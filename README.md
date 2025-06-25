@@ -2,7 +2,7 @@
 
 ## Overview
 
-A comprehensive pizza ordering application designed to streamline the ordering process for pizza stores. This full-stack application allows users to browse the menu, customize their orders, and manage their cart. Admins can manage inventory, view orders, and update customer information.
+A feature rich pizza ordering application crafted to simplify and enhance the ordering experience for both customers and store admins. Users can effortlessly browse the menu, customize pizzas to their taste, and manage their cart with ease. Administrators have powerful tools to manage inventory, track orders, and update customer details, all in one seamless system.
 
 ## Features
 
