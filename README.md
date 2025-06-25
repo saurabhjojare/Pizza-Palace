@@ -6,10 +6,10 @@ A feature rich pizza ordering application crafted to simplify and enhance the or
 
 ## Features
 
-- **Cart Management**: Add/remove pizzas, select size, add toppings, adjust quantities.
-- **Customer Management**: Add, view, update, and delete customer information.
-- **Order History**: View and track order history.
-- **Business Rules**: Enforces validation rules for order customization and inventory.
+- Add and remove pizzas from the cart, select sizes, add toppings, and adjust quantities  
+- Manage customer information by adding, viewing, updating, and deleting records  
+- View and track order history for better order management  
+- Enforce validation rules for order customization and inventory control  
 
 ## Technologies Used
 
