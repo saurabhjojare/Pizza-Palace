@@ -11,7 +11,7 @@ A feature rich pizza ordering application crafted to simplify and enhance the or
 - View and track order history for better order management  
 - Enforce validation rules for order customization and inventory control  
 
-## Technologies Used
+## Tech Stack
 
 - **Frontend**: ReactJS with TypeScript
 - **Backend**: NestJS
