@@ -17,3 +17,8 @@ A feature rich pizza ordering application crafted to simplify and enhance the or
 - **Backend**: NestJS
 - **Database**: PostgreSQL
 - **API**: RESTful APIs
+
+## License
+This project is licensed under the [MIT License](LICENSE).
+  
+For any issues or feedback, please contact saurabh.jojare@gmail.com.
