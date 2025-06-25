@@ -12,11 +12,10 @@ A feature rich pizza ordering application crafted to simplify and enhance the or
 - Enforce validation rules for order customization and inventory control  
 
 ## Tech Stack
-
-- **Frontend**: ReactJS with TypeScript
-- **Backend**: NestJS
-- **Database**: PostgreSQL
-- **API**: RESTful APIs
+**Frontend**: ReactJS with TypeScript  
+**Backend**: NestJS  
+**Database**: PostgreSQL  
+**API**: RESTful APIs  
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
