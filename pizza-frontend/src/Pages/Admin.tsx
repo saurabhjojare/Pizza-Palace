@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AdminPage: React.FC = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        navigate('/pizza');
-    }, [navigate]);
+  useEffect(() => {
+    navigate("/pizza");
+  }, [navigate]);
 
-    return null; 
+  return null;
 };
 
 export default AdminPage;

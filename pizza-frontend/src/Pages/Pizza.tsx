@@ -1,17 +1,17 @@
-import React from 'react';
-import { useLocation } from 'react-router-dom';
-import GetPizza from '../Components/Pizza/GetPizza';
-import FetchPizza from '../Components/Pizza/FetchPizza';
+import React from "react";
+import { useLocation } from "react-router-dom";
+import GetPizza from "../components/Pizza/GetPizza";
+import FetchPizza from "../components/Pizza/FetchPizza";
 
 const PizzaPage: React.FC = () => {
-    const location = useLocation();
+  const location = useLocation();
 
-    return (
-        <div>
-            {location.pathname === '/' && <GetPizza />}
-            {location.pathname === '/pizza' && <FetchPizza />}
-        </div>
-    );
+  return (
+    <div>
+      {location.pathname === "/" && <GetPizza />}
+      {location.pathname === "/pizza" && <FetchPizza />}
+    </div>
+  );
 };
 
 export default PizzaPage;

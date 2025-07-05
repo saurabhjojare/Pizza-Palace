@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 export interface Customer {
   customer_id: number;
@@ -15,16 +15,18 @@ const GetCustomers: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    document.title = 'Customer';
+    document.title = "Customer";
   }, []);
 
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/v1/customers');
+        const response = await axios.get(
+          "http://localhost:5000/api/v1/customers"
+        );
         setCustomers(response.data.Data);
       } catch (err) {
-        setError('Failed to fetch customer');
+        setError("Failed to fetch customer");
       }
     };
     fetchCustomers();
@@ -32,10 +34,14 @@ const GetCustomers: React.FC = () => {
 
   const handleDelete = async (customerId: number) => {
     try {
-      await axios.delete(`http://localhost:5000/api/v1/customers/${customerId}`);
-      setCustomers(customers.filter(customer => customer.customer_id !== customerId));
+      await axios.delete(
+        `http://localhost:5000/api/v1/customers/${customerId}`
+      );
+      setCustomers(
+        customers.filter((customer) => customer.customer_id !== customerId)
+      );
     } catch (err) {
-      setError('Failed to delete customer');
+      setError("Failed to delete customer");
     }
   };
 
@@ -65,16 +71,20 @@ const GetCustomers: React.FC = () => {
             {customers.map((customer) => (
               <tr key={customer.customer_id}>
                 <td>{customer.customer_id}</td>
-                <td>{customer.first_name} {customer.last_name}</td>
+                <td>
+                  {customer.first_name} {customer.last_name}
+                </td>
                 <td>{customer.address}</td>
                 <td>
-                  Phone: {customer.phone_number}<br />
+                  Phone: {customer.phone_number}
+                  <br />
                   Email: {customer.email_address}
                 </td>
                 <td>
                   <button
                     className="btn btn-danger btn-sm"
-                    onClick={() => handleDelete(customer.customer_id)}>
+                    onClick={() => handleDelete(customer.customer_id)}
+                  >
                     Delete
                   </button>
                 </td>
