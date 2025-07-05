@@ -1,17 +1,16 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
-import GetPizza from "../components/Pizza/GetPizza";
 import FetchPizza from "../components/Pizza/FetchPizza";
+import GetPizza from "../components/Pizza/GetPizza";
 
 const PizzaPage: React.FC = () => {
   const location = useLocation();
-
-  return (
-    <div>
-      {location.pathname === "/" && <GetPizza />}
-      {location.pathname === "/pizza" && <FetchPizza />}
-    </div>
-  );
+  if (location.pathname === "/pizza") {
+    return <FetchPizza />;
+  } else if (location.pathname === "/home") {
+    return <GetPizza />;
+  }
+  return null;
 };
 
 export default PizzaPage;

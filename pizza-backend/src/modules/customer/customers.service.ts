@@ -1,23 +1,34 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CustomerEntity } from './entities/customer.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class CustomersService {
   constructor(
     @InjectRepository(CustomerEntity)
     private readonly customersRepository: Repository<CustomerEntity>,
-  ) { }
+  ) {}
 
   async create(createCustomerDto: CreateCustomerDto): Promise<CustomerEntity> {
     try {
-      const customer = this.customersRepository.create(createCustomerDto);
+      const hashedPassword = await bcrypt.hash(createCustomerDto.password, 10);
+      const customer = this.customersRepository.create({
+        ...createCustomerDto,
+        password: hashedPassword,
+      });
       return await this.customersRepository.save(customer);
     } catch (error) {
-      throw new BadRequestException('Invalid data provided for customer creation');
+      throw new BadRequestException(
+        'Invalid data provided for customer creation',
+      );
     }
   }
 
@@ -35,7 +46,10 @@ export class CustomersService {
     return customer;
   }
 
-  async update(id: number, updateCustomerDto: UpdateCustomerDto): Promise<CustomerEntity> {
+  async update(
+    id: number,
+    updateCustomerDto: UpdateCustomerDto,
+  ): Promise<CustomerEntity> {
     const result = await this.customersRepository.update(id, updateCustomerDto);
     if (result.affected === 0) {
       throw new NotFoundException(`Customer with ID ${id} not found`);

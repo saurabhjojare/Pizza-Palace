@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Pizza } from '../Pizza/GetPizza';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { Pizza } from "../Pizza/GetPizza";
+import { useNavigate } from "react-router-dom";
 
 interface OrderLine {
   orderline_id: number;
@@ -26,17 +27,55 @@ const GetOrders: React.FC = () => {
   const [pizzas, setPizzas] = useState<Map<number, string>>(new Map());
   const [error, setError] = useState<string | null>(null);
 
+  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
+
+  // Role-based access control using base64-decoded JWT
   useEffect(() => {
-    document.title = 'Order';
+    if (!token) {
+      navigate("/");
+      return;
+    }
+
+    try {
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const payload = JSON.parse(atob(base64));
+      const role = payload.role;
+
+      if (role !== "admin") {
+        navigate("/");
+      }
+    } catch (e) {
+      navigate("/");
+    }
+  }, [navigate, token]);
+
+  useEffect(() => {
+    document.title = "Order's";
   }, []);
 
   useEffect(() => {
     const fetchOrdersAndPizzas = async () => {
       try {
-        const ordersResponse = await axios.get('http://localhost:5000/api/v1/orders');
+        const ordersResponse = await axios.get(
+          "http://localhost:5000/api/v1/orders",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         setOrders(ordersResponse.data.Data);
 
-        const pizzasResponse = await axios.get('http://localhost:5000/api/v1/pizzas');
+        const pizzasResponse = await axios.get(
+          "http://localhost:5000/api/v1/pizzas",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         const pizzaData: Pizza[] = pizzasResponse.data.Data;
 
         const pizzaMap = new Map<number, string>();
@@ -45,30 +84,41 @@ const GetOrders: React.FC = () => {
         });
         setPizzas(pizzaMap);
       } catch (err) {
-        setError('Failed to fetch orders');
+        setError("Failed to fetch orders");
       }
     };
     fetchOrdersAndPizzas();
-  }, []);
+  }, [token]);
 
   const handleCancel = async (orderId: number) => {
     try {
-      await axios.patch(`http://localhost:5000/api/v1/orders/${orderId}`, {
-        status: false,
-      });
-      setOrders(orders.map(order =>
-        order.order_id === orderId ? { ...order, status: false } : order
-      ));
+      await axios.patch(
+        `http://localhost:5000/api/v1/orders/${orderId}`,
+        { status: false },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setOrders(
+        orders.map((order) =>
+          order.order_id === orderId ? { ...order, status: false } : order
+        )
+      );
     } catch (err) {
-      setError('Failed to cancel order');
+      setError("Failed to cancel order");
     }
   };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return {
-      date: date.toLocaleDateString('en-GB'),
-      time: date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+      date: date.toLocaleDateString("en-GB"),
+      time: date.toLocaleTimeString("en-GB", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
     };
   };
 
@@ -106,8 +156,10 @@ const GetOrders: React.FC = () => {
                   <td>
                     {order.orderLines.map((line) => (
                       <div key={line.orderline_id}>
-                        {pizzas.get(line.pizza_id)}<br />
-                        Size: {line.size}<br />
+                        {pizzas.get(line.pizza_id)}
+                        <br />
+                        Size: {line.size}
+                        <br />
                         Quantity: {line.quantity}
                       </div>
                     ))}
@@ -123,7 +175,8 @@ const GetOrders: React.FC = () => {
                       <button
                         className="btn btn-danger btn-sm"
                         onClick={() => handleCancel(order.order_id)}
-                      >Cancel
+                      >
+                        Cancel
                       </button>
                     ) : (
                       <span className="text-muted">Canceled</span>

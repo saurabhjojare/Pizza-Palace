@@ -1,33 +1,25 @@
-import React from 'react';
+import React from "react";
 
-export type Topping = {
+export interface Topping {
   name: string;
   price: number;
-  type: 'veg' | 'non-veg';
-};
+}
 
-export type Crust = {
+export interface Crust {
   name: string;
   price: number;
-};
+}
 
 export const vegToppings: Topping[] = [
-  { name: 'Tomato', price: 30, type: 'veg' },
-  { name: 'Capsicum', price: 40, type: 'veg' },
-  { name: 'Paneer', price: 50, type: 'veg' },
+  { name: "Olives", price: 1 },
+  { name: "Capsicum", price: 1 },
+  { name: "Mushrooms", price: 1 },
 ];
 
 export const nonVegToppings: Topping[] = [
-  { name: 'Chicken', price: 60, type: 'non-veg' },
-  { name: 'Pepperoni', price: 70, type: 'non-veg' },
-  { name: 'Sausage', price: 80, type: 'non-veg' },
-];
-
-export const crusts: Crust[] = [
-  { name: "Thin Crust", price: 50 },
-  { name: "Cheese Burst", price: 100 },
-  { name: "Stuffed Crust", price: 80 },
-  { name: "Pan Pizza", price: 70 },
+  { name: "Pepperoni", price: 1.5 },
+  { name: "Chicken", price: 1.5 },
+  { name: "Sausage", price: 1.5 },
 ];
 
 interface ToppingsProps {
@@ -36,26 +28,31 @@ interface ToppingsProps {
   handleToppingChange: (topping: Topping) => void;
 }
 
-const Toppings: React.FC<ToppingsProps> = ({ availableToppings, selectedToppings, handleToppingChange }) => {
+const Toppings: React.FC<ToppingsProps> = ({
+  availableToppings,
+  selectedToppings,
+  handleToppingChange,
+}) => {
   return (
-    <div className='mb-3'>
-      <label className='form-label'>Toppings</label>
-      <div>
-        {availableToppings.map((topping) => (
-          <div key={topping.name} className='form-check'>
-            <input
-              type='checkbox'
-              className='form-check-input'
-              id={`topping-${topping.name}`}
-              checked={selectedToppings.includes(topping)}
-              onChange={() => handleToppingChange(topping)}
-            />
-            <label className='form-check-label' htmlFor={`topping-${topping.name}`}>
-              {topping.name} - ₹{topping.price}
-            </label>
-          </div>
-        ))}
-      </div>
+    <div className="mb-2">
+      <label className="form-label">Toppings:</label>
+      {availableToppings.map((topping) => (
+        <div className="form-check" key={topping.name}>
+          <input
+            type="checkbox"
+            className="form-check-input"
+            id={`topping-${topping.name}`}
+            checked={selectedToppings.some((t) => t.name === topping.name)}
+            onChange={() => handleToppingChange(topping)}
+          />
+          <label
+            className="form-check-label"
+            htmlFor={`topping-${topping.name}`}
+          >
+            {topping.name} (+${topping.price})
+          </label>
+        </div>
+      ))}
     </div>
   );
 };

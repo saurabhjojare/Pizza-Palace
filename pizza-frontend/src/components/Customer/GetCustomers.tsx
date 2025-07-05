@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export interface Customer {
   customer_id: number;
@@ -13,29 +14,65 @@ export interface Customer {
 const GetCustomers: React.FC = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  const token = localStorage.getItem("token");
+
+  // Manual JWT decoding to get the role
+  let role: string | null = null;
+
+  if (token) {
+    try {
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const payload = JSON.parse(atob(base64));
+      role = payload.role;
+    } catch (err) {
+      role = null;
+    }
+  }
 
   useEffect(() => {
-    document.title = "Customer";
+    if (role !== "admin") {
+      navigate("/");
+    }
+  }, [role, navigate]);
+
+  useEffect(() => {
+    document.title = "Customer's";
   }, []);
 
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/v1/customers"
+          "http://localhost:5000/api/v1/customers",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         setCustomers(response.data.Data);
       } catch (err) {
         setError("Failed to fetch customer");
       }
     };
-    fetchCustomers();
-  }, []);
+
+    if (role === "admin") {
+      fetchCustomers();
+    }
+  }, [token, role]);
 
   const handleDelete = async (customerId: number) => {
     try {
       await axios.delete(
-        `http://localhost:5000/api/v1/customers/${customerId}`
+        `http://localhost:5000/api/v1/customers/${customerId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       setCustomers(
         customers.filter((customer) => customer.customer_id !== customerId)
