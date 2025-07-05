@@ -10,6 +10,7 @@ import OrderPage from "./Pages/Order";
 import AdminPage from "./Pages/Admin";
 import UpdatePizza from "./components/Pizza/UpdatePizza";
 import AddPizza from "./components/Pizza/AddPizza";
+import Login from "./components/Login/Login";
 
 const App: React.FC = () => {
   return (
@@ -19,7 +20,8 @@ const App: React.FC = () => {
         <Navbar />
         <div className="content">
           <Routes>
-            <Route path="/" element={<PizzaPage />}></Route>
+            <Route path="/" element={<Login />}></Route>
+            <Route path="/home" element={<PizzaPage />}></Route>
 
             <Route path="/admin" element={<AdminPage />}></Route>
             <Route path="/pizza" element={<PizzaPage />}></Route>

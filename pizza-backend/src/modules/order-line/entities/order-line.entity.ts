@@ -1,4 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { OrderEntity } from '../../order/entities/order.entity';
 import { PizzaEntity } from '../../pizza/entities/pizza.entity';
 
@@ -19,14 +25,16 @@ export class OrderLineEntity {
   @Column({ nullable: false })
   quantity: number;
 
-  @Column({ nullable: false })
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: false })
   total_amount: number;
 
-  @ManyToOne(() => OrderEntity, order => order.orderLines, { onDelete: 'CASCADE' })
+  @ManyToOne(() => OrderEntity, (order) => order.orderLines, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'order_id' })
   order: OrderEntity;
 
-  @ManyToOne(() => PizzaEntity, pizza => pizza.pizza_id)
+  @ManyToOne(() => PizzaEntity, (pizza) => pizza.pizza_id)
   @JoinColumn({ name: 'pizza_id' })
   pizza: PizzaEntity;
 }

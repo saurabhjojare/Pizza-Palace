@@ -1,53 +1,82 @@
-import React, { useState } from 'react';
-import { Pizza } from './GetPizza';
-import { vegToppings, nonVegToppings, crusts, Topping, Crust } from './Toppings';
-import Quantity from './Quantity';
-import Size from './Size';
-import CrustComponent from './Crust';
-import ToppingsComponent from './Toppings';
+import React, { useState } from "react";
+import { Pizza } from "./GetPizza";
+import Toppings, {
+  Crust,
+  Topping,
+  vegToppings,
+  nonVegToppings,
+} from "./Toppings";
 
 interface AddToCartProps {
   pizza: Pizza;
-  addToCart: (pizza: Pizza, size: string, quantity: number, crust: Crust, selectedToppings: Topping[]) => void;
+  addToCart: (
+    pizza: Pizza,
+    size: string,
+    quantity: number,
+    crust: Crust,
+    selectedToppings: Topping[]
+  ) => void;
 }
 
+const defaultCrust: Crust = { name: "Classic", price: 0 };
+
 const AddToCart: React.FC<AddToCartProps> = ({ pizza, addToCart }) => {
-  const [size, setSize] = useState<string>('regular');
+  const [size, setSize] = useState<string>("regular");
   const [quantity, setQuantity] = useState<number>(1);
-  const [crust, setCrust] = useState<Crust>(crusts[0]);
+  const [crust, setCrust] = useState<Crust>(defaultCrust);
   const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
 
   const handleAddToCart = () => {
     addToCart(pizza, size, quantity, crust, selectedToppings);
   };
 
-  const incrementQuantity = () => setQuantity((prev) => prev + 1);
-  const decrementQuantity = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
-
   const handleToppingChange = (topping: Topping) => {
-    setSelectedToppings((prev) =>
-      prev.includes(topping)
-        ? prev.filter((t) => t !== topping)
-        : [...prev, topping]
-    );
+    setSelectedToppings((prev) => {
+      const exists = prev.some((t) => t.name === topping.name);
+      if (exists) {
+        return prev.filter((t) => t.name !== topping.name);
+      } else {
+        return [...prev, topping];
+      }
+    });
   };
 
-  const availableToppings = pizza.type === 'Vegetarian' ? vegToppings : nonVegToppings;
+  const availableToppings =
+    pizza.type === "Vegetarian" ? vegToppings : nonVegToppings;
 
   return (
     <div>
-      <Size size={size} setSize={setSize} pizza={pizza} />
+      {/* Size dropdown with price inside each option */}
+      <select
+        value={size}
+        onChange={(e) => setSize(e.target.value)}
+        className="form-select mb-2"
+      >
+        <option value="regular">Regular - ${pizza.regularPrice}</option>
+        <option value="medium">Medium - ${pizza.mediumPrice}</option>
+        <option value="large">Large - ${pizza.largePrice}</option>
+      </select>
 
-      <CrustComponent crust={crust} setCrust={setCrust} crusts={crusts} />
+      {/* Quantity input */}
+      <input
+        type="number"
+        min={1}
+        value={quantity}
+        onChange={(e) => setQuantity(Number(e.target.value))}
+        className="form-control mb-2"
+      />
 
-      <ToppingsComponent availableToppings={availableToppings} selectedToppings={selectedToppings} handleToppingChange={handleToppingChange} />
+      {/* Toppings checkboxes */}
+      <Toppings
+        availableToppings={availableToppings}
+        selectedToppings={selectedToppings}
+        handleToppingChange={handleToppingChange}
+      />
 
-      <Quantity quantity={quantity} incrementQuantity={incrementQuantity} decrementQuantity={decrementQuantity} />
-
-      <div className='text-center'>
-        <button className='btn btn-primary' onClick={handleAddToCart}>Add to Cart</button>
-      </div>
-
+      {/* Add to Cart */}
+      <button className="btn btn-success mt-2" onClick={handleAddToCart}>
+        Add to Cart
+      </button>
     </div>
   );
 };

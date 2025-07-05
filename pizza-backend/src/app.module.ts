@@ -6,6 +6,8 @@ import { OrdersModule } from './modules/order/orders.module';
 import { OrderLineModule } from './modules/order-line/order-line.module';
 import { PizzaModule } from './modules/pizza/pizza.module';
 import { APP_PIPE } from '@nestjs/core';
+import { AuthService } from './modules/auth/auth.service';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -14,13 +16,9 @@ import { APP_PIPE } from '@nestjs/core';
     OrdersModule,
     OrderLineModule,
     PizzaModule,
+    AuthModule,
   ],
   controllers: [],
-  providers: [
-    {
-      provide: APP_PIPE,
-      useClass: ValidationPipe,
-    },
-  ],
+  providers: [{ provide: APP_PIPE, useClass: ValidationPipe }, AuthService],
 })
 export class AppModule {}

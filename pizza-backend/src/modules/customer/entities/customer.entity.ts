@@ -21,6 +21,12 @@ export class CustomerEntity {
   @Column({ unique: true, nullable: false })
   email_address: string;
 
+  @Column({ nullable: false })
+  password: string;
+
+  @Column({ nullable: false })
+  role: string;
+
   @OneToMany(() => OrderEntity, order => order.customer)
   orders: OrderEntity[];
 }
