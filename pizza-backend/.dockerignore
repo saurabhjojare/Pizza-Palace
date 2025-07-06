@@ -1,0 +1,60 @@
+# Node modules and dependencies
+node_modules
+**/node_modules
+
+# Build output folders
+dist
+build
+.out
+/.next
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# VS Code settings and workspace files
+.vscode
+.vscode/*
+
+# TypeScript cache files
+*.tsbuildinfo
+
+# Miscellaneous
+.DS_Store
+*.log
+
+# Git
+.git
+.gitignore
+
+# Dockerfile and Docker-related
+Dockerfile
+docker-compose.yml
+
+# Coverage reports
+coverage
+coverage/*
+
+# IDE-specific files
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# React static files
+public/static
+
+# Optional: exclude tests (if you don't need them in image)
+__tests__
+*.spec.ts
+*.test.ts
