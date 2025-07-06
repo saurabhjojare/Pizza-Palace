@@ -1,6 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
 
-@Entity("pizza")
+@Entity('pizza')
 export class PizzaEntity {
   @PrimaryGeneratedColumn()
   pizza_id: number;
@@ -9,24 +9,24 @@ export class PizzaEntity {
   name: string;
 
   @Column({
-    type: "enum",
-    enum: ["Vegetarian", "Non-Vegetarian"],
-    nullable: false
+    type: 'enum',
+    enum: ['Vegetarian', 'Non-Vegetarian'],
+    nullable: false,
   })
   type: string;
 
   @Column({ nullable: false })
   imageUrl: string;
 
-  @Column({ type: "text", nullable: false })
+  @Column({ type: 'text', nullable: false })
   description: string;
 
-  @Column({ type: "decimal", precision: 10, scale: 2, nullable: false })
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: false })
   regularPrice: number;
 
-  @Column({ type: "decimal", precision: 10, scale: 2, nullable: false })
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: false })
   mediumPrice: number;
 
-  @Column({ type: "decimal", precision: 10, scale: 2, nullable: false })
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: false })
   largePrice: number;
 }

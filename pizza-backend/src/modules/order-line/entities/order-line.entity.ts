@@ -16,7 +16,7 @@ export class OrderLineEntity {
   @Column({ nullable: false })
   order_id: number;
 
-  @Column({ nullable: false })
+  @Column({ nullable: true })
   pizza_id: number;
 
   @Column({ nullable: false })
@@ -34,7 +34,10 @@ export class OrderLineEntity {
   @JoinColumn({ name: 'order_id' })
   order: OrderEntity;
 
-  @ManyToOne(() => PizzaEntity, (pizza) => pizza.pizza_id)
+  @ManyToOne(() => PizzaEntity, (pizza) => pizza.pizza_id, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
   @JoinColumn({ name: 'pizza_id' })
   pizza: PizzaEntity;
 }

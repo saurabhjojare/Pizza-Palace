@@ -18,8 +18,4 @@ export class UpdateOrderLineDto extends PartialType(CreateOrderLineDto) {
   @IsOptional()
   @IsNumber({}, { message: 'Quantity must be a number' })
   quantity?: number;
-
-  @IsOptional()
-  @IsNumber({}, { message: 'Total amount must be a number' })
-  total_amount?: number;
 }

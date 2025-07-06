@@ -1,15 +1,11 @@
 import React from "react";
-import { Pizza } from "./GetPizza";
 import Buy from "./Buy";
-import { Crust, Topping } from "./Toppings";
+import { Pizza } from "./GetPizza";
 
-interface CartItem {
+export interface CartItem {
   pizza: Pizza;
   size: string;
   quantity: number;
-  crust: Crust;
-  selectedToppings: Topping[];
-  totalAmount: number;
 }
 
 interface CartProps {
@@ -25,28 +21,8 @@ const Cart: React.FC<CartProps> = ({
   removeFromCart,
   updateQuantity,
   clearCart,
+  customerId,
 }) => {
-  const calculateTotalAmount = () =>
-    cartItems.reduce((total, item) => {
-      const pizzaPrice =
-        item.size === "regular"
-          ? Number(item.pizza.regularPrice)
-          : item.size === "medium"
-          ? Number(item.pizza.mediumPrice)
-          : Number(item.pizza.largePrice);
-
-      const toppingsPrice = item.selectedToppings.reduce(
-        (sum, topping) => sum + topping.price,
-        0
-      );
-
-      return (
-        total + (pizzaPrice + item.crust.price + toppingsPrice) * item.quantity
-      );
-    }, 0);
-
-  const totalAmount = calculateTotalAmount();
-
   const handleQuantityChange = (index: number, increment: boolean) => {
     const newQuantity = increment
       ? cartItems[index].quantity + 1
@@ -55,6 +31,19 @@ const Cart: React.FC<CartProps> = ({
       updateQuantity(index, newQuantity);
     }
   };
+
+  const calculateTotalAmount = () =>
+    cartItems.reduce((total, item) => {
+      const price =
+        item.size === "regular"
+          ? Number(item.pizza.regularPrice)
+          : item.size === "medium"
+          ? Number(item.pizza.mediumPrice)
+          : Number(item.pizza.largePrice);
+      return total + price * item.quantity;
+    }, 0);
+
+  const totalAmount = calculateTotalAmount();
 
   return cartItems.length > 0 ? (
     <div className="card mt-4 mb-4 cart-box-shadow">
@@ -71,40 +60,27 @@ const Cart: React.FC<CartProps> = ({
                   <strong>Pizza:</strong> {item.pizza.name}
                 </p>
                 <p className="mb-1">
-                  <strong>Size:</strong> {item.size}
+                  <strong>Size:</strong>{" "}
+                  {item.size.charAt(0).toUpperCase() + item.size.slice(1)}
                 </p>
-                <p className="mb-1">
-                  <strong>Crust:</strong> {item.crust.name} : ₹
-                  {item.crust.price}
-                </p>
-                <p className="mb-1">
-                  <div className="d-flex align-items-center mt-2">
-                    <strong>Quantity:</strong>
-                    {item.quantity > 1 && (
-                      <button
-                        className="btn btn-light btn-sm mx-2"
-                        onClick={() => handleQuantityChange(index, false)}
-                      >
-                        -
-                      </button>
-                    )}
-                    <span className="ms-2 me-2">{item.quantity} </span>
+                <div className="d-flex align-items-center mt-2">
+                  <strong>Quantity:</strong>
+                  {item.quantity > 1 && (
                     <button
                       className="btn btn-light btn-sm mx-2"
-                      onClick={() => handleQuantityChange(index, true)}
+                      onClick={() => handleQuantityChange(index, false)}
                     >
-                      +
+                      -
                     </button>
-                  </div>
-                </p>
-                <p className="mb-1">
-                  <strong>Toppings: </strong>
-                  {item.selectedToppings.map((topping) => (
-                    <span key={topping.name}>
-                      {topping.name} : ₹{topping.price}{" "}
-                    </span>
-                  ))}
-                </p>
+                  )}
+                  <span className="ms-2 me-2">{item.quantity}</span>
+                  <button
+                    className="btn btn-light btn-sm mx-2"
+                    onClick={() => handleQuantityChange(index, true)}
+                  >
+                    +
+                  </button>
+                </div>
               </div>
               <button
                 className="btn btn-danger btn-sm"
@@ -115,22 +91,19 @@ const Cart: React.FC<CartProps> = ({
             </li>
           ))}
         </ul>
-        <div className="mt-3">
-          <h6 className="fs-5 text-end">Total: ₹{totalAmount}</h6>
+
+        <div className="mt-3 text-end">
+          <h6 className="fs-5">Total: ₹{totalAmount.toFixed(2)}</h6>
         </div>
+
         <div className="text-end mt-3">
           <Buy
-            customerId={1}
+            customerId={customerId}
             deliveryAddress="5678 Oak Avenue, CA"
             cartItems={cartItems.map((item) => ({
               pizza_id: item.pizza.pizza_id,
               size: item.size,
               quantity: item.quantity,
-              crust: item.crust.name,
-              toppings: item.selectedToppings.map((topping) => ({
-                name: topping.name,
-                price: topping.price,
-              })),
             }))}
             totalAmount={totalAmount}
             clearCart={clearCart}

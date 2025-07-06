@@ -1,16 +1,17 @@
 import React from "react";
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Header from "./components/Header/Header";
-import Navbar from "./components/Navbar/Navbar";
-import Footer from "./components/Footer/Footer";
-import CustomerPage from "./Pages/Customer";
-import PizzaPage from "./Pages/Pizza";
-import OrderPage from "./Pages/Order";
-import AdminPage from "./Pages/Admin";
-import UpdatePizza from "./components/Pizza/UpdatePizza";
-import AddPizza from "./components/Pizza/AddPizza";
-import Login from "./components/Login/Login";
+import Header from "./components/header/Header";
+import Navbar from "./components/navbar/Navbar";
+import Footer from "./components/footer/Footer";
+import CustomerPage from "./pages/Customer";
+import PizzaPage from "./pages/Pizza";
+import OrderPage from "./pages/Order";
+import AdminPage from "./pages/Admin";
+import UpdatePizza from "./components/pizza/UpdatePizza";
+import AddPizza from "./components/pizza/AddPizza";
+import Login from "./components/login/Login";
+import SignUpPage from "./pages/Signup";
 
 const App: React.FC = () => {
   return (
@@ -21,6 +22,7 @@ const App: React.FC = () => {
         <div className="content">
           <Routes>
             <Route path="/" element={<Login />}></Route>
+            <Route path="/signup" element={<SignUpPage />}></Route>
             <Route path="/home" element={<PizzaPage />}></Route>
 
             <Route path="/admin" element={<AdminPage />}></Route>

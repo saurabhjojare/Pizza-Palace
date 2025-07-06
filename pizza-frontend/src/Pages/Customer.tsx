@@ -1,5 +1,5 @@
 import React from "react";
-import GetCustomers from "../components/Customer/GetCustomers";
+import GetCustomers from "../components/customer/GetCustomers";
 
 const CustomerPage: React.FC = () => {
   return (

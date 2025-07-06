@@ -11,7 +11,6 @@ const Header: React.FC = () => {
     navigate("/");
   };
 
-  // Routes where Logout button should appear
   const showLogoutRoutes = [
     "/pizza",
     "/add-pizza",

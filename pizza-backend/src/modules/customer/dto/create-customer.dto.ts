@@ -1,4 +1,12 @@
-import { ValidateIf, IsIn, IsNotEmpty, IsEmail, IsString, Length, Matches } from 'class-validator';
+import {
+  ValidateIf,
+  IsIn,
+  IsNotEmpty,
+  IsEmail,
+  IsString,
+  Length,
+  Matches,
+} from 'class-validator';
 
 export class CreateCustomerDto {
   @IsNotEmpty({ message: 'First name is required' })
@@ -24,7 +32,9 @@ export class CreateCustomerDto {
 
   @IsNotEmpty({ message: 'Email address is required' })
   @IsEmail({}, { message: 'Email address must be a valid email' })
-  @Length(1, 255, { message: 'Email address must be between 1 and 255 characters' })
+  @Length(1, 255, {
+    message: 'Email address must be between 1 and 255 characters',
+  })
   email_address: string;
 
   @IsNotEmpty({ message: 'Password is required' })
@@ -34,6 +44,8 @@ export class CreateCustomerDto {
 
   @IsNotEmpty({ message: 'Role is required' })
   @IsString({ message: 'Role must be a string' })
-  @IsIn(['customer', 'admin'], { message: 'Role must be either customer or admin' })
+  @IsIn(['customer', 'admin'], {
+    message: 'Role must be either customer or admin',
+  })
   role: string;
 }

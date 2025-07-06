@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import AddToCart from "../Pizza/AddToCart";
-import Cart from "../Pizza/Cart";
-import { Crust, Topping } from "./Toppings";
+import AddToCart from "./AddToCart";
+import Cart from "./Cart";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { Roles } from "../enums/Roles";
 
+export interface CartItem {
+  pizza: Pizza;
+  size: string;
+  quantity: number;
+}
 export interface Pizza {
   pizza_id: number;
   name: string;
@@ -15,15 +20,6 @@ export interface Pizza {
   regularPrice: string;
   mediumPrice: string;
   largePrice: string;
-}
-
-interface CartItem {
-  pizza: Pizza;
-  size: string;
-  quantity: number;
-  crust: Crust;
-  selectedToppings: Topping[];
-  totalAmount: number;
 }
 
 interface TokenPayload {
@@ -37,7 +33,6 @@ const GetPizza: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [customerId, setCustomerId] = useState<number | null>(null);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,7 +45,7 @@ const GetPizza: React.FC = () => {
 
     try {
       const decoded = jwtDecode<TokenPayload>(token);
-      if (decoded.role !== "customer") {
+      if (decoded.role !== Roles.CUSTOMER) {
         navigate("/");
       } else {
         setCustomerId(decoded.customer_id);
@@ -82,34 +77,30 @@ const GetPizza: React.FC = () => {
         setError("Failed to fetch pizza");
       }
     };
+
     fetchPizzas();
   }, []);
 
-  const addToCart = (
-    pizza: Pizza,
-    size: string,
-    quantity: number,
-    crust: Crust,
-    selectedToppings: Topping[]
-  ) => {
-    const price =
-      size === "regular"
-        ? Number(pizza.regularPrice)
-        : size === "medium"
-        ? Number(pizza.mediumPrice)
-        : Number(pizza.largePrice);
+  const addToCart = (pizza: Pizza, size: string, quantity: number) => {
+    setCartItems((prevItems) => {
+      const existingIndex = prevItems.findIndex(
+        (item) => item.pizza.pizza_id === pizza.pizza_id && item.size === size
+      );
 
-    const toppingsPrice = selectedToppings.reduce(
-      (sum, topping) => sum + topping.price,
-      0
-    );
-    const itemPrice = price + crust.price + toppingsPrice;
-    const totalAmount = itemPrice * quantity;
+      if (existingIndex !== -1) {
+        const updatedItems = [...prevItems];
+        const existingItem = updatedItems[existingIndex];
 
-    setCartItems((prevItems) => [
-      ...prevItems,
-      { pizza, size, quantity, crust, selectedToppings, totalAmount },
-    ]);
+        updatedItems[existingIndex] = {
+          ...existingItem,
+          quantity: existingItem.quantity + quantity,
+        };
+
+        return updatedItems;
+      } else {
+        return [...prevItems, { pizza, size, quantity }];
+      }
+    });
   };
 
   const removeFromCart = (index: number) => {
@@ -135,13 +126,6 @@ const GetPizza: React.FC = () => {
           ? Number(item.pizza.mediumPrice)
           : Number(item.pizza.largePrice);
 
-      const toppingsPrice = item.selectedToppings.reduce(
-        (sum, topping) => sum + topping.price,
-        0
-      );
-
-      item.totalAmount =
-        (price + item.crust.price + toppingsPrice) * newQuantity;
       return updatedItems;
     });
   };
@@ -182,12 +166,7 @@ const GetPizza: React.FC = () => {
                 <p className="card-text">
                   <strong>Type:</strong> {pizza.type}
                 </p>
-                <p className="card-text">
-                  <strong>Prices:</strong> <br />
-                  Regular: ₹{pizza.regularPrice} <br />
-                  Medium: ₹{pizza.mediumPrice} <br />
-                  Large: ₹{pizza.largePrice}
-                </p>
+
                 <AddToCart pizza={pizza} addToCart={addToCart} />
               </div>
             </div>

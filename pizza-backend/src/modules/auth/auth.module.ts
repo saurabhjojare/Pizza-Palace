@@ -10,8 +10,8 @@ import { CustomersModule } from '../customer/customers.module';
   imports: [
     PassportModule,
     JwtModule.register({
-      secret: 'd3eb1468b1e060e68255f9da70ad4af3',
-      signOptions: { expiresIn: '1h' },
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: process.env.JWT_EXPIRATION },
     }),
     CustomersModule,
   ],
