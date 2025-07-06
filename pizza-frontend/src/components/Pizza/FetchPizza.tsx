@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Pizza } from "./GetPizza";
+import { Pizza } from "../pizza/GetPizza";
 import { useNavigate } from "react-router-dom";
+import { Roles } from "../enums/Roles";
 
 const FetchPizza: React.FC = () => {
   const [pizzas, setPizzas] = useState<Pizza[]>([]);
@@ -10,7 +11,6 @@ const FetchPizza: React.FC = () => {
 
   const token = localStorage.getItem("token");
 
-  // Manually decode JWT to get role
   let role: string | null = null;
   if (token) {
     try {
@@ -24,7 +24,7 @@ const FetchPizza: React.FC = () => {
   }
 
   useEffect(() => {
-    if (role !== "admin") {
+    if (role !== Roles.ADMIN) {
       navigate("/");
     }
   }, [role, navigate]);

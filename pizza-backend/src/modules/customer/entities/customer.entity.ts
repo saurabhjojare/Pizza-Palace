@@ -27,6 +27,6 @@ export class CustomerEntity {
   @Column({ nullable: false })
   role: string;
 
-  @OneToMany(() => OrderEntity, order => order.customer)
+  @OneToMany(() => OrderEntity, (order) => order.customer)
   orders: OrderEntity[];
 }

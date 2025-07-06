@@ -25,7 +25,7 @@ export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.CUSTOMER)
+  @Roles(Role.CUSTOMER)
   @Post()
   async create(@Body() createOrderDto: CreateOrderDto): Promise<OrderEntity> {
     const message = await this.ordersService.create(createOrderDto);
@@ -34,21 +34,21 @@ export class OrdersController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.CUSTOMER)
+  @Roles(Role.ADMIN)
   @Get()
   async findAll(): Promise<OrderEntity[]> {
     return this.ordersService.findAll();
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.CUSTOMER)
+  @Roles(Role.CUSTOMER)
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<OrderEntity> {
     return this.ordersService.findOne(+id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.CUSTOMER)
+  @Roles(Role.ADMIN)
   @Patch(':id')
   async update(
     @Param('id') id: string,

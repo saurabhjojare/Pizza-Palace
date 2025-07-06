@@ -33,25 +33,17 @@ export class CustomersController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.CUSTOMER)
+  @Roles(Role.ADMIN)
   @Get()
   async findAll(): Promise<CustomerEntity[]> {
     return this.customersService.findAll();
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.CUSTOMER)
+  @Roles(Role.CUSTOMER)
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<CustomerEntity> {
     return this.customersService.findOne(+id);
-  }
-
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.CUSTOMER)
-  @Get('profile')
-  async getProfile(@Request() req): Promise<CustomerEntity> {
-    const customerId = req.user.customer_id;
-    return this.customersService.findOne(customerId);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

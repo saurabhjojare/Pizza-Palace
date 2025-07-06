@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Pizza } from "../Pizza/GetPizza";
+import { Pizza } from "../pizza/GetPizza";
 import { useNavigate } from "react-router-dom";
+import { Roles } from "../enums/Roles";
 
 interface OrderLine {
   orderline_id: number;
@@ -9,7 +10,6 @@ interface OrderLine {
   pizza_id: number;
   size: string;
   quantity: number;
-  total_amount: number;
 }
 
 interface Order {
@@ -30,7 +30,6 @@ const GetOrders: React.FC = () => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
-  // Role-based access control using base64-decoded JWT
   useEffect(() => {
     if (!token) {
       navigate("/");
@@ -43,7 +42,7 @@ const GetOrders: React.FC = () => {
       const payload = JSON.parse(atob(base64));
       const role = payload.role;
 
-      if (role !== "admin") {
+      if (role !== Roles.ADMIN) {
         navigate("/");
       }
     } catch (e) {
@@ -140,7 +139,7 @@ const GetOrders: React.FC = () => {
           <thead>
             <tr>
               <th>#</th>
-              <th>Name</th>
+              <th>Items</th>
               <th>Total Amount</th>
               <th>Order Time</th>
               <th>Address</th>
@@ -156,7 +155,7 @@ const GetOrders: React.FC = () => {
                   <td>
                     {order.orderLines.map((line) => (
                       <div key={line.orderline_id}>
-                        {pizzas.get(line.pizza_id)}
+                        {pizzas.get(line.pizza_id) || " - "}
                         <br />
                         Size: {line.size}
                         <br />
@@ -164,7 +163,7 @@ const GetOrders: React.FC = () => {
                       </div>
                     ))}
                   </td>
-                  <td>${order.total_amount}</td>
+                  <td>₹{order.total_amount}</td>
                   <td>
                     <div>Date: {date}</div>
                     <div>Time: {time}</div>

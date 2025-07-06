@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
-import FetchPizza from "../components/Pizza/FetchPizza";
-import GetPizza from "../components/Pizza/GetPizza";
+import FetchPizza from "../components/pizza/FetchPizza";
+import GetPizza from "../components/pizza/GetPizza";
 
 const PizzaPage: React.FC = () => {
   const location = useLocation();

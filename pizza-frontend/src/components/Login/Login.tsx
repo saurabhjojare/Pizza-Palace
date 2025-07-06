@@ -1,7 +1,7 @@
-// src/pages/Login.tsx
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import { Roles } from "../enums/Roles";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -9,7 +9,10 @@ const Login: React.FC = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // Redirect user if already logged in
+  useEffect(() => {
+    document.title = "Login";
+  }, []);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -19,13 +22,12 @@ const Login: React.FC = () => {
         const payload = JSON.parse(atob(base64));
         const role = payload.role;
 
-        if (role === "admin") {
+        if (role === Roles.ADMIN) {
           navigate("/admin");
-        } else if (role === "customer") {
+        } else if (role === Roles.CUSTOMER) {
           navigate("/home");
         }
       } catch (err) {
-        // Invalid token; ignore and stay on login
         console.error("Failed to decode token:", err);
       }
     }
@@ -59,9 +61,9 @@ const Login: React.FC = () => {
       const role = payload.role;
       console.log("User role:", role);
 
-      if (role === "admin") {
+      if (role === Roles.ADMIN) {
         navigate("/admin");
-      } else if (role === "customer") {
+      } else if (role === Roles.CUSTOMER) {
         navigate("/home");
       } else {
         navigate("/");
@@ -102,6 +104,15 @@ const Login: React.FC = () => {
         <button type="submit" className="btn btn-light w-100">
           Login
         </button>
+
+        <div className="text-center mt-3">
+          <small>
+            Don't have an account?{" "}
+            <Link to="/signup" className="text-decoration-none">
+              Sign Up
+            </Link>
+          </small>
+        </div>
       </form>
     </div>
   );

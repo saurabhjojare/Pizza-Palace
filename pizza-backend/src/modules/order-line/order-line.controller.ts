@@ -24,6 +24,8 @@ import { Role } from 'src/common/enums/Role';
 export class OrderLineController {
   constructor(private readonly orderLineService: OrderLineService) {}
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.CUSTOMER)
   @Post()
   async create(
     @Body() createOrderLineDto: CreateOrderLineDto,
@@ -33,21 +35,21 @@ export class OrderLineController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.CUSTOMER)
+  @Roles(Role.ADMIN)
   @Get()
   async findAll(): Promise<OrderLineEntity[]> {
     return this.orderLineService.findAll();
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.CUSTOMER)
+  @Roles(Role.ADMIN)
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<OrderLineEntity> {
     return this.orderLineService.findOne(+id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.CUSTOMER)
+  @Roles(Role.ADMIN)
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -58,7 +60,7 @@ export class OrderLineController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.CUSTOMER)
+  @Roles(Role.ADMIN)
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
     await this.orderLineService.remove(+id);

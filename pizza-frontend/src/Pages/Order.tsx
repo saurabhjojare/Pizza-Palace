@@ -1,5 +1,5 @@
 import React from "react";
-import GetOrders from "../components/Order/GetOrders";
+import GetOrders from "../components/order/GetOrders";
 
 const OrderPage: React.FC = () => {
   return (

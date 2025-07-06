@@ -1,7 +1,6 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreatePizzaDto {
-
   @IsNotEmpty({ message: 'Pizza name is required' })
   @IsString({ message: 'Pizza name must be a string' })
   name: string;

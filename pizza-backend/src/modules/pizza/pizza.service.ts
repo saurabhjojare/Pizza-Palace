@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { CreatePizzaDto } from './dto/create-pizza.dto';
 import { UpdatePizzaDto } from './dto/update-pizza.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,7 +14,7 @@ export class PizzaService {
   constructor(
     @InjectRepository(PizzaEntity)
     private readonly pizzaRepository: Repository<PizzaEntity>,
-  ) { }
+  ) {}
 
   async create(createPizzaDto: CreatePizzaDto): Promise<PizzaEntity> {
     const pizza = this.pizzaRepository.create(createPizzaDto);
@@ -29,14 +33,17 @@ export class PizzaService {
     return pizza;
   }
 
-  async update(id: number, updatePizzaDto: UpdatePizzaDto): Promise<PizzaEntity> {
-    const pizza = await this.findOne(id); 
+  async update(
+    id: number,
+    updatePizzaDto: UpdatePizzaDto,
+  ): Promise<PizzaEntity> {
+    const pizza = await this.findOne(id);
     await this.pizzaRepository.update(id, updatePizzaDto);
     return this.pizzaRepository.findOneBy({ pizza_id: id });
   }
 
   async remove(id: number): Promise<void> {
-    const pizza = await this.findOne(id); 
+    const pizza = await this.findOne(id);
     await this.pizzaRepository.delete(id);
   }
 }

@@ -4,11 +4,11 @@ import axios from "axios";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import { validationSchema } from "./Validation";
 import "./Pizza.css";
+import { Roles } from "../enums/Roles";
 
 const AddPizza: React.FC = () => {
   const navigate = useNavigate();
 
-  // Role check on mount
   useEffect(() => {
     document.title = "Add Pizza";
 
@@ -24,7 +24,7 @@ const AddPizza: React.FC = () => {
       const payload = JSON.parse(atob(base64));
       const role = payload.role;
 
-      if (role !== "admin") {
+      if (role !== Roles.ADMIN) {
         navigate("/");
       }
     } catch (err) {

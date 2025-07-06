@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Roles } from "../enums/Roles";
 
 export interface Customer {
   customer_id: number;
@@ -18,7 +19,6 @@ const GetCustomers: React.FC = () => {
 
   const token = localStorage.getItem("token");
 
-  // Manual JWT decoding to get the role
   let role: string | null = null;
 
   if (token) {
@@ -33,7 +33,7 @@ const GetCustomers: React.FC = () => {
   }
 
   useEffect(() => {
-    if (role !== "admin") {
+    if (role !== Roles.ADMIN) {
       navigate("/");
     }
   }, [role, navigate]);
@@ -59,7 +59,7 @@ const GetCustomers: React.FC = () => {
       }
     };
 
-    if (role === "admin") {
+    if (role === Roles.ADMIN) {
       fetchCustomers();
     }
   }, [token, role]);

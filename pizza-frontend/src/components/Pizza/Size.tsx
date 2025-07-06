@@ -1,5 +1,5 @@
-import React from 'react';
-import { Pizza } from './GetPizza';
+import React from "react";
+import { Pizza } from "./GetPizza";
 
 interface SizeProps {
   size: string;
@@ -9,11 +9,13 @@ interface SizeProps {
 
 const Size: React.FC<SizeProps> = ({ size, setSize, pizza }) => {
   return (
-    <div className='mb-3'>
-      <label htmlFor={`size-${pizza.pizza_id}`} className='form-label'>Size</label>
+    <div className="mb-3">
+      <label htmlFor={`size-${pizza.pizza_id}`} className="form-label">
+        Size
+      </label>
       <select
         id={`size-${pizza.pizza_id}`}
-        className='form-select'
+        className="form-select"
         value={size}
         onChange={(e) => setSize(e.target.value)}
       >

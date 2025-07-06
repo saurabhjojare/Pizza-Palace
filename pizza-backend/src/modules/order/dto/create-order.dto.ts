@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsNumber, IsBoolean, IsString, ValidateNested, IsArray } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  ValidateNested,
+  IsArray,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { CreateOrderLineDto } from '../../order-line/dto/create-order-line.dto';
 
@@ -11,17 +17,16 @@ export class CreateOrderDto {
   @IsString({ message: 'Delivery address must be a string' })
   delivery_address: string;
 
-  @IsNotEmpty({ message: 'Total amount is required' })
-  @IsNumber({}, { message: 'Total amount must be a number' })
-  total_amount: number;
-
   @IsNotEmpty({ message: 'Status is required' })
-  @IsBoolean({ message: 'Status must be a boolean' })
-  status: boolean;
+  @IsString({ message: 'Status must be a string' }) // changed from boolean
+  status: string;
 
-  @IsNotEmpty({ message: 'Pizza details are required' })
-  @IsArray({ message: 'Pizza must be an array' })
-  @ValidateNested({ each: true, message: 'Each item in pizza must be a valid CreateOrderLineDto' })
+  @IsNotEmpty({ message: 'Order lines are required' })
+  @IsArray({ message: 'Order lines must be an array' })
+  @ValidateNested({
+    each: true,
+    message: 'Each item must be a valid CreateOrderLineDto',
+  })
   @Type(() => CreateOrderLineDto)
-  pizza: CreateOrderLineDto[];
+  orderLines: CreateOrderLineDto[];
 }
