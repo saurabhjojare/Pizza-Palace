@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import { Pizza } from "./GetPizza";
-
-interface AddToCartProps {
-  pizza: Pizza;
-  addToCart: (pizza: Pizza, size: string, quantity: number) => void;
-}
+import { AddToCartProps } from "../../interfaces/Order";
 
 const AddToCart: React.FC<AddToCartProps> = ({ pizza, addToCart }) => {
   const [size, setSize] = useState<string>("regular");

@@ -1,10 +1,5 @@
 import React from "react";
-
-interface QuantityProps {
-  quantity: number;
-  incrementQuantity: () => void;
-  decrementQuantity: () => void;
-}
+import { QuantityProps } from "../../interfaces/Order";
 
 const Quantity: React.FC<QuantityProps> = ({
   quantity,

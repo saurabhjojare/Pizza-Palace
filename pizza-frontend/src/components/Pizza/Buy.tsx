@@ -1,19 +1,8 @@
 import React from "react";
-import axios from "axios";
-
-interface CartItemPayload {
-  pizza_id: number;
-  size: string;
-  quantity: number;
-}
-
-interface BuyProps {
-  customerId: number;
-  deliveryAddress: string;
-  cartItems: CartItemPayload[];
-  clearCart: () => void;
-  totalAmount: number;
-}
+import { BuyProps } from "../../interfaces/Order";
+import { placeOrder } from "../../services/OrderService";
+import { Messages } from "../enums/Messages";
+import { Constants } from "../enums/Constants";
 
 const Buy: React.FC<BuyProps> = ({
   customerId,
@@ -22,39 +11,30 @@ const Buy: React.FC<BuyProps> = ({
   clearCart,
   totalAmount,
 }) => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem(Constants.TOKEN.toLowerCase());
 
   const handleBuy = async () => {
     if (!token) {
-      alert("Authentication token missing. Please login again.");
+      alert(Messages.AUTH_TOKEN_MISSING);
       return;
     }
 
     try {
-      const payload = {
-        customer_id: customerId,
-        delivery_address: deliveryAddress,
-        status: "pending",
-        orderLines: cartItems.map(({ pizza_id, size, quantity }) => ({
-          pizza_id,
-          size,
-          quantity,
-        })),
-      };
-
-      console.log("Sending order:", payload);
-
-      await axios.post("http://localhost:5000/api/v1/orders", payload, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
+      console.log(Messages.SENDING_ORDER, {
+        customerId,
+        deliveryAddress,
+        cartItems,
       });
 
-      alert("Order placed successfully!");
+      await placeOrder(token, customerId, deliveryAddress, cartItems);
+
+      alert(Messages.ORDER_PLACED_SUCCESSFULLY);
       clearCart();
     } catch (error: any) {
-      console.error("Buy Error:", error?.response?.data || error.message);
+      console.error(
+        Messages.ERROR_WHILE_BUYING,
+        error?.response?.data || error.message
+      );
       alert(
         `Failed to place order: ${
           error?.response?.data?.message || error.message

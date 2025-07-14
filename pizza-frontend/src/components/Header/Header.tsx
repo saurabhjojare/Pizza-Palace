@@ -1,6 +1,8 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import "./header.css";
+import { getToken } from "../../utils/Auth";
+import "./Header.css";
+import { Paths } from "../enums/Paths";
 
 const Header: React.FC = () => {
   const location = useLocation();
@@ -8,40 +10,41 @@ const Header: React.FC = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/");
+    navigate(Paths.ROOT);
   };
 
   const showLogoutRoutes = [
-    "/pizza",
-    "/add-pizza",
-    "/order",
-    "/customer",
-    "/home",
+    Paths.PIZZA,
+    Paths.ADD_PIZZA,
+    Paths.ORDER,
+    Paths.CUSTOMER,
+    Paths.HOME,
   ];
 
   const showLogout =
-    showLogoutRoutes.includes(location.pathname) ||
-    location.pathname.startsWith("/update-pizza/");
+    getToken() !== null &&
+    (showLogoutRoutes.includes(location.pathname as Paths) ||
+      location.pathname.startsWith("/update-pizza/"));
 
   return (
-    <header className="header d-flex justify-content-between align-items-center px-3 py-2 bg-dark">
+    <header className="header d-flex justify-content-between align-items-center px-3 py-3 bg-dark">
       <Link to="/home" className="text-decoration-none text-white">
-        <h2 className="fw-light mb-0">Pizza Palace</h2>
+        <h2 className="fw-light mb-0 fs-4">Pizza Palace</h2>
       </Link>
 
       <div className="d-flex align-items-center">
-        {location.pathname === "/pizza" && (
+        {location.pathname === Paths.PIZZA && (
           <Link to="/add-pizza" className="btn text-white me-2">
             Add Pizza
           </Link>
         )}
 
-        {location.pathname === "/add-pizza" ||
-        location.pathname.startsWith("/update-pizza/") ? (
+        {(location.pathname === Paths.ADD_PIZZA ||
+          location.pathname.startsWith("/update-pizza/")) && (
           <Link to="/pizza" className="btn text-white me-2">
             Back
           </Link>
-        ) : null}
+        )}
 
         {showLogout && (
           <button className="btn text-white me-2" onClick={handleLogout}>

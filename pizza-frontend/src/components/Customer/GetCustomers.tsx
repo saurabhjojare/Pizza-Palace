@@ -1,84 +1,54 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Customer } from "../../interfaces/Customer";
 import { Roles } from "../enums/Roles";
-
-export interface Customer {
-  customer_id: number;
-  first_name: string;
-  last_name: string;
-  address: string;
-  phone_number: string;
-  email_address: string;
-}
+import { getToken, getUserRoleFromToken } from "../../utils/Auth";
+import { getAllCustomers } from "../../services/CustomerService";
+import { deleteCustomer } from "../../services/CustomerService";
+import CustomerList from "./CustomerList";
+import { Messages } from "../enums/Messages";
+import { Constants } from "../enums/Constants";
+import { Paths } from "../enums/Paths";
 
 const GetCustomers: React.FC = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const token = localStorage.getItem("token");
-
-  let role: string | null = null;
-
-  if (token) {
-    try {
-      const base64Url = token.split(".")[1];
-      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      const payload = JSON.parse(atob(base64));
-      role = payload.role;
-    } catch (err) {
-      role = null;
-    }
-  }
+  const token = getToken();
+  const role = getUserRoleFromToken();
 
   useEffect(() => {
-    if (role !== Roles.ADMIN) {
-      navigate("/");
+    if (!token || role !== Roles.ADMIN) {
+      navigate(Paths.ROOT);
     }
-  }, [role, navigate]);
+  }, [token, role, navigate]);
 
   useEffect(() => {
-    document.title = "Customer's";
+    document.title = Constants.CUSTOMER;
   }, []);
 
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/api/v1/customers",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setCustomers(response.data.Data);
-      } catch (err) {
-        setError("Failed to fetch customer");
+        const customerData = await getAllCustomers(token!);
+        setCustomers(customerData);
+      } catch {
+        setError(Messages.FAILED_TO_FETCH_CUSTOMER);
       }
     };
 
-    if (role === Roles.ADMIN) {
+    if (token && role === Roles.ADMIN) {
       fetchCustomers();
     }
   }, [token, role]);
 
   const handleDelete = async (customerId: number) => {
     try {
-      await axios.delete(
-        `http://localhost:5000/api/v1/customers/${customerId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setCustomers(
-        customers.filter((customer) => customer.customer_id !== customerId)
-      );
-    } catch (err) {
-      setError("Failed to delete customer");
+      await deleteCustomer(customerId, token!);
+      setCustomers((prev) => prev.filter((c) => c.customer_id !== customerId));
+    } catch {
+      setError(Messages.FAILED_TO_DELETE_CUSTOMER);
     }
   };
 
@@ -90,48 +60,7 @@ const GetCustomers: React.FC = () => {
     );
   }
 
-  return (
-    <div className="container mt-3">
-      <h3 className="text-center mb-4">Customer List</h3>
-      <div className="table-responsive">
-        <table className="table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Address</th>
-              <th>Contact</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {customers.map((customer) => (
-              <tr key={customer.customer_id}>
-                <td>{customer.customer_id}</td>
-                <td>
-                  {customer.first_name} {customer.last_name}
-                </td>
-                <td>{customer.address}</td>
-                <td>
-                  Phone: {customer.phone_number}
-                  <br />
-                  Email: {customer.email_address}
-                </td>
-                <td>
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => handleDelete(customer.customer_id)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
+  return <CustomerList customers={customers} onDelete={handleDelete} />;
 };
 
 export default GetCustomers;

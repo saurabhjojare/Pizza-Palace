@@ -1,20 +1,6 @@
 import React from "react";
 import Buy from "./Buy";
-import { Pizza } from "./GetPizza";
-
-export interface CartItem {
-  pizza: Pizza;
-  size: string;
-  quantity: number;
-}
-
-interface CartProps {
-  cartItems: CartItem[];
-  removeFromCart: (index: number) => void;
-  updateQuantity: (index: number, newQuantity: number) => void;
-  clearCart: () => void;
-  customerId: number;
-}
+import { CartProps } from "../../interfaces/Order";
 
 const Cart: React.FC<CartProps> = ({
   cartItems,

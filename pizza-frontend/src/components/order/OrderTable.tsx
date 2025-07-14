@@ -1,112 +1,76 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { Pizza } from "../pizza/GetPizza";
 import { useNavigate } from "react-router-dom";
+import { Order } from "../../interfaces/Order";
+import { fetchOrders, cancelOrder } from "../../services/OrderService";
+import { fetchPizzas } from "../../services/PizzaService";
+import { getToken, getUserRoleFromToken } from "../../utils/Auth";
+import { Constants } from "../enums/Constants";
+import { Messages } from "../enums/Messages";
+import { Paths } from "../enums/Paths";
 import { Roles } from "../enums/Roles";
 
-interface OrderLine {
-  orderline_id: number;
-  order_id: number;
-  pizza_id: number;
-  size: string;
-  quantity: number;
-}
-
-interface Order {
-  order_id: number;
-  status: boolean;
-  total_amount: string;
-  order_time: string;
-  customer_id: number;
-  delivery_address: string;
-  orderLines: OrderLine[];
-}
-
-const GetOrders: React.FC = () => {
+const OrderTable: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [pizzas, setPizzas] = useState<Map<number, string>>(new Map());
   const [error, setError] = useState<string | null>(null);
 
-  const token = localStorage.getItem("token");
+  const token = getToken();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!token) {
-      navigate("/");
+      navigate(Paths.ROOT);
       return;
     }
 
-    try {
-      const base64Url = token.split(".")[1];
-      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      const payload = JSON.parse(atob(base64));
-      const role = payload.role;
-
-      if (role !== Roles.ADMIN) {
-        navigate("/");
-      }
-    } catch (e) {
-      navigate("/");
+    const role = getUserRoleFromToken();
+    if (role !== Roles.ADMIN) {
+      navigate(Paths.ROOT);
     }
   }, [navigate, token]);
 
   useEffect(() => {
-    document.title = "Order's";
+    document.title = Constants.ORDER;
   }, []);
 
   useEffect(() => {
-    const fetchOrdersAndPizzas = async () => {
-      try {
-        const ordersResponse = await axios.get(
-          "http://localhost:5000/api/v1/orders",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setOrders(ordersResponse.data.Data);
+    const loadOrdersAndPizzas = async () => {
+      if (!token) return;
 
-        const pizzasResponse = await axios.get(
-          "http://localhost:5000/api/v1/pizzas",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const pizzaData: Pizza[] = pizzasResponse.data.Data;
+      try {
+        const [ordersData, pizzaData] = await Promise.all([
+          fetchOrders(),
+          fetchPizzas(),
+        ]);
+
+        setOrders(ordersData);
 
         const pizzaMap = new Map<number, string>();
-        pizzaData.forEach((pizza: Pizza) => {
+        pizzaData.forEach((pizza: { pizza_id: number; name: string }) => {
           pizzaMap.set(pizza.pizza_id, pizza.name);
         });
+
         setPizzas(pizzaMap);
-      } catch (err) {
-        setError("Failed to fetch orders");
+      } catch {
+        setError(Messages.FAILED_TO_FETCH_ORDERS);
       }
     };
-    fetchOrdersAndPizzas();
+
+    loadOrdersAndPizzas();
   }, [token]);
 
   const handleCancel = async (orderId: number) => {
+    if (!token) return;
+
     try {
-      await axios.patch(
-        `http://localhost:5000/api/v1/orders/${orderId}`,
-        { status: false },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setOrders(
-        orders.map((order) =>
+      await cancelOrder(token, orderId);
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
           order.order_id === orderId ? { ...order, status: false } : order
         )
       );
-    } catch (err) {
-      setError("Failed to cancel order");
+    } catch {
+      setError(Messages.FAILED_TO_CANCEL_ORDER);
     }
   };
 
@@ -121,19 +85,12 @@ const GetOrders: React.FC = () => {
     };
   };
 
-  if (error) {
-    return (
-      <div className="text-center" role="alert">
-        {error}
-      </div>
-    );
-  }
-
   const reversedOrders = [...orders].reverse();
 
   return (
     <div className="container mt-3">
       <h3 className="text-center mb-4">Order List</h3>
+      {error && <div className="alert alert-danger">{error}</div>}
       <div className="table-responsive">
         <table className="table">
           <thead>
@@ -191,4 +148,4 @@ const GetOrders: React.FC = () => {
   );
 };
 
-export default GetOrders;
+export default OrderTable;

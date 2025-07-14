@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { Roles } from "../enums/Roles";
+import { getToken, getUserRoleFromToken, saveToken } from "../../utils/Auth";
+import LoginForm from "./LoginForm";
+import { loginUser } from "../../services/AuthService";
+import { Paths } from "../enums/Paths";
+import { Constants } from "../enums/Constants";
+import { Messages } from "../enums/Messages";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -10,25 +15,16 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    document.title = "Login";
-  }, []);
+    document.title = Constants.LOGIN;
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const base64Url = token.split(".")[1];
-        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-        const payload = JSON.parse(atob(base64));
-        const role = payload.role;
+    const token = getToken();
+    const role = getUserRoleFromToken();
 
-        if (role === Roles.ADMIN) {
-          navigate("/admin");
-        } else if (role === Roles.CUSTOMER) {
-          navigate("/home");
-        }
-      } catch (err) {
-        console.error("Failed to decode token:", err);
+    if (token && role) {
+      if (role === Roles.ADMIN) {
+        navigate(Paths.ADMIN);
+      } else if (role === Roles.CUSTOMER) {
+        navigate(Paths.HOME);
       }
     }
   }, [navigate]);
@@ -38,83 +34,32 @@ const Login: React.FC = () => {
     setError("");
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/v1/auth/login",
-        {
-          email: email.trim(),
-          password: password.trim(),
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const token = await loginUser(email, password);
+      saveToken(token);
 
-      const token = response.data.Data.access_token;
-      localStorage.setItem("token", token);
-
-      const base64Url = token.split(".")[1];
-      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      const payload = JSON.parse(atob(base64));
-
-      const role = payload.role;
-      console.log("User role:", role);
+      const role = getUserRoleFromToken();
 
       if (role === Roles.ADMIN) {
-        navigate("/admin");
+        navigate(Paths.ADMIN);
       } else if (role === Roles.CUSTOMER) {
-        navigate("/home");
+        navigate(Paths.HOME);
       } else {
-        navigate("/");
+        navigate(Paths.ROOT);
       }
-    } catch (err: any) {
-      setError("Invalid email or password");
+    } catch {
+      setError(Messages.INVALID_EMAIL_OR_PASSWORD);
     }
   };
 
   return (
-    <div className="container mt-5" style={{ maxWidth: 500 }}>
-      <h2 className="mb-4 text-center pt-5">Login</h2>
-      <form onSubmit={handleLogin}>
-        {error && <div className="alert alert-danger">{error}</div>}
-
-        <div className="mb-3">
-          <label className="form-label">Email address</label>
-          <input
-            type="email"
-            className="form-control"
-            value={email}
-            required
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label">Password</label>
-          <input
-            type="password"
-            className="form-control"
-            value={password}
-            required
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-
-        <button type="submit" className="btn btn-light w-100">
-          Login
-        </button>
-
-        <div className="text-center mt-3">
-          <small>
-            Don't have an account?{" "}
-            <Link to="/signup" className="text-decoration-none">
-              Sign Up
-            </Link>
-          </small>
-        </div>
-      </form>
-    </div>
+    <LoginForm
+      email={email}
+      password={password}
+      onEmailChange={setEmail}
+      onPasswordChange={setPassword}
+      onSubmit={handleLogin}
+      error={error}
+    />
   );
 };
 

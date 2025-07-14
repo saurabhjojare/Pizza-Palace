@@ -1,22 +1,22 @@
 .footer {
-    background-color: #000;
-    color: #fff;
-    padding: 0px;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    text-align: center;
-    z-index: 1000;
-    border-top-left-radius: 25px;
-    border-top-right-radius: 25px;
+  color: #fff;
+  padding: 0px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 1000;
+  background: #536976;
+  background: -webkit-linear-gradient(to right, #292e49, #536976);
+  background: linear-gradient(to right, #292e49, #536976);
 }
 
 .footer a {
-    color: #ffc107;
-    text-decoration: none;
-    margin: 0 5px;
+  color: #ffc107;
+  text-decoration: none;
+  margin: 0 5px;
 }
 
 .footer a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }

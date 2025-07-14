@@ -1,13 +1,14 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import { Paths } from "../enums/Paths";
 
 const Navbar: React.FC = () => {
   const location = useLocation();
 
-  const adminPaths = ["/pizza", "/order", "/customer"];
-  const isAdminPage = adminPaths.includes(location.pathname);
+  const adminPaths = [Paths.PIZZA, Paths.ORDER, Paths.CUSTOMER];
+  const isAdminPage = adminPaths.includes(location.pathname as Paths);
 
-  const isAddPizzaPage = location.pathname === "/add-pizza";
+  const isAddPizzaPage = location.pathname === Paths.ADD_PIZZA;
 
   return (
     <div className="container-fluid container-with-navbar">
@@ -22,7 +23,7 @@ const Navbar: React.FC = () => {
                   }`}
                   to="/pizza"
                 >
-                  Pizza's
+                  Pizza List
                 </Link>
               </li>
               <li className="nav-item">
@@ -32,7 +33,7 @@ const Navbar: React.FC = () => {
                   }`}
                   to="/customer"
                 >
-                  Customer's
+                  Customer List
                 </Link>
               </li>
               <li className="nav-item">
@@ -42,7 +43,7 @@ const Navbar: React.FC = () => {
                   }`}
                   to="/order"
                 >
-                  Order's
+                  Order List
                 </Link>
               </li>
             </>

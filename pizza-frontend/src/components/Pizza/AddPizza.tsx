@@ -1,48 +1,25 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import { validationSchema } from "./Validation";
 import "./Pizza.css";
-import { Roles } from "../enums/Roles";
+import { Constants } from "../enums/Constants";
+import { addPizza } from "../../services/PizzaService";
+import { useAdminAuth } from "../../utils/Auth";
+import { Messages } from "../enums/Messages";
 
 const AddPizza: React.FC = () => {
-  const navigate = useNavigate();
+  useAdminAuth();
 
   useEffect(() => {
-    document.title = "Add Pizza";
-
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/");
-      return;
-    }
-
-    try {
-      const base64Url = token.split(".")[1];
-      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      const payload = JSON.parse(atob(base64));
-      const role = payload.role;
-
-      if (role !== Roles.ADMIN) {
-        navigate("/");
-      }
-    } catch (err) {
-      navigate("/");
-    }
-  }, [navigate]);
+    document.title = Constants.ADD_PIZZA;
+  }, []);
 
   const handleSubmit = async (values: any) => {
     try {
-      const token = localStorage.getItem("token");
-      await axios.post("http://localhost:5000/api/v1/pizzas", values, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      alert("Pizza added successfully!");
+      await addPizza(values);
+      alert(Messages.PIZZA_ADDED_SUCCESSFULLY);
     } catch (err) {
-      alert("Failed to add pizza");
+      alert(Messages.FAILED_TO_ADD_PIZZA);
     }
   };
 

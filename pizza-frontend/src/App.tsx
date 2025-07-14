@@ -11,7 +11,7 @@ import AdminPage from "./pages/Admin";
 import UpdatePizza from "./components/pizza/UpdatePizza";
 import AddPizza from "./components/pizza/AddPizza";
 import Login from "./components/login/Login";
-import SignUpPage from "./pages/Signup";
+import SignUpPage from "./pages/SignUp";
 
 const App: React.FC = () => {
   return (
@@ -22,7 +22,7 @@ const App: React.FC = () => {
         <div className="content">
           <Routes>
             <Route path="/" element={<Login />}></Route>
-            <Route path="/signup" element={<SignUpPage />}></Route>
+            <Route path="/sign-up" element={<SignUpPage />}></Route>
             <Route path="/home" element={<PizzaPage />}></Route>
 
             <Route path="/admin" element={<AdminPage />}></Route>

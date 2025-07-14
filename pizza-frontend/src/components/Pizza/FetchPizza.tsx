@@ -1,71 +1,45 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { Pizza } from "../pizza/GetPizza";
 import { useNavigate } from "react-router-dom";
-import { Roles } from "../enums/Roles";
+import { fetchPizzas, deletePizza } from "../../services/PizzaService";
+import { useAdminAuth } from "../../utils/Auth";
+import { Pizza } from "../../interfaces/Order";
 
 const FetchPizza: React.FC = () => {
   const [pizzas, setPizzas] = useState<Pizza[]>([]);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const token = localStorage.getItem("token");
-
-  let role: string | null = null;
-  if (token) {
-    try {
-      const base64Url = token.split(".")[1];
-      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      const payload = JSON.parse(atob(base64));
-      role = payload.role;
-    } catch (e) {
-      role = null;
-    }
-  }
+  useAdminAuth();
 
   useEffect(() => {
-    if (role !== Roles.ADMIN) {
-      navigate("/");
-    }
-  }, [role, navigate]);
-
-  useEffect(() => {
-    document.title = "Pizza's";
+    document.title = "Pizzas";
   }, []);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/v1/pizzas", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setPizzas(response.data.Data);
-      })
-      .catch(() => {
+    const loadPizzas = async () => {
+      try {
+        const pizzasData = await fetchPizzas();
+        setPizzas(pizzasData);
+      } catch {
         setError("Failed to fetch pizza");
-      });
-  }, [token]);
+      }
+    };
+
+    loadPizzas();
+  }, []);
 
   const handleUpdateClick = (pizzaId: number) => {
-    navigate(`/update-pizza/${pizzaId.toString()}`);
+    navigate(`/update-pizza/${pizzaId}`);
   };
 
-  const handleDeleteClick = (pizzaId: number) => {
+  const handleDeleteClick = async (pizzaId: number) => {
     if (window.confirm("Are you sure you want to delete this pizza?")) {
-      axios
-        .delete(`http://localhost:5000/api/v1/pizzas/${pizzaId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then(() => {
-          setPizzas(pizzas.filter((pizza) => pizza.pizza_id !== pizzaId));
-        })
-        .catch(() => {
-          setError("Failed to delete pizza");
-        });
+      try {
+        await deletePizza(pizzaId);
+        setPizzas(pizzas.filter((pizza) => pizza.pizza_id !== pizzaId));
+      } catch {
+        setError("Failed to delete pizza");
+      }
     }
   };
 

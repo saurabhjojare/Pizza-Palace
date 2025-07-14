@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import { validationSchema } from "./Validation";
 import "./Pizza.css";
+import { useAdminAuth } from "../../utils/Auth";
+import { getPizzaById, updatePizza } from "../../services/PizzaService";
 
 const UpdatePizza: React.FC = () => {
   const { pizzaId } = useParams<{ pizzaId: string }>();
   const navigate = useNavigate();
+
+  useAdminAuth();
 
   const [initialValues, setInitialValues] = useState({
     name: "",
@@ -18,30 +21,9 @@ const UpdatePizza: React.FC = () => {
     mediumPrice: "",
     largePrice: "",
   });
+
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-
-  // Role check using JWT
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/");
-      return;
-    }
-
-    try {
-      const base64Url = token.split(".")[1];
-      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      const payload = JSON.parse(atob(base64));
-      const role = payload.role;
-
-      if (role !== "admin") {
-        navigate("/");
-      }
-    } catch (e) {
-      navigate("/");
-    }
-  }, [navigate]);
 
   useEffect(() => {
     document.title = "Update Pizza";
@@ -50,18 +32,9 @@ const UpdatePizza: React.FC = () => {
   useEffect(() => {
     if (!pizzaId) return;
 
-    const fetchPizza = async () => {
+    const fetchData = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get(
-          `http://localhost:5000/api/v1/pizzas/${pizzaId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const pizza = response.data.Data;
+        const pizza = await getPizzaById(pizzaId);
         setInitialValues({
           name: pizza.name || "",
           type: pizza.type || "Vegetarian",
@@ -76,7 +49,7 @@ const UpdatePizza: React.FC = () => {
       }
     };
 
-    fetchPizza();
+    fetchData();
   }, [pizzaId]);
 
   return (
@@ -86,30 +59,20 @@ const UpdatePizza: React.FC = () => {
           <h3 className="mb-2 text-center">Update Pizza</h3>
           {error && <div className="alert alert-danger">{error}</div>}
           {success && <div className="alert alert-success">{success}</div>}
+
           <Formik
-            enableReinitialize={true}
+            enableReinitialize
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
               try {
-                const token = localStorage.getItem("token");
-                const response = await axios.patch(
-                  `http://localhost:5000/api/v1/pizzas/${pizzaId}`,
-                  values,
-                  {
-                    headers: {
-                      Authorization: `Bearer ${token}`,
-                    },
-                  }
-                );
-                if (response.data.Success) {
+                const response = await updatePizza(pizzaId!, values);
+                if (response.Success) {
                   setSuccess("Pizza updated successfully!");
                   setError(null);
                   navigate("/pizza");
                 } else {
-                  throw new Error(
-                    response.data.Message || "Failed to update pizza"
-                  );
+                  throw new Error(response.Message || "Failed to update pizza");
                 }
               } catch (err) {
                 setError("Failed to update pizza");
@@ -119,20 +82,29 @@ const UpdatePizza: React.FC = () => {
           >
             {() => (
               <Form className="needs-validation" noValidate>
-                <div className="form-group mb-2">
-                  <label htmlFor="name">Name</label>
-                  <Field
-                    type="text"
-                    id="name"
-                    name="name"
-                    className="form-control"
-                  />
-                  <ErrorMessage
-                    name="name"
-                    component="div"
-                    className="mt-2 text-danger"
-                  />
-                </div>
+                {[
+                  { id: "name", label: "Name", type: "text" },
+                  { id: "imageUrl", label: "Image URL", type: "text" },
+                  { id: "regularPrice", label: "Regular Price", type: "text" },
+                  { id: "mediumPrice", label: "Medium Price", type: "text" },
+                  { id: "largePrice", label: "Large Price", type: "text" },
+                ].map(({ id, label, type }) => (
+                  <div className="form-group mb-2" key={id}>
+                    <label htmlFor={id}>{label}</label>
+                    <Field
+                      type={type}
+                      id={id}
+                      name={id}
+                      className="form-control"
+                    />
+                    <ErrorMessage
+                      name={id}
+                      component="div"
+                      className="mt-2 text-danger"
+                    />
+                  </div>
+                ))}
+
                 <div className="form-group mb-2">
                   <label htmlFor="type">Type</label>
                   <Field
@@ -150,20 +122,7 @@ const UpdatePizza: React.FC = () => {
                     className="mt-2 text-danger"
                   />
                 </div>
-                <div className="form-group mb-2">
-                  <label htmlFor="imageUrl">Image URL</label>
-                  <Field
-                    type="text"
-                    id="imageUrl"
-                    name="imageUrl"
-                    className="form-control"
-                  />
-                  <ErrorMessage
-                    name="imageUrl"
-                    component="div"
-                    className="mt-2 text-danger"
-                  />
-                </div>
+
                 <div className="form-group mb-2">
                   <label htmlFor="description">Description</label>
                   <Field
@@ -179,48 +138,7 @@ const UpdatePizza: React.FC = () => {
                     className="mt-2 text-danger"
                   />
                 </div>
-                <div className="form-group mb-2">
-                  <label htmlFor="regularPrice">Regular Price</label>
-                  <Field
-                    type="text"
-                    id="regularPrice"
-                    name="regularPrice"
-                    className="form-control"
-                  />
-                  <ErrorMessage
-                    name="regularPrice"
-                    component="div"
-                    className="mt-2 text-danger"
-                  />
-                </div>
-                <div className="form-group mb-2">
-                  <label htmlFor="mediumPrice">Medium Price</label>
-                  <Field
-                    type="text"
-                    id="mediumPrice"
-                    name="mediumPrice"
-                    className="form-control"
-                  />
-                  <ErrorMessage
-                    name="mediumPrice"
-                    component="div"
-                    className="mt-2 text-danger"
-                  />
-                </div>
-                <div className="form-group mb-2">
-                  <label htmlFor="largePrice">Large Price</label>
-                  <Field
-                    type="text"
-                    id="largePrice"
-                    name="largePrice"
-                    className="form-control"
-                  />
-                  <ErrorMessage
-                    name="largePrice"
-                    component="div"
-                    className="mt-2 text-danger"
-                  />
-                </div>
+
                 <div className="text-center">
                   <button type="submit" className="btn btn-primary">
                     Update
