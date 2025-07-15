@@ -107,6 +107,22 @@ export class OrdersService {
     return this.orderRepository.find({ relations: ['orderLines'] });
   }
 
+  async getOrdersByCustomerId(customerId: number): Promise<OrderEntity[]> {
+    const orders = await this.orderRepository.find({
+      where: { customer_id: customerId },
+      relations: ['orderLines'],
+      order: { order_time: 'DESC' }, // Optional: Sort by latest orders
+    });
+
+    if (!orders || orders.length === 0) {
+      throw new NotFoundException(
+        `No orders found for customer ID ${customerId}`,
+      );
+    }
+
+    return orders;
+  }
+
   async findOne(id: number): Promise<OrderEntity> {
     const order = await this.orderRepository.findOne({
       where: { order_id: id },

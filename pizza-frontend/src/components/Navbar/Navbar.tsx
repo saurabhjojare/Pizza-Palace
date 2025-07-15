@@ -5,7 +5,12 @@ import { Paths } from "../enums/Paths";
 const Navbar: React.FC = () => {
   const location = useLocation();
 
-  const adminPaths = [Paths.PIZZA, Paths.ORDER, Paths.CUSTOMER];
+  const adminPaths = [
+    Paths.PIZZA_LIST,
+    Paths.ORDER,
+    Paths.CUSTOMER,
+    Paths.ADMIN,
+  ];
   const isAdminPage = adminPaths.includes(location.pathname as Paths);
 
   const isAddPizzaPage = location.pathname === Paths.ADD_PIZZA;
@@ -13,15 +18,15 @@ const Navbar: React.FC = () => {
   return (
     <div className="container-fluid container-with-navbar">
       <div className="navbar d-flex justify-content-center mt-4">
-        <ul className="nav nav-pills">
+        <ul className="nav nav-pills ">
           {isAdminPage && !isAddPizzaPage && (
             <>
               <li className="nav-item">
                 <Link
                   className={`nav-link ${
-                    location.pathname === "/pizza" ? "active" : ""
+                    location.pathname === "/pizza-list" ? "active" : ""
                   }`}
-                  to="/pizza"
+                  to="/pizza-list"
                 >
                   Pizza List
                 </Link>
@@ -34,6 +39,16 @@ const Navbar: React.FC = () => {
                   to="/customer"
                 >
                   Customer List
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link
+                  className={`nav-link ${
+                    location.pathname === "/admin" ? "active" : ""
+                  }`}
+                  to="/admin"
+                >
+                  Admin List
                 </Link>
               </li>
               <li className="nav-item">

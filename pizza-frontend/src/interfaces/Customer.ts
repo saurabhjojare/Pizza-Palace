@@ -10,4 +10,5 @@ export interface Customer {
 export interface CustomerListProps {
   customers: Customer[];
   onDelete: (customerId: number) => void;
+  title?: string;
 }

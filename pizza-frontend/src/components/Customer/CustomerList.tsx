@@ -1,10 +1,14 @@
 import React from "react";
 import { CustomerListProps } from "../../interfaces/Customer";
 
-const CustomerList: React.FC<CustomerListProps> = ({ customers, onDelete }) => {
+const CustomerList: React.FC<CustomerListProps> = ({
+  customers,
+  onDelete,
+  title,
+}) => {
   return (
     <div className="container mt-3">
-      <h3 className="text-center mb-4">Customer List</h3>
+      {/* <h3 className="text-center mb-4">{title}</h3> */}
       <div className="table-responsive">
         <table className="table">
           <thead>

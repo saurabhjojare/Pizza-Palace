@@ -32,7 +32,7 @@ export const SignUp = () => {
 
   useEffect(() => {
     const role = getUserRoleFromToken();
-    if (role === Roles.ADMIN) navigate(Paths.ADMIN);
+    if (role === Roles.ADMIN) navigate(Paths.PIZZA_LIST);
     else if (role === Roles.CUSTOMER) navigate(Paths.HOME);
   }, [navigate]);
 

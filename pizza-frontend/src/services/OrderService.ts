@@ -49,3 +49,18 @@ export const placeOrder = async (
     },
   });
 };
+
+export const fetchOrdersByCustomerId = async (
+  customerId: number
+): Promise<Order[]> => {
+  const token = getToken();
+  const response = await axios.get(
+    `${API_BASE_URL}/orders/customer/${customerId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data.Data;
+};

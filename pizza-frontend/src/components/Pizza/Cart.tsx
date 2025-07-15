@@ -1,6 +1,8 @@
-import React from "react";
-import Buy from "./Buy";
+import React, { useState } from "react";
 import { CartProps } from "../../interfaces/Order";
+import { placeOrder } from "../../services/OrderService";
+import { Messages } from "../enums/Messages";
+import { Constants } from "../enums/Constants";
 
 const Cart: React.FC<CartProps> = ({
   cartItems,
@@ -9,6 +11,10 @@ const Cart: React.FC<CartProps> = ({
   clearCart,
   customerId,
 }) => {
+  const [showModal, setShowModal] = useState(false);
+  const [address, setAddress] = useState("");
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+
   const handleQuantityChange = (index: number, increment: boolean) => {
     const newQuantity = increment
       ? cartItems[index].quantity + 1
@@ -30,6 +36,57 @@ const Cart: React.FC<CartProps> = ({
     }, 0);
 
   const totalAmount = calculateTotalAmount();
+
+  const handlePlaceOrder = async () => {
+    if (!address.trim()) {
+      alert("Please enter a delivery address");
+      return;
+    }
+
+    const token = localStorage.getItem(Constants.TOKEN.toLowerCase());
+
+    if (!token) {
+      alert(Messages.AUTH_TOKEN_MISSING);
+      return;
+    }
+
+    setIsPlacingOrder(true);
+
+    try {
+      console.log(Messages.SENDING_ORDER, {
+        customerId,
+        deliveryAddress: address,
+        cartItems,
+      });
+
+      await placeOrder(
+        token,
+        customerId,
+        address,
+        cartItems.map((item) => ({
+          pizza_id: item.pizza.pizza_id,
+          size: item.size,
+          quantity: item.quantity,
+        }))
+      );
+
+      clearCart();
+      setShowModal(false);
+      setAddress("");
+    } catch (error: any) {
+      console.error(
+        Messages.ERROR_WHILE_BUYING,
+        error?.response?.data || error.message
+      );
+      alert(
+        `Failed to place order: ${
+          error?.response?.data?.message || error.message
+        }`
+      );
+    } finally {
+      setIsPlacingOrder(false);
+    }
+  };
 
   return cartItems.length > 0 ? (
     <div className="card mt-4 mb-4 cart-box-shadow">
@@ -83,19 +140,63 @@ const Cart: React.FC<CartProps> = ({
         </div>
 
         <div className="text-end mt-3">
-          <Buy
-            customerId={customerId}
-            deliveryAddress="5678 Oak Avenue, CA"
-            cartItems={cartItems.map((item) => ({
-              pizza_id: item.pizza.pizza_id,
-              size: item.size,
-              quantity: item.quantity,
-            }))}
-            totalAmount={totalAmount}
-            clearCart={clearCart}
-          />
+          <button
+            className="btn btn-primary"
+            onClick={() => setShowModal(true)}
+          >
+            Proceed to Checkout
+          </button>
         </div>
       </div>
+
+      {/* Bootstrap Modal */}
+      {showModal && (
+        <div
+          className="modal show fade d-block"
+          tabIndex={-1}
+          role="dialog"
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+        >
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Enter Delivery Address</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowModal(false)}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <textarea
+                  className="form-control"
+                  placeholder="1234 Example Street, City, Zip"
+                  rows={3}
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                ></textarea>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setShowModal(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  disabled={isPlacingOrder}
+                  onClick={handlePlaceOrder}
+                >
+                  {isPlacingOrder ? "Placing..." : "Place Order"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   ) : null;
 };

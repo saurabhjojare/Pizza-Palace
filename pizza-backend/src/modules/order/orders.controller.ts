@@ -42,13 +42,22 @@ export class OrdersController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.CUSTOMER)
+  @Get('customer/:customerId')
+  async getOrdersByCustomerId(
+    @Param('customerId') customerId: string,
+  ): Promise<OrderEntity[]> {
+    return this.ordersService.getOrdersByCustomerId(+customerId);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.CUSTOMER)
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<OrderEntity> {
     return this.ordersService.findOne(+id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.CUSTOMER)
   @Patch(':id')
   async update(
     @Param('id') id: string,

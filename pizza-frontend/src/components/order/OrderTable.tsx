@@ -8,11 +8,14 @@ import { Constants } from "../enums/Constants";
 import { Messages } from "../enums/Messages";
 import { Paths } from "../enums/Paths";
 import { Roles } from "../enums/Roles";
+import { getAllCustomers } from "../../services/CustomerService";
+import { Customer } from "../../interfaces/Customer";
 
 const OrderTable: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [pizzas, setPizzas] = useState<Map<number, string>>(new Map());
   const [error, setError] = useState<string | null>(null);
+  const [customers, setCustomers] = useState<Map<number, Customer>>(new Map());
 
   const token = getToken();
   const navigate = useNavigate();
@@ -38,19 +41,25 @@ const OrderTable: React.FC = () => {
       if (!token) return;
 
       try {
-        const [ordersData, pizzaData] = await Promise.all([
+        const [ordersData, pizzaData, customerData] = await Promise.all([
           fetchOrders(),
           fetchPizzas(),
+          getAllCustomers(token),
         ]);
 
         setOrders(ordersData);
 
         const pizzaMap = new Map<number, string>();
-        pizzaData.forEach((pizza: { pizza_id: number; name: string }) => {
+        pizzaData.forEach((pizza) => {
           pizzaMap.set(pizza.pizza_id, pizza.name);
         });
-
         setPizzas(pizzaMap);
+
+        const customerMap = new Map<number, Customer>();
+        customerData.forEach((customer) => {
+          customerMap.set(customer.customer_id, customer);
+        });
+        setCustomers(customerMap);
       } catch {
         setError(Messages.FAILED_TO_FETCH_ORDERS);
       }
@@ -89,13 +98,14 @@ const OrderTable: React.FC = () => {
 
   return (
     <div className="container mt-3">
-      <h3 className="text-center mb-4">Order List</h3>
+      {/* <h3 className="text-center mb-4">Order List</h3> */}
       {error && <div className="alert alert-danger">{error}</div>}
       <div className="table-responsive">
         <table className="table">
           <thead>
             <tr>
               <th>#</th>
+              <th>Customer</th>
               <th>Items</th>
               <th>Total Amount</th>
               <th>Order Time</th>
@@ -106,9 +116,27 @@ const OrderTable: React.FC = () => {
           <tbody>
             {reversedOrders.map((order) => {
               const { date, time } = formatDate(order.order_time);
+              const customer = customers.get(order.customer_id);
+
               return (
                 <tr key={order.order_id}>
                   <td>{order.order_id}</td>
+                  <td>
+                    {customer ? (
+                      <>
+                        <strong>
+                          {customer.first_name} {customer.last_name}
+                        </strong>
+                        <br />
+                        <small>Email:</small> {customer.email_address}
+                        <br />
+                        <small>Phone:</small> {customer.phone_number}
+                      </>
+                    ) : (
+                      "Unknown"
+                    )}
+                  </td>
+
                   <td>
                     {order.orderLines.map((line) => (
                       <div key={line.orderline_id}>

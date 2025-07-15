@@ -1,5 +1,5 @@
 import React from "react";
-import { SignUp } from "./SignUp"; // importing logic
+import { SignUp } from "./SignUp";
 import { Roles } from "../enums/Roles";
 
 export const SignUpForm: React.FC = () => {
@@ -142,7 +142,7 @@ export const SignUpForm: React.FC = () => {
       <div className="text-center mt-3">
         <small>
           Already have an account?{" "}
-          <a href="/" className="text-decoration-none">
+          <a href="/login" className="text-decoration-none">
             Login
           </a>
         </small>

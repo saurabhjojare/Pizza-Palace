@@ -6,8 +6,12 @@ export enum Paths {
   LOGIN = "/login",
   REGISTER = "/sign-up",
   NOT_FOUND = "/not-found",
+  MY_PROFILE = "/my-profile",
   PIZZA = "/pizza",
+  MY_ORDERS = "/my-orders",
+  PIZZA_LIST = "/pizza-list",
   ADD_PIZZA = "/add-pizza",
   UPDATE_PIZZA = "/update-pizza/:id",
   ORDER = "/order",
+  EMPTY = "",
 }

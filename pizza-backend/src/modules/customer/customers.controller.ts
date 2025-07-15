@@ -8,7 +8,7 @@ import {
   Delete,
   UseInterceptors,
   UseGuards,
-  Request,
+  BadRequestException,
 } from '@nestjs/common';
 import { ResponseInterceptor } from '../../common/interceptors/response.interceptor';
 import { CustomersService } from './customers.service';
@@ -40,10 +40,21 @@ export class CustomersController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.CUSTOMER)
+  @Roles(Role.ADMIN)
+  @Post('by-role')
+  async findByRole(@Body('role') role: string): Promise<CustomerEntity[]> {
+    return this.customersService.findByRole(role);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.CUSTOMER, Role.ADMIN)
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<CustomerEntity> {
-    return this.customersService.findOne(+id);
+    const customerId = parseInt(id, 10);
+    if (isNaN(customerId)) {
+      throw new BadRequestException('Invalid customer ID');
+    }
+    return this.customersService.findOne(customerId);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -61,5 +72,33 @@ export class CustomersController {
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
     return this.customersService.remove(+id);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.CUSTOMER)
+  @Get(':id/full-name')
+  async getCustomerName(
+    @Param('id') id: string,
+  ): Promise<{ fullName: string }> {
+    const customerId = parseInt(id, 10);
+    if (isNaN(customerId)) {
+      throw new BadRequestException('Invalid customer ID');
+    }
+    return this.customersService.getCustomerNameById(customerId);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  @Post('search')
+  async searchCustomers(
+    @Body()
+    searchQuery: {
+      name?: string;
+      address?: string;
+      phone_number?: string;
+      email_address?: string;
+    },
+  ): Promise<CustomerEntity[]> {
+    return this.customersService.searchCustomers(searchQuery);
   }
 }

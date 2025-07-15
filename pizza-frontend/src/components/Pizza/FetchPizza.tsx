@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchPizzas, deletePizza } from "../../services/PizzaService";
-import { useAdminAuth } from "../../utils/Auth";
 import { Pizza } from "../../interfaces/Order";
+import { useAdminAuth } from "../../utils/Auth";
 
 const FetchPizza: React.FC = () => {
   const [pizzas, setPizzas] = useState<Pizza[]>([]);
@@ -46,8 +46,8 @@ const FetchPizza: React.FC = () => {
   if (error) return <p className="text-center">{error}</p>;
 
   return (
-    <div className="container mt-4">
-      <h3 className="mb-4 text-center">Pizza List</h3>
+    <div className="container mt-3">
+      {/* <h3 className="text-center mb-4">Pizza List</h3> */}
       <table className="table">
         <thead>
           <tr>

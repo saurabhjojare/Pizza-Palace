@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePizzaDto } from './dto/create-pizza.dto';
 import { UpdatePizzaDto } from './dto/update-pizza.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -45,5 +41,12 @@ export class PizzaService {
   async remove(id: number): Promise<void> {
     const pizza = await this.findOne(id);
     await this.pizzaRepository.delete(id);
+  }
+
+  async searchByName(name: string): Promise<PizzaEntity[]> {
+    return await this.pizzaRepository
+      .createQueryBuilder('pizza')
+      .where('LOWER(pizza.name) LIKE LOWER(:name)', { name: `%${name}%` })
+      .getMany();
   }
 }

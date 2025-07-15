@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Customer } from "../../interfaces/Customer";
 import { Roles } from "../enums/Roles";
 import { getToken, getUserRoleFromToken } from "../../utils/Auth";
-// ✅ use getCustomersByRole instead of getAllCustomers
 import {
   getCustomersByRole,
   deleteCustomer,
@@ -13,7 +12,7 @@ import { Messages } from "../enums/Messages";
 import { Constants } from "../enums/Constants";
 import { Paths } from "../enums/Paths";
 
-const GetCustomers: React.FC = () => {
+const GetAdmin: React.FC = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -28,17 +27,16 @@ const GetCustomers: React.FC = () => {
   }, [token, role, navigate]);
 
   useEffect(() => {
-    document.title = Constants.CUSTOMER;
+    document.title = Constants.ADMIN_LIST;
   }, []);
 
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        // ✅ fetch only customers by role
-        const customerData = await getCustomersByRole("customer", token!);
+        const customerData = await getCustomersByRole("admin", token!);
         setCustomers(customerData);
       } catch {
-        setError(Messages.FAILED_TO_FETCH_CUSTOMER);
+        setError(Messages.FAILED_TO_FETCH_ADMIN);
       }
     };
 
@@ -52,7 +50,7 @@ const GetCustomers: React.FC = () => {
       await deleteCustomer(customerId, token!);
       setCustomers((prev) => prev.filter((c) => c.customer_id !== customerId));
     } catch {
-      setError(Messages.FAILED_TO_DELETE_CUSTOMER);
+      setError(Messages.FAILED_TO_DELETE_ADMIN);
     }
   };
 
@@ -68,9 +66,9 @@ const GetCustomers: React.FC = () => {
     <CustomerList
       customers={customers}
       onDelete={handleDelete}
-      title="Customer List"
+      title="Admin List"
     />
   );
 };
 
-export default GetCustomers;
+export default GetAdmin;

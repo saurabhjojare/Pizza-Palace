@@ -1,7 +1,9 @@
 export enum Messages {
   INVALID_EMAIL_OR_PASSWORD = "Invalid email or password",
   FAILED_TO_DELETE_CUSTOMER = "Failed to delete customer",
+  FAILED_TO_DELETE_ADMIN = "Failed to delete admin",
   FAILED_TO_FETCH_CUSTOMER = "Failed to fetch customer",
+  FAILED_TO_FETCH_ADMIN = "Failed to fetch admin",
   FAILED_TO_FETCH_ORDERS = "Failed to fetch orders",
   FAILED_TO_FETCH_PIZZAS = "Failed to fetch pizzas",
   FAILED_TO_CANCEL_ORDER = "Failed to cancel order",
