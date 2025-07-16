@@ -7,6 +7,8 @@ import { getToken, getUserIdFromToken } from "../../utils/Auth";
 import { Customer } from "../../interfaces/Customer";
 import { useNavigate } from "react-router-dom";
 import { Constants } from "../enums/Constants";
+import { Paths } from "../enums/Paths";
+import "./UserProfile.css";
 
 const UserProfile: React.FC = () => {
   const [customer, setCustomer] = useState<Customer | null>(null);
@@ -67,7 +69,7 @@ const UserProfile: React.FC = () => {
   };
 
   const handleUpdate = () => {
-    navigate("/update-profile");
+    navigate(Paths.UPDATE_PROFILE);
   };
 
   if (loading) {
@@ -75,18 +77,14 @@ const UserProfile: React.FC = () => {
   }
 
   if (error) {
-    return <div className="alert alert-danger text-center mt-5">{error}</div>;
+    return null;
   }
 
   return (
-    <div className="container d-flex justify-content-center mt-2">
-      <div
-        className="card p-4 shadow"
-        style={{ maxWidth: "450px", width: "100%" }}
-      >
-        <div className="text-center mb-1">
-          <i className="bi bi-person-circle fs-1"></i>
-
+    <div className="container container-with-navbar d-flex justify-content-center">
+      <div className="card p-4 shadow rounded-4 border-0 custom-custom">
+        <div className="text-center mb-3">
+          <i className="bi bi-person-circle fs-1 text-secondary"></i>
           <h3 className="fw-bold mb-0">
             {customer?.first_name} {customer?.last_name}
           </h3>

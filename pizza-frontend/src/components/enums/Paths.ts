@@ -7,6 +7,7 @@ export enum Paths {
   REGISTER = "/sign-up",
   NOT_FOUND = "/not-found",
   MY_PROFILE = "/my-profile",
+  UPDATE_PROFILE = "/update-profile",
   PIZZA = "/pizza",
   MY_ORDERS = "/my-orders",
   PIZZA_LIST = "/pizza-list",

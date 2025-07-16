@@ -41,7 +41,12 @@ const Header: React.FC = () => {
     );
 
   return (
-    <header className="header d-flex justify-content-between align-items-center px-3 py-3 bg-dark">
+    <header
+      className="header d-flex justify-content-between align-items-center px-3 py-3 bg-dark"
+      style={{
+        boxShadow: "rgba(0, 0, 0, 0.45) 0px 25px 20px -20px",
+      }}
+    >
       <Link to={Paths.ROOT} className="text-decoration-none text-white">
         <h2 className="fw-light mb-0 fs-4 dancing-script">Pizza Palace</h2>
       </Link>

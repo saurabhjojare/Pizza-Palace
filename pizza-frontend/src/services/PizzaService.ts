@@ -1,14 +1,11 @@
-// src/services/PizzaService.ts
-
 import axios from "axios";
 import { getToken } from "../utils/Auth";
 import { Pizza } from "../interfaces/Order";
-
-const API_BASE_URL = "http://localhost:5000/api/v1/pizzas";
+import { PIZZA_API } from "../constants/Endpoints";
 
 export const fetchPizzas = async (): Promise<Pizza[]> => {
   const token = getToken();
-  const response = await axios.get(API_BASE_URL, {
+  const response = await axios.get(PIZZA_API.GET_ALL, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -18,7 +15,7 @@ export const fetchPizzas = async (): Promise<Pizza[]> => {
 
 export const deletePizza = async (pizzaId: number): Promise<void> => {
   const token = getToken();
-  await axios.delete(`${API_BASE_URL}/${pizzaId}`, {
+  await axios.delete(PIZZA_API.DELETE(pizzaId), {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -27,7 +24,7 @@ export const deletePizza = async (pizzaId: number): Promise<void> => {
 
 export const getPizzaById = async (pizzaId: string): Promise<Pizza> => {
   const token = getToken();
-  const response = await axios.get(`${API_BASE_URL}/${pizzaId}`, {
+  const response = await axios.get(PIZZA_API.GET_BY_ID(pizzaId), {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -37,7 +34,7 @@ export const getPizzaById = async (pizzaId: string): Promise<Pizza> => {
 
 export const updatePizza = async (pizzaId: string, data: any) => {
   const token = getToken();
-  const response = await axios.patch(`${API_BASE_URL}/${pizzaId}`, data, {
+  const response = await axios.patch(PIZZA_API.UPDATE(pizzaId), data, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -49,11 +46,28 @@ export const addPizza = async (pizzaData: any) => {
   const token = getToken();
   if (!token) throw new Error("Unauthorized: No token provided");
 
-  const response = await axios.post(API_BASE_URL, pizzaData, {
+  const response = await axios.post(PIZZA_API.ADD, pizzaData, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 
   return response.data;
+};
+
+export const searchPizzasByName = async (name: string): Promise<Pizza[]> => {
+  const token = getToken();
+  if (!token) throw new Error("Unauthorized: No token provided");
+
+  const response = await axios.post(
+    PIZZA_API.SEARCH_BY_NAME,
+    { name },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return response.data.Data;
 };

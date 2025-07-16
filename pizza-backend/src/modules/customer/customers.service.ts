@@ -6,7 +6,7 @@ import {
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { CustomerEntity } from './entities/customer.entity';
 import * as bcrypt from 'bcrypt';
 
@@ -90,40 +90,33 @@ export class CustomersService {
     return { fullName };
   }
 
-  async searchCustomers(searchQuery: {
-    name?: string;
-    address?: string;
-    phone_number?: string;
-    email_address?: string;
-  }): Promise<CustomerEntity[]> {
+  async searchCustomers(search: string): Promise<CustomerEntity[]> {
+    return this.searchByKeywordAndRole('customer', search);
+  }
+
+  async searchAdmins(search: string): Promise<CustomerEntity[]> {
+    return this.searchByKeywordAndRole('admin', search);
+  }
+
+  async searchByKeywordAndRole(
+    role: string,
+    search: string,
+  ): Promise<CustomerEntity[]> {
     const queryBuilder =
       this.customersRepository.createQueryBuilder('customer');
 
-    if (searchQuery.name) {
+    queryBuilder.where('LOWER(customer.role) = LOWER(:role)', { role });
+
+    if (search) {
+      const searchTerm = `%${search.toLowerCase()}%`;
+
       queryBuilder.andWhere(
-        `LOWER(customer.first_name) LIKE LOWER(:name) OR LOWER(customer.last_name) LIKE LOWER(:name)`,
-        { name: `%${searchQuery.name}%` },
-      );
-    }
-
-    if (searchQuery.address) {
-      queryBuilder.andWhere(`LOWER(customer.address) LIKE LOWER(:address)`, {
-        address: `%${searchQuery.address}%`,
-      });
-    }
-
-    if (searchQuery.phone_number) {
-      queryBuilder.andWhere(`customer.phone_number LIKE :phone_number`, {
-        phone_number: `%${searchQuery.phone_number}%`,
-      });
-    }
-
-    if (searchQuery.email_address) {
-      queryBuilder.andWhere(
-        `LOWER(customer.email_address) LIKE LOWER(:email_address)`,
-        {
-          email_address: `%${searchQuery.email_address}%`,
-        },
+        `(LOWER(customer.first_name) LIKE :searchTerm OR
+        LOWER(customer.last_name) LIKE :searchTerm OR
+        LOWER(customer.address) LIKE :searchTerm OR
+        LOWER(customer.email_address) LIKE :searchTerm OR
+        customer.phone_number LIKE :searchTerm)`,
+        { searchTerm },
       );
     }
 

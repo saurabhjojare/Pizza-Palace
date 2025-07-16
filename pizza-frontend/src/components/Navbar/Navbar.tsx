@@ -28,7 +28,7 @@ const Navbar: React.FC = () => {
                   }`}
                   to="/pizza-list"
                 >
-                  Pizza List
+                  Pizzas
                 </Link>
               </li>
               <li className="nav-item">
@@ -38,7 +38,7 @@ const Navbar: React.FC = () => {
                   }`}
                   to="/customer"
                 >
-                  Customer List
+                  Customers
                 </Link>
               </li>
               <li className="nav-item">
@@ -48,7 +48,7 @@ const Navbar: React.FC = () => {
                   }`}
                   to="/admin"
                 >
-                  Admin List
+                  Admins
                 </Link>
               </li>
               <li className="nav-item">
@@ -58,7 +58,7 @@ const Navbar: React.FC = () => {
                   }`}
                   to="/order"
                 >
-                  Order List
+                  Orders
                 </Link>
               </li>
             </>

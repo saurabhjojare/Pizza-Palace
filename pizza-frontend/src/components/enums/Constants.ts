@@ -8,6 +8,7 @@ export enum Constants {
   PIZZA_LIST = "Pizza List",
   ADD_PIZZA = "Add Pizza",
   UPDATE_PIZZA = "Update Pizza",
+  UPDATE_PROFILE = "Update Profile",
   ORDER = "Order",
   MY_ORDERS = "My Orders",
   ORDER_LIST = "Order List",

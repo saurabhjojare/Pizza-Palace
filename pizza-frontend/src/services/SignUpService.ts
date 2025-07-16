@@ -1,10 +1,11 @@
 import axios from "axios";
 import { SignUpForm } from "../interfaces/SignUp";
+import { CUSTOMER_API } from "../constants/Endpoints";
 
 export const signUpUser = async (formData: SignUpForm) => {
   try {
     const response = await axios.post(
-      "http://localhost:5000/api/v1/customers",
+      CUSTOMER_API.CREATE,
       {
         first_name: formData.firstName,
         last_name: formData.lastName,
@@ -23,6 +24,6 @@ export const signUpUser = async (formData: SignUpForm) => {
 
     return response.data;
   } catch (error: any) {
-    throw new Error(error.response?.data?.message || "SignUp failed");
+    throw new Error(error.response?.data?.message || "Sign Up Failed");
   }
 };

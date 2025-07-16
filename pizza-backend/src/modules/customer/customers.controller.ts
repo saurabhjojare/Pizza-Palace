@@ -9,6 +9,7 @@ import {
   UseInterceptors,
   UseGuards,
   BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { ResponseInterceptor } from '../../common/interceptors/response.interceptor';
 import { CustomersService } from './customers.service';
@@ -87,18 +88,13 @@ export class CustomersController {
     return this.customersService.getCustomerNameById(customerId);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN)
-  @Post('search')
-  async searchCustomers(
-    @Body()
-    searchQuery: {
-      name?: string;
-      address?: string;
-      phone_number?: string;
-      email_address?: string;
-    },
-  ): Promise<CustomerEntity[]> {
-    return this.customersService.searchCustomers(searchQuery);
+  @Get('search/customers')
+  async searchCustomers(@Query('q') query: string) {
+    return this.customersService.searchCustomers(query);
+  }
+
+  @Get('search/admins')
+  async searchAdmins(@Query('q') query: string) {
+    return this.customersService.searchAdmins(query);
   }
 }

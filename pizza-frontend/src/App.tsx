@@ -16,8 +16,8 @@ import Login from "./components/login/Login";
 import { CartProvider } from "./context/CartContext";
 import MyOrders from "./components/order/MyOrders";
 import UserProfile from "./components/profile/UserProfile";
-import UpdateUserProfile from "./components/profile/UpdateUserProfile";
 import GetAdmin from "./components/customer/GetAdmin";
+import UpdateUserProfile from "./components/profile/UpdateUserProfile";
 
 const App: React.FC = () => {
   return (
@@ -29,18 +29,19 @@ const App: React.FC = () => {
           <div className="content">
             <Routes>
               <Route path="/" element={<HomePage />}></Route>
+
               <Route path="/login" element={<Login />}></Route>
               <Route path="/sign-up" element={<SignUpForm />}></Route>
-              <Route path="/pizza-list" element={<FetchPizza />}></Route>
+
               <Route path="/pizza" element={<GetPizza />}></Route>
               <Route path="/my-orders" element={<MyOrders />} />
-              <Route path="/order" element={<OrderTable />} />
-              <Route path="/customer" element={<GetCustomers />}></Route>
-              <Route path="/admin" element={<GetAdmin />}></Route>
-
               <Route path="/my-profile" element={<UserProfile />} />
               <Route path="/update-profile" element={<UpdateUserProfile />} />
 
+              <Route path="/pizza-list" element={<FetchPizza />}></Route>
+              <Route path="/order" element={<OrderTable />} />
+              <Route path="/customer" element={<GetCustomers />}></Route>
+              <Route path="/admin" element={<GetAdmin />}></Route>
               <Route path="/update-pizza/:pizzaId" element={<UpdatePizza />} />
               <Route path="/add-pizza" element={<AddPizza />} />
             </Routes>

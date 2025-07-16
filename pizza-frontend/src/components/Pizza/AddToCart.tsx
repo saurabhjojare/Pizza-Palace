@@ -11,7 +11,11 @@ const AddToCart: React.FC<AddToCartProps> = ({ pizza, addToCart }) => {
   const tokenExists = !!getUserIdFromToken();
 
   const handleAddToCart = () => {
+    console.trace("AddToCart clicked");
+    console.log("Adding:", { pizzaId: pizza.pizza_id, size, quantity });
+
     addToCart(pizza, size, quantity);
+    setQuantity(1);
   };
 
   return (

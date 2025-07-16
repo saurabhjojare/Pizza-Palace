@@ -1,11 +1,12 @@
 import axios from "axios";
+import { AUTH_API } from "../constants/Endpoints";
 
 export const loginUser = async (
   email: string,
   password: string
 ): Promise<string> => {
   const response = await axios.post(
-    "http://localhost:5000/api/v1/auth/login",
+    AUTH_API.LOGIN,
     {
       email: email.trim(),
       password: password.trim(),

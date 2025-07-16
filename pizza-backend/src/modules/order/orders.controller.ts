@@ -8,6 +8,8 @@ import {
   Delete,
   UseInterceptors,
   UseGuards,
+  Query,
+  Req,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -47,6 +49,16 @@ export class OrdersController {
     @Param('customerId') customerId: string,
   ): Promise<OrderEntity[]> {
     return this.ordersService.getOrdersByCustomerId(+customerId);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  @Get('filter')
+  async getOrdersByFilter(
+    @Query('name') name?: string,
+    @Query('date') date?: string, // expected as ISO string or yyyy-mm-dd
+  ): Promise<OrderEntity[]> {
+    return this.ordersService.getOrdersByFilter(name, date);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

@@ -89,7 +89,13 @@ const Cart: React.FC<CartProps> = ({
   };
 
   return cartItems.length > 0 ? (
-    <div className="card mt-4 mb-4 cart-box-shadow">
+    <div
+      className="mx-auto card mt-4 mb-4 cart-box-shadow w-50"
+      style={{
+        boxShadow:
+          "rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
+      }}
+    >
       <div className="card-body">
         <h5 className="card-title fs-3">Cart</h5>
         <ul className="list-group list-group-flush">
@@ -157,7 +163,7 @@ const Cart: React.FC<CartProps> = ({
           role="dialog"
           style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
         >
-          <div className="modal-dialog" role="document">
+          <div className="modal-dialog modal-dialog-centered" role="document">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">Enter Delivery Address</h5>

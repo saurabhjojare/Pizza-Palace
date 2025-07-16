@@ -1,12 +1,11 @@
 import axios from "axios";
 import { Order } from "../interfaces/Order";
 import { getToken } from "../utils/Auth";
-
-const API_BASE_URL = "http://localhost:5000/api/v1";
+import { ORDER_API } from "../constants/Endpoints";
 
 export const fetchOrders = async (): Promise<Order[]> => {
   const token = getToken();
-  const response = await axios.get(`${API_BASE_URL}/orders`, {
+  const response = await axios.get(ORDER_API.GET_ALL, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -19,7 +18,7 @@ export const cancelOrder = async (
   orderId: number
 ): Promise<void> => {
   await axios.patch(
-    `${API_BASE_URL}/orders/${orderId}`,
+    ORDER_API.CANCEL(orderId),
     { status: false },
     {
       headers: {
@@ -42,7 +41,7 @@ export const placeOrder = async (
     orderLines: cartItems,
   };
 
-  await axios.post(`${API_BASE_URL}/orders`, payload, {
+  await axios.post(ORDER_API.PLACE, payload, {
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
@@ -54,13 +53,29 @@ export const fetchOrdersByCustomerId = async (
   customerId: number
 ): Promise<Order[]> => {
   const token = getToken();
-  const response = await axios.get(
-    `${API_BASE_URL}/orders/customer/${customerId}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  const response = await axios.get(ORDER_API.GET_BY_CUSTOMER_ID(customerId), {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data.Data;
+};
+
+export const fetchOrdersByFilter = async (
+  name: string,
+  date: string
+): Promise<Order[]> => {
+  const token = getToken();
+  const queryParams = new URLSearchParams();
+
+  if (name.trim()) queryParams.append("name", name.trim());
+  if (date.trim()) queryParams.append("date", date.trim());
+
+  const response = await axios.get(ORDER_API.FILTER(queryParams.toString()), {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
   return response.data.Data;
 };

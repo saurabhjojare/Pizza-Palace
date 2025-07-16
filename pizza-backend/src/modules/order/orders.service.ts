@@ -4,7 +4,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Brackets, Repository } from 'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { OrderEntity } from './entities/order.entity';
@@ -153,5 +153,52 @@ export class OrdersService {
   async remove(id: number): Promise<void> {
     const order = await this.findOne(id);
     await this.orderRepository.remove(order);
+  }
+
+  async getOrdersByFilter(
+    name?: string,
+    date?: string,
+  ): Promise<OrderEntity[]> {
+    const query = this.orderRepository
+      .createQueryBuilder('order')
+      .leftJoinAndSelect('order.customer', 'customer')
+      .leftJoinAndSelect('order.orderLines', 'orderLine')
+      .orderBy('order.order_time', 'DESC');
+
+    if (!name && !date) {
+      throw new BadRequestException(
+        'At least one filter (name or date) is required',
+      );
+    }
+
+    if (name) {
+      const trimmedName = name.trim().toLowerCase();
+      query.andWhere(
+        new Brackets((qb) => {
+          qb.where('LOWER(customer.first_name) LIKE :name', {
+            name: `%${trimmedName}%`,
+          }).orWhere('LOWER(customer.last_name) LIKE :name', {
+            name: `%${trimmedName}%`,
+          });
+        }),
+      );
+    }
+
+    if (date) {
+      const parsedDate = new Date(date);
+      if (isNaN(parsedDate.getTime())) {
+        throw new BadRequestException('Invalid date format');
+      }
+
+      const startOfDay = new Date(parsedDate.setUTCHours(0, 0, 0, 0));
+      const endOfDay = new Date(parsedDate.setUTCHours(23, 59, 59, 999));
+
+      query.andWhere('order.order_time BETWEEN :start AND :end', {
+        start: startOfDay.toISOString(),
+        end: endOfDay.toISOString(),
+      });
+    }
+
+    return query.getMany();
   }
 }

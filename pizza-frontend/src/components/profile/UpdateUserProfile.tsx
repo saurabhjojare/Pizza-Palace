@@ -1,78 +1,29 @@
-import React, { useEffect, useState } from "react";
-import {
-  getCustomerById,
-  updateCustomerProfile,
-} from "../../services/CustomerService";
-import { getToken, getUserIdFromToken } from "../../utils/Auth";
-import { Customer } from "../../interfaces/Customer";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useUpdateUserProfile } from "./useUpdateUserProfile";
+import { Constants } from "../enums/Constants";
 
 const UpdateUserProfile: React.FC = () => {
-  const [customer, setCustomer] = useState<Partial<Customer>>({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const { customer, loading, error, handleChange, handleSubmit } =
+    useUpdateUserProfile();
 
   useEffect(() => {
-    const loadCustomer = async () => {
-      const token = getToken();
-      const userId = getUserIdFromToken();
-
-      if (!token || !userId) {
-        setError("Unauthorized access.");
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const data = await getCustomerById(Number(userId), token);
-        setCustomer(data);
-      } catch (err) {
-        setError("Failed to load profile.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadCustomer();
+    document.title = Constants.UPDATE_PROFILE;
   }, []);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCustomer({ ...customer, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const token = getToken();
-    if (!token) {
-      setError("Unauthorized.");
-      return;
-    }
-
-    try {
-      await updateCustomerProfile(customer, token);
-      navigate("/my-profile");
-    } catch (err) {
-      console.error(err);
-      setError("Failed to update profile.");
-    }
-  };
 
   if (loading) return <div className="text-center mt-5">Loading...</div>;
   if (error)
     return <div className="alert alert-danger text-center mt-5">{error}</div>;
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-2 d-flex justify-content-center">
       <div
-        className="card p-4 shadow"
-        style={{ maxWidth: "600px", margin: "auto" }}
+        className="card p-4 shadow rounded-4 border-0"
+        style={{ maxWidth: "600px", width: "100%" }}
       >
         <h3 className="text-center mb-4">Update Profile</h3>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label>First Name</label>
+            <label className="form-label">First Name</label>
             <input
               name="first_name"
               type="text"
@@ -84,7 +35,7 @@ const UpdateUserProfile: React.FC = () => {
           </div>
 
           <div className="mb-3">
-            <label>Last Name</label>
+            <label className="form-label">Last Name</label>
             <input
               name="last_name"
               type="text"
@@ -96,7 +47,7 @@ const UpdateUserProfile: React.FC = () => {
           </div>
 
           <div className="mb-3">
-            <label>Email</label>
+            <label className="form-label">Email</label>
             <input
               name="email_address"
               type="email"
@@ -108,7 +59,7 @@ const UpdateUserProfile: React.FC = () => {
           </div>
 
           <div className="mb-3">
-            <label>Phone</label>
+            <label className="form-label">Phone</label>
             <input
               name="phone_number"
               type="text"
@@ -120,7 +71,7 @@ const UpdateUserProfile: React.FC = () => {
           </div>
 
           <div className="mb-3">
-            <label>Address</label>
+            <label className="form-label">Address</label>
             <input
               name="address"
               type="text"

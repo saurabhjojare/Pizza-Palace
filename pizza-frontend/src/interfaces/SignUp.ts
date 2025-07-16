@@ -1,4 +1,3 @@
-// src/types/SignUpFormData.ts
 import { Roles } from "../components/enums/Roles";
 
 export interface SignUpForm {

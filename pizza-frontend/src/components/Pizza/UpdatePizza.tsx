@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import { validationSchema } from "./Validation";
-import "./Pizza.css";
 import { useAdminAuth } from "../../utils/Auth";
 import { getPizzaById, updatePizza } from "../../services/PizzaService";
+import "./Pizza.css";
 
 const UpdatePizza: React.FC = () => {
   const { pizzaId } = useParams<{ pizzaId: string }>();
@@ -30,9 +30,9 @@ const UpdatePizza: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (!pizzaId) return;
-
     const fetchData = async () => {
+      if (!pizzaId) return;
+
       try {
         const pizza = await getPizzaById(pizzaId);
         setInitialValues({
@@ -52,101 +52,121 @@ const UpdatePizza: React.FC = () => {
     fetchData();
   }, [pizzaId]);
 
+  const handleSubmit = async (values: typeof initialValues) => {
+    try {
+      const response = await updatePizza(pizzaId!, values);
+      if (response.Success) {
+        setSuccess("Pizza updated successfully!");
+        setError(null);
+        navigate("/pizza");
+      } else {
+        throw new Error(response.Message || "Failed to update pizza");
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Failed to update pizza");
+      setSuccess(null);
+    }
+  };
+
   return (
-    <div className="container container-with-navbar">
+    <div className="container mt-2">
       <div className="row justify-content-center">
         <div className="col-lg-6 col-md-8 col-sm-10">
-          <h3 className="mb-2 text-center">Update Pizza</h3>
-          {error && <div className="alert alert-danger">{error}</div>}
-          {success && <div className="alert alert-success">{success}</div>}
+          <div className="card p-4 shadow rounded-4 border-0">
+            <h3 className="mb-3 text-center">Update Pizza</h3>
 
-          <Formik
-            enableReinitialize
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={async (values) => {
-              try {
-                const response = await updatePizza(pizzaId!, values);
-                if (response.Success) {
-                  setSuccess("Pizza updated successfully!");
-                  setError(null);
-                  navigate("/pizza");
-                } else {
-                  throw new Error(response.Message || "Failed to update pizza");
-                }
-              } catch (err) {
-                setError("Failed to update pizza");
-                setSuccess(null);
-              }
-            }}
-          >
-            {() => (
-              <Form className="needs-validation" noValidate>
-                {[
-                  { id: "name", label: "Name", type: "text" },
-                  { id: "imageUrl", label: "Image URL", type: "text" },
-                  { id: "regularPrice", label: "Regular Price", type: "text" },
-                  { id: "mediumPrice", label: "Medium Price", type: "text" },
-                  { id: "largePrice", label: "Large Price", type: "text" },
-                ].map(({ id, label, type }) => (
-                  <div className="form-group mb-2" key={id}>
-                    <label htmlFor={id}>{label}</label>
+            {error && <div className="alert alert-danger">{error}</div>}
+            {success && <div className="alert alert-success">{success}</div>}
+
+            <Formik
+              enableReinitialize
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={handleSubmit}
+            >
+              {() => (
+                <Form noValidate>
+                  {/* Input Fields */}
+                  {[
+                    { id: "name", label: "Name", type: "text" },
+                    { id: "imageUrl", label: "Image URL", type: "text" },
+                    {
+                      id: "regularPrice",
+                      label: "Regular Price",
+                      type: "text",
+                    },
+                    { id: "mediumPrice", label: "Medium Price", type: "text" },
+                    { id: "largePrice", label: "Large Price", type: "text" },
+                  ].map(({ id, label, type }) => (
+                    <div className="mb-3" key={id}>
+                      <label htmlFor={id} className="form-label">
+                        {label}
+                      </label>
+                      <Field
+                        type={type}
+                        id={id}
+                        name={id}
+                        className="form-control"
+                      />
+                      <ErrorMessage
+                        name={id}
+                        component="div"
+                        className="text-danger mt-1"
+                      />
+                    </div>
+                  ))}
+
+                  {/* Select Field */}
+                  <div className="mb-3">
+                    <label htmlFor="type" className="form-label">
+                      Type
+                    </label>
                     <Field
-                      type={type}
-                      id={id}
-                      name={id}
-                      className="form-control"
-                    />
+                      as="select"
+                      name="type"
+                      id="type"
+                      className="form-select"
+                    >
+                      <option value="Vegetarian">Vegetarian</option>
+                      <option value="Non-Vegetarian">Non-Vegetarian</option>
+                    </Field>
                     <ErrorMessage
-                      name={id}
+                      name="type"
                       component="div"
-                      className="mt-2 text-danger"
+                      className="text-danger mt-1"
                     />
                   </div>
-                ))}
 
-                <div className="form-group mb-2">
-                  <label htmlFor="type">Type</label>
-                  <Field
-                    as="select"
-                    id="type"
-                    name="type"
-                    className="form-control"
-                  >
-                    <option value="Vegetarian">Vegetarian</option>
-                    <option value="Non-Vegetarian">Non-Vegetarian</option>
-                  </Field>
-                  <ErrorMessage
-                    name="type"
-                    component="div"
-                    className="mt-2 text-danger"
-                  />
-                </div>
+                  {/* Textarea */}
+                  <div className="mb-3">
+                    <label htmlFor="description" className="form-label">
+                      Description
+                    </label>
+                    <Field
+                      as="textarea"
+                      id="description"
+                      name="description"
+                      className="form-control"
+                      rows={4}
+                    />
+                    <ErrorMessage
+                      name="description"
+                      component="div"
+                      className="text-danger mt-1"
+                    />
+                  </div>
 
-                <div className="form-group mb-2">
-                  <label htmlFor="description">Description</label>
-                  <Field
-                    as="textarea"
-                    id="description"
-                    name="description"
-                    className="form-control"
-                    rows={4}
-                  />
-                  <ErrorMessage
-                    name="description"
-                    component="div"
-                    className="mt-2 text-danger"
-                  />
-                </div>
-
-                <div className="text-center">
-                  <button type="submit" className="btn btn-primary">
-                    Update
-                  </button>
-                </div>
-              </Form>
-            )}
-          </Formik>
+                  {/* Submit Button */}
+                  <div className="text-center">
+                    <button type="submit" className="btn btn-primary px-4">
+                      Update
+                    </button>
+                  </div>
+                </Form>
+              )}
+            </Formik>
+          </div>
         </div>
       </div>
     </div>

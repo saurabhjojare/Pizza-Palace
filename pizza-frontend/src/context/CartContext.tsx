@@ -1,13 +1,13 @@
-import React, { createContext, useState, useContext } from "react";
-import { CartItem } from "../interfaces/Order";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { CartItem, Pizza } from "../interfaces/Order";
+import { getCartStorageKey } from "../utils/CartStorage";
 
 interface CartContextType {
   cartItems: CartItem[];
-  setCartItems: React.Dispatch<React.SetStateAction<CartItem[]>>;
-  clearCart: () => void;
-  updateQuantity: (index: number, quantity: number) => void;
+  addToCart: (pizza: Pizza, size: string, quantity: number) => void;
   removeFromCart: (index: number) => void;
-  addToCart: (pizza: any, size: string, quantity: number) => void;
+  updateQuantity: (index: number, quantity: number) => void;
+  clearCart: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -15,23 +15,29 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
+    const key = getCartStorageKey();
+    if (!key) return [];
+    const stored = localStorage.getItem(key);
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        return parsed;
+      } catch (error) {
+        return [];
+      }
+    }
+    return [];
+  });
 
-  const clearCart = () => setCartItems([]);
+  useEffect(() => {
+    const key = getCartStorageKey();
+    if (key) {
+      localStorage.setItem(key, JSON.stringify(cartItems));
+    }
+  }, [cartItems]);
 
-  const removeFromCart = (index: number) => {
-    setCartItems((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const updateQuantity = (index: number, quantity: number) => {
-    setCartItems((prev) => {
-      const updated = [...prev];
-      updated[index].quantity = quantity;
-      return updated;
-    });
-  };
-
-  const addToCart = (pizza: any, size: string, quantity: number) => {
+  const addToCart = (pizza: Pizza, size: string, quantity: number) => {
     setCartItems((prevItems) => {
       const existingIndex = prevItems.findIndex(
         (item) => item.pizza.pizza_id === pizza.pizza_id && item.size === size
@@ -39,7 +45,13 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
 
       if (existingIndex !== -1) {
         const updatedItems = [...prevItems];
-        updatedItems[existingIndex].quantity += quantity;
+        const existingItem = updatedItems[existingIndex];
+
+        updatedItems[existingIndex] = {
+          ...existingItem,
+          quantity: existingItem.quantity + quantity,
+        };
+
         return updatedItems;
       }
 
@@ -47,15 +59,32 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
+  const removeFromCart = (index: number) => {
+    setCartItems((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const updateQuantity = (index: number, quantity: number) => {
+    setCartItems((prev) =>
+      prev.map((item, i) => (i === index ? { ...item, quantity } : item))
+    );
+  };
+
+  const clearCart = () => {
+    setCartItems([]);
+    const key = getCartStorageKey();
+    if (key) {
+      localStorage.removeItem(key);
+    }
+  };
+
   return (
     <CartContext.Provider
       value={{
         cartItems,
-        setCartItems,
-        clearCart,
+        addToCart,
         removeFromCart,
         updateQuantity,
-        addToCart,
+        clearCart,
       }}
     >
       {children}
@@ -65,6 +94,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
 
 export const useCart = () => {
   const context = useContext(CartContext);
-  if (!context) throw new Error("useCart must be used within CartProvider");
+  if (context === undefined) {
+    throw new Error("useCart must be used within a CartProvider");
+  }
   return context;
 };
