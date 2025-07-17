@@ -67,6 +67,7 @@ The images above showcase the core features of the Pizza Ordering System:
 **Backend**: NestJS  
 **Database**: PostgreSQL  
 **API**: RESTful APIs  
+**Authentication**: JWT (JSON Web Token)
 
 
 ## License
