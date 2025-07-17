@@ -1,4 +1,4 @@
-export interface ValidationFormValues {
+export interface PizzaFormValues {
   name: string;
   type: "Vegetarian" | "Non-Vegetarian";
   imageUrl?: string;

@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import "./Pizza.css";
 import { useAdminAuth } from "../../utils/Auth";
 import { getPizzaById, updatePizza } from "../../services/PizzaService";
-import { validationSchema } from "./Validation";
+import { validationSchema } from "./AddPizza";
 
 const defaultValues = {
   name: "",

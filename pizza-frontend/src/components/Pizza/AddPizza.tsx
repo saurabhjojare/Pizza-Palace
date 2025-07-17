@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
-import { validationSchema } from "./Validation";
+import { useAddPizza } from "./AddPizza";
 import "./Pizza.css";
 import { Constants } from "../enums/Constants";
 import { addPizza } from "../../services/PizzaService";
@@ -42,7 +42,7 @@ const AddPizza: React.FC = () => {
                   mediumPrice: "",
                   largePrice: "",
                 }}
-                validationSchema={validationSchema}
+                validationSchema={useAddPizza}
                 onSubmit={handleSubmit}
               >
                 {() => (
