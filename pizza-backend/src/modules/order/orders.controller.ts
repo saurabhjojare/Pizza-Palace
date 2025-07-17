@@ -8,6 +8,9 @@ import {
   Delete,
   UseInterceptors,
   UseGuards,
+  Query,
+  Req,
+  BadRequestException,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -42,13 +45,32 @@ export class OrdersController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.CUSTOMER)
+  @Get('customer/:customerId')
+  async getOrdersByCustomerId(
+    @Param('customerId') customerId: string,
+  ): Promise<OrderEntity[]> {
+    return this.ordersService.getOrdersByCustomerId(+customerId);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  @Get('filter')
+  async getOrdersByFilter(
+    @Query('name') name?: string,
+    @Query('date') date?: string, // expected as ISO string or yyyy-mm-dd
+  ): Promise<OrderEntity[]> {
+    return this.ordersService.getOrdersByFilter(name, date);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.CUSTOMER)
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<OrderEntity> {
     return this.ordersService.findOne(+id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.CUSTOMER)
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -63,5 +85,15 @@ export class OrdersController {
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
     await this.ordersService.remove(+id);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.CUSTOMER)
+  @Get('customer/:customerId/date')
+  async getOrdersByCustomerAndDate(
+    @Param('customerId') customerId: string,
+    @Query('date') date: string,
+  ): Promise<OrderEntity[]> {
+    return this.ordersService.getOrdersByCustomerAndDate(+customerId, date);
   }
 }

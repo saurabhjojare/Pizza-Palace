@@ -1,0 +1,12 @@
+.nav-link.active {
+  background-color: slategray !important;
+  color: #fff !important;
+  margin-right: 5px;
+}
+
+.nav-link:hover {
+}
+
+.nav-link {
+  color: #000 !important;
+}

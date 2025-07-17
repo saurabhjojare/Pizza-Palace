@@ -1,4 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('pizza')
 export class PizzaEntity {
@@ -26,6 +31,9 @@ export class PizzaEntity {
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: false })
   mediumPrice: number;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: false })
   largePrice: number;

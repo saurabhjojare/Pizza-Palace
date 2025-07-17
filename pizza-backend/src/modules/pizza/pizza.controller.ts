@@ -8,6 +8,7 @@ import {
   Delete,
   UseInterceptors,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { PizzaService } from './pizza.service';
 import { CreatePizzaDto } from './dto/create-pizza.dto';
@@ -31,8 +32,6 @@ export class PizzaController {
     return this.pizzaService.create(createPizzaDto);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.CUSTOMER)
   @Get()
   async findAll(): Promise<PizzaEntity[]> {
     return this.pizzaService.findAll();
@@ -61,5 +60,12 @@ export class PizzaController {
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
     await this.pizzaService.remove(+id);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.CUSTOMER)
+  @Post('search-by-name')
+  async searchByName(@Body('name') name: string): Promise<PizzaEntity[]> {
+    return this.pizzaService.searchByName(name);
   }
 }

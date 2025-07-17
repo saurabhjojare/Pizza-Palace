@@ -6,7 +6,7 @@ import {
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { CustomerEntity } from './entities/customer.entity';
 import * as bcrypt from 'bcrypt';
 
@@ -33,7 +33,11 @@ export class CustomersService {
   }
 
   async findAll(): Promise<CustomerEntity[]> {
-    return await this.customersRepository.find();
+    return await this.customersRepository.find({
+      order: {
+        created_at: 'DESC', // Sort by created_at in descending order (latest date first)
+      },
+    });
   }
 
   async findOne(id: number): Promise<CustomerEntity> {
@@ -68,5 +72,76 @@ export class CustomersService {
     if (result.affected === 0) {
       throw new NotFoundException(`Customer with ID ${id} not found`);
     }
+  }
+
+  async findByRole(role: string): Promise<CustomerEntity[]> {
+    return await this.customersRepository.find({
+      where: { role },
+      order: {
+        created_at: 'DESC', // Order by created_at in descending order
+      },
+    });
+  }
+
+  async getCustomerNameById(id: number): Promise<{ fullName: string }> {
+    const customer = await this.customersRepository.findOne({
+      where: { customer_id: id },
+      select: ['first_name', 'last_name'], // Only select needed fields
+    });
+
+    if (!customer) {
+      throw new NotFoundException(`Customer with ID ${id} not found`);
+    }
+
+    const fullName = `${customer.first_name} ${customer.last_name}`;
+    return { fullName };
+  }
+
+  async getCustomerAddressById(id: number): Promise<{ address: string }> {
+    const customer = await this.customersRepository.findOne({
+      where: { customer_id: id },
+      select: ['address'],
+    });
+
+    if (!customer) {
+      throw new NotFoundException(`Customer with ID ${id} not found`);
+    }
+
+    return { address: customer.address };
+  }
+
+  async searchCustomers(search: string): Promise<CustomerEntity[]> {
+    return this.searchByKeywordAndRole('customer', search);
+  }
+
+  async searchAdmins(search: string): Promise<CustomerEntity[]> {
+    return this.searchByKeywordAndRole('admin', search);
+  }
+
+  async searchByKeywordAndRole(
+    role: string,
+    search: string,
+  ): Promise<CustomerEntity[]> {
+    const queryBuilder =
+      this.customersRepository.createQueryBuilder('customer');
+
+    queryBuilder.where('LOWER(customer.role) = LOWER(:role)', { role });
+
+    if (search) {
+      const searchTerm = `%${search.toLowerCase()}%`;
+
+      queryBuilder.andWhere(
+        `(LOWER(customer.first_name) LIKE :searchTerm OR
+        LOWER(customer.last_name) LIKE :searchTerm OR
+        LOWER(customer.address) LIKE :searchTerm OR
+        LOWER(customer.email_address) LIKE :searchTerm OR
+        customer.phone_number LIKE :searchTerm)`,
+        { searchTerm },
+      );
+    }
+
+    queryBuilder.orderBy('customer.created_at', 'DESC');
+
+    return await queryBuilder.getMany();
   }
 }

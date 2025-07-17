@@ -1,11 +1,5 @@
 import React from "react";
-import { Pizza } from "./GetPizza";
-
-interface SizeProps {
-  size: string;
-  setSize: (size: string) => void;
-  pizza: Pizza;
-}
+import { SizeProps } from "../../interfaces/Order";
 
 const Size: React.FC<SizeProps> = ({ size, setSize, pizza }) => {
   return (

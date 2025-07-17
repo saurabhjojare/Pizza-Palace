@@ -1,20 +1,8 @@
 import React from "react";
-import Buy from "./Buy";
-import { Pizza } from "./GetPizza";
-
-export interface CartItem {
-  pizza: Pizza;
-  size: string;
-  quantity: number;
-}
-
-interface CartProps {
-  cartItems: CartItem[];
-  removeFromCart: (index: number) => void;
-  updateQuantity: (index: number, newQuantity: number) => void;
-  clearCart: () => void;
-  customerId: number;
-}
+import { CartProps } from "../../interfaces/Order";
+import { useCart } from "./useCart";
+import { getCustomerAddressById } from "../../services/CustomerService";
+import { getToken, getUserIdFromToken } from "../../utils/Auth";
 
 const Cart: React.FC<CartProps> = ({
   cartItems,
@@ -23,30 +11,45 @@ const Cart: React.FC<CartProps> = ({
   clearCart,
   customerId,
 }) => {
-  const handleQuantityChange = (index: number, increment: boolean) => {
-    const newQuantity = increment
-      ? cartItems[index].quantity + 1
-      : cartItems[index].quantity - 1;
-    if (newQuantity > 0) {
-      updateQuantity(index, newQuantity);
-    }
-  };
-
-  const calculateTotalAmount = () =>
-    cartItems.reduce((total, item) => {
-      const price =
-        item.size === "regular"
-          ? Number(item.pizza.regularPrice)
-          : item.size === "medium"
-          ? Number(item.pizza.mediumPrice)
-          : Number(item.pizza.largePrice);
-      return total + price * item.quantity;
-    }, 0);
+  const {
+    isPlacingOrder,
+    handleQuantityChange,
+    calculateTotalAmount,
+    handlePlaceOrder,
+  } = useCart(cartItems, removeFromCart, updateQuantity, clearCart, customerId);
 
   const totalAmount = calculateTotalAmount();
 
+  const handleClickPlaceOrder = async () => {
+    const token = getToken();
+    const userId = getUserIdFromToken();
+    if (!token) {
+      alert("Authentication token is missing.");
+      return;
+    }
+
+    if (!userId) {
+      alert("User ID is missing.");
+      return;
+    }
+
+    try {
+      const address = await getCustomerAddressById(Number(userId), token);
+      await handlePlaceOrder(address);
+    } catch (error) {
+      console.error("Failed to place order:", error);
+      alert("Failed to retrieve address or place the order.");
+    }
+  };
+
   return cartItems.length > 0 ? (
-    <div className="card mt-4 mb-4 cart-box-shadow">
+    <div
+      className="mx-auto card mt-4 mb-4 cart-box-shadow w-50"
+      style={{
+        boxShadow:
+          "rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
+      }}
+    >
       <div className="card-body">
         <h5 className="card-title fs-3">Cart</h5>
         <ul className="list-group list-group-flush">
@@ -97,17 +100,13 @@ const Cart: React.FC<CartProps> = ({
         </div>
 
         <div className="text-end mt-3">
-          <Buy
-            customerId={customerId}
-            deliveryAddress="5678 Oak Avenue, CA"
-            cartItems={cartItems.map((item) => ({
-              pizza_id: item.pizza.pizza_id,
-              size: item.size,
-              quantity: item.quantity,
-            }))}
-            totalAmount={totalAmount}
-            clearCart={clearCart}
-          />
+          <button
+            className="btn btn-success"
+            disabled={isPlacingOrder}
+            onClick={handleClickPlaceOrder}
+          >
+            {isPlacingOrder ? "Placing..." : "Place Order"}
+          </button>
         </div>
       </div>
     </div>

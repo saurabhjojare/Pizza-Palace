@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
+  CreateDateColumn,
 } from 'typeorm';
 import { OrderEntity } from '../../order/entities/order.entity';
 import { PizzaEntity } from '../../pizza/entities/pizza.entity';
@@ -27,6 +28,9 @@ export class OrderLineEntity {
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: false })
   total_amount: number;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
 
   @ManyToOne(() => OrderEntity, (order) => order.orderLines, {
     onDelete: 'CASCADE',

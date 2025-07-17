@@ -1,142 +1,52 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 import AddToCart from "./AddToCart";
 import Cart from "./Cart";
-import { useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
-import { Roles } from "../enums/Roles";
-
-export interface CartItem {
-  pizza: Pizza;
-  size: string;
-  quantity: number;
-}
-export interface Pizza {
-  pizza_id: number;
-  name: string;
-  type: "Vegetarian" | "Non-Vegetarian";
-  imageUrl: string;
-  description: string;
-  regularPrice: string;
-  mediumPrice: string;
-  largePrice: string;
-}
-
-interface TokenPayload {
-  role: string;
-  customer_id: number;
-  [key: string]: any;
-}
+import { getToken } from "../../utils/Auth";
+import { useGetPizza } from "./useGetPizza";
+import "./Pizza.css";
 
 const GetPizza: React.FC = () => {
-  const [pizzas, setPizzas] = useState<Pizza[]>([]);
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [customerId, setCustomerId] = useState<number | null>(null);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      navigate("/");
-      return;
-    }
-
-    try {
-      const decoded = jwtDecode<TokenPayload>(token);
-      if (decoded.role !== Roles.CUSTOMER) {
-        navigate("/");
-      } else {
-        setCustomerId(decoded.customer_id);
-      }
-    } catch (error) {
-      console.error("Failed to decode token:", error);
-      navigate("/");
-    }
-  }, [navigate]);
-
-  useEffect(() => {
-    document.title = "Pizza Palace";
-  }, []);
-
-  useEffect(() => {
-    const fetchPizzas = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get(
-          "http://localhost:5000/api/v1/pizzas",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setPizzas(response.data.Data);
-      } catch (err) {
-        setError("Failed to fetch pizza");
-      }
-    };
-
-    fetchPizzas();
-  }, []);
-
-  const addToCart = (pizza: Pizza, size: string, quantity: number) => {
-    setCartItems((prevItems) => {
-      const existingIndex = prevItems.findIndex(
-        (item) => item.pizza.pizza_id === pizza.pizza_id && item.size === size
-      );
-
-      if (existingIndex !== -1) {
-        const updatedItems = [...prevItems];
-        const existingItem = updatedItems[existingIndex];
-
-        updatedItems[existingIndex] = {
-          ...existingItem,
-          quantity: existingItem.quantity + quantity,
-        };
-
-        return updatedItems;
-      } else {
-        return [...prevItems, { pizza, size, quantity }];
-      }
-    });
-  };
-
-  const removeFromCart = (index: number) => {
-    const newCartItems = cartItems.filter((_, i) => i !== index);
-    setCartItems(newCartItems);
-  };
-
-  const clearCart = () => {
-    setCartItems([]);
-  };
-
-  const updateQuantity = (index: number, newQuantity: number) => {
-    setCartItems((prevItems) => {
-      const updatedItems = [...prevItems];
-      const item = updatedItems[index];
-
-      item.quantity = newQuantity;
-
-      const price =
-        item.size === "regular"
-          ? Number(item.pizza.regularPrice)
-          : item.size === "medium"
-          ? Number(item.pizza.mediumPrice)
-          : Number(item.pizza.largePrice);
-
-      return updatedItems;
-    });
-  };
+  const {
+    pizzas,
+    error,
+    cartItems,
+    addToCart,
+    removeFromCart,
+    updateQuantity,
+    clearCart,
+    customerId,
+    firstName,
+    searchTerm,
+    setSearchTerm,
+  } = useGetPizza();
 
   if (error) {
     return (
-      <div className="text-center" role="alert">
+      <div className="text-center text-danger" role="alert">
         {error}
       </div>
     );
   }
+
+  const scrollToTopSlow = () => {
+    const duration = 1000;
+    const start = window.scrollY;
+    const startTime = performance.now();
+
+    const scrollStep = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easeInOut = 0.5 * (1 - Math.cos(Math.PI * progress));
+
+      window.scrollTo(0, start * (1 - easeInOut));
+
+      if (progress < 1) {
+        requestAnimationFrame(scrollStep);
+      }
+    };
+
+    requestAnimationFrame(scrollStep);
+  };
 
   return (
     <div className="container mt-3">
@@ -150,24 +60,76 @@ const GetPizza: React.FC = () => {
         />
       )}
 
-      <h3 className="text-center mb-4">Menu</h3>
-      <div className="row justify-content-center">
+      {cartItems.length > 0 && customerId !== null && (
+        <span
+          onClick={scrollToTopSlow}
+          className="text-black font-weight-light go-to-cart"
+          aria-label="Top"
+        >
+          Cart
+        </span>
+      )}
+
+      {getToken() && firstName ? (
+        <h3 className="text-center mb-4 fw-lighter">Welcome, {firstName} </h3>
+      ) : (
+        <h3 className="text-center mb-4 fw-lighter">Our Menu</h3>
+      )}
+
+      {getToken() && (
+        <div className="d-flex justify-content-center mb-4">
+          <div className="col-10 col-sm-10 col-md-6 col-lg-4">
+            <input
+              type="text"
+              className="form-control py-2 px-4 h4 fw-lighter"
+              placeholder="What's on your mind today?"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{
+                boxShadow:
+                  "inset 0 30px 60px -12px rgba(250, 250, 250, 0.25), inset 0 18px 36px -18px rgba(180, 167, 167, 0.3)",
+              }}
+            />
+          </div>
+        </div>
+      )}
+
+      <div className="row justify-content-left">
         {pizzas.map((pizza) => (
           <div key={pizza.pizza_id} className="col-md-6 col-lg-4 mb-4">
-            <div className="card h-100">
+            <div
+              className="card h-100 d-flex flex-column"
+              style={{
+                boxShadow: "rgba(0, 0, 0, 0.1) 0px 10px 50px",
+              }}
+            >
               <img
                 src={pizza.imageUrl}
                 className="card-img-top"
                 alt={pizza.name}
+                style={{
+                  height: "300px",
+                  objectFit: "cover",
+                }}
               />
-              <div className="card-body">
-                <h5 className="card-title">{pizza.name}</h5>
-                <p className="card-text">{pizza.description}</p>
-                <p className="card-text">
+              <div className="card-body d-flex flex-column">
+                <h5 className="card-title" title={pizza.name}>
+                  {pizza.name.length > 35
+                    ? pizza.name.slice(0, 35) + "..."
+                    : pizza.name}
+                </h5>
+
+                <p className="card-text" title={pizza.description}>
+                  {pizza.description.length > 100
+                    ? pizza.description.slice(0, 100) + "..."
+                    : pizza.description}
+                </p>
+                <p className="card-text ">
                   <strong>Type:</strong> {pizza.type}
                 </p>
-
-                <AddToCart pizza={pizza} addToCart={addToCart} />
+                <div className="mt-auto">
+                  <AddToCart pizza={pizza} addToCart={addToCart} />
+                </div>
               </div>
             </div>
           </div>

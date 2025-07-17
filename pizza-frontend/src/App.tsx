@@ -4,37 +4,50 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./components/header/Header";
 import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
-import CustomerPage from "./pages/Customer";
-import PizzaPage from "./pages/Pizza";
-import OrderPage from "./pages/Order";
-import AdminPage from "./pages/Admin";
+import GetCustomers from "./components/customer/GetCustomers";
+import GetPizza from "./components/pizza/GetPizza";
+import OrderTable from "./components/order/OrderTable";
 import UpdatePizza from "./components/pizza/UpdatePizza";
 import AddPizza from "./components/pizza/AddPizza";
+import SignUpForm from "./components/sign-up/SignUpForm";
+import HomePage from "./components/home/HomePage";
+import FetchPizza from "./components/pizza/FetchPizza";
 import Login from "./components/login/Login";
-import SignUpPage from "./pages/Signup";
+import { CartProvider } from "./context/CartContext";
+import MyOrders from "./components/order/MyOrders";
+import UserProfile from "./components/profile/UserProfile";
+import GetAdmin from "./components/customer/GetAdmin";
+import UpdateUserProfile from "./components/profile/UpdateUserProfile";
 
 const App: React.FC = () => {
   return (
     <div className="app">
       <Router>
-        <Header />
-        <Navbar />
-        <div className="content">
-          <Routes>
-            <Route path="/" element={<Login />}></Route>
-            <Route path="/signup" element={<SignUpPage />}></Route>
-            <Route path="/home" element={<PizzaPage />}></Route>
+        <CartProvider>
+          <Header />
+          <Navbar />
+          <div className="content">
+            <Routes>
+              <Route path="/" element={<HomePage />}></Route>
 
-            <Route path="/admin" element={<AdminPage />}></Route>
-            <Route path="/pizza" element={<PizzaPage />}></Route>
-            <Route path="/order" element={<OrderPage />} />
-            <Route path="/customer" element={<CustomerPage />}></Route>
+              <Route path="/login" element={<Login />}></Route>
+              <Route path="/sign-up" element={<SignUpForm />}></Route>
 
-            <Route path="/update-pizza/:pizzaId" element={<UpdatePizza />} />
-            <Route path="/add-pizza" element={<AddPizza />} />
-          </Routes>
-        </div>
-        <Footer />
+              <Route path="/pizza" element={<GetPizza />}></Route>
+              <Route path="/my-orders" element={<MyOrders />} />
+              <Route path="/my-profile" element={<UserProfile />} />
+              <Route path="/update-profile" element={<UpdateUserProfile />} />
+
+              <Route path="/pizza-list" element={<FetchPizza />}></Route>
+              <Route path="/order" element={<OrderTable />} />
+              <Route path="/customer" element={<GetCustomers />}></Route>
+              <Route path="/admin" element={<GetAdmin />}></Route>
+              <Route path="/update-pizza/:pizzaId" element={<UpdatePizza />} />
+              <Route path="/add-pizza" element={<AddPizza />} />
+            </Routes>
+          </div>
+          <Footer />
+        </CartProvider>
       </Router>
     </div>
   );
