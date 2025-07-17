@@ -9,8 +9,6 @@ import {
   UseInterceptors,
   UseGuards,
   Query,
-  Req,
-  BadRequestException,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -57,7 +55,7 @@ export class OrdersController {
   @Get('filter')
   async getOrdersByFilter(
     @Query('name') name?: string,
-    @Query('date') date?: string, // expected as ISO string or yyyy-mm-dd
+    @Query('date') date?: string,
   ): Promise<OrderEntity[]> {
     return this.ordersService.getOrdersByFilter(name, date);
   }

@@ -20,7 +20,7 @@ export class ResponseInterceptor implements NestInterceptor {
         if (data === undefined || data === null) {
           return {
             Success: true,
-            Message: 'Operation successful',
+            Message: 'Success',
           };
         }
 
@@ -30,7 +30,7 @@ export class ResponseInterceptor implements NestInterceptor {
 
         return {
           Success: true,
-          Message: 'Operation successful',
+          Message: 'Success',
           Data: data,
         };
       }),

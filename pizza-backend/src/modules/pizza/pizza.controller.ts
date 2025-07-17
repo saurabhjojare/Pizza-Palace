@@ -8,7 +8,6 @@ import {
   Delete,
   UseInterceptors,
   UseGuards,
-  Query,
 } from '@nestjs/common';
 import { PizzaService } from './pizza.service';
 import { CreatePizzaDto } from './dto/create-pizza.dto';
