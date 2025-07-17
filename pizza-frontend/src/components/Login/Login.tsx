@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useLogin } from "./useLogin";
-import "./Login.css";
+import { useLogin } from "./login.use";
+import "./login.css";
 
 const Login: React.FC = () => {
   const { email, setEmail, password, setPassword, error, handleLogin } =

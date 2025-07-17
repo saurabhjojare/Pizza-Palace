@@ -1,23 +1,23 @@
 import React from "react";
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Header from "./components/header/Header";
-import Navbar from "./components/navbar/Navbar";
-import Footer from "./components/footer/Footer";
-import GetCustomers from "./components/customer/CustomersPage";
-import GetPizza from "./components/pizza/GetPizza";
-import OrderPage from "./components/order/OrderPage";
-import UpdatePizza from "./components/pizza/UpdatePizza";
-import AddPizza from "./components/pizza/AddPizza";
-import SignUpForm from "./components/sign-up/SignUpForm";
-import HomePage from "./components/home/HomePage";
-import FetchPizza from "./components/pizza/FetchPizza";
-import Login from "./components/login/Login";
-import { CartProvider } from "./context/CartContext";
-import MyOrders from "./components/order/MyOrders";
-import UserProfile from "./components/profile/UserProfile";
-import GetAdmin from "./components/customer/AdminsPage";
-import UpdateUserProfile from "./components/profile/UpdateUserProfile";
+import Header from "./components/header/header";
+import Navbar from "./components/navbar/navbar";
+import Footer from "./components/footer/footer";
+import GetCustomers from "./components/customer/customer.page";
+import GetPizza from "./components/pizza/get-pizza-customer.page";
+import OrderPage from "./components/order/orders.page";
+import UpdatePizza from "./components/pizza/update-pizza.page";
+import AddPizza from "./components/pizza/add-pizza.page";
+import SignUpForm from "./components/sign-up/sign-up.page";
+import HomePage from "./components/home/home.page";
+import FetchPizza from "./components/pizza/get-pizza-admin.page";
+import Login from "./components/login/login";
+import { CartProvider } from "./context/cart.context";
+import MyOrders from "./components/order/my-orders.page";
+import UserProfile from "./components/profile/user-profile.page";
+import GetAdmin from "./components/customer/admin.page";
+import UpdateUserProfile from "./components/profile/update-profile.page";
 
 const App: React.FC = () => {
   return (
