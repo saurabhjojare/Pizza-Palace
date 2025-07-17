@@ -51,17 +51,23 @@ View all admins except yourself
 Browse all orders with filters for username and date
 ![Orders](https://uc234c8de346320a1f9c79eb17e2.previews.dropboxusercontent.com/p/thumb/ACt_jNrWglpxYchsP57MS21drd3qfrWskXQbI7BELHLh-tDiWBQkKtAVmg3n5WUdnXaIpM4-BJk79WbJtDhKOSrLbxxPzQLRP9ySq2I-YlipxkIfYio-MR0J9leT2non8LyELppUV6aI8Mr6y_Cgnc-04w5ytlZWBdtso1bWkmpzVNAwN_50Wy0Bf507_TdBA6q7U-JUjwtA0us6zwiWKcF80P-4531e5xWvO-2_1Jw8f34EKsjL3gkCyEiDFNGQlNeofU6p_yrXv42vrxb-gJHnr7xvBoqXzqUdqottqMJbG8LvZZ-hiOT2zn7YJ0RWo6WhAbyB-e-Z8o59o9SAfikQB2hXKl9nbFYEtUAI28THlublOz_EaQslBq6PQHN90Kv3F18AJaYLTg6s0kkmC5oR/p.png?is_prewarmed=true)
 
-## Features
-- Add and remove pizzas from the cart, select sizes, add toppings, and adjust quantities  
-- Manage customer information by adding, viewing, updating, and deleting records  
-- View and track order history for better order management  
-- Enforce validation rules for order customization and inventory control  
+
+## Feature Summary
+
+The images above showcase the core features of the Pizza Ordering System:
+
+- **Cart Management**: Add or remove pizzas, select sizes, and adjust quantities in real time.
+- **Customer Management**: Add, view, update, and delete customer records.
+- **Order Tracking**: View complete order history for efficient order tracking and customer service.
+- **Validation & Control**: Enforce rules for customizing orders and managing inventory to ensure a smooth process.
+
 
 ## Tech Stack
 **Frontend**: ReactJS with TypeScript  
 **Backend**: NestJS  
 **Database**: PostgreSQL  
 **API**: RESTful APIs  
+
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
