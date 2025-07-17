@@ -1,5 +1,5 @@
 import React from "react";
-import { useOrderPage } from "./orders-page.use";
+import { useOrderPage } from "./orders.use";
 import "./orders.css";
 
 const OrderPage: React.FC = () => {
