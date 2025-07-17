@@ -2,9 +2,9 @@ import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getToken, getUserRoleFromToken } from "../../utils/auth.utils";
 import "./header.css";
-import { Paths } from "../../enums/paths";
+import { Paths } from "../../enums/paths.enums";
 import { useCart } from "../../context/cart.context";
-import { Roles } from "../../enums/roles";
+import { Roles } from "../../enums/roles.enums";
 
 const Header: React.FC = () => {
   const location = useLocation();

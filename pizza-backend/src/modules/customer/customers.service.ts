@@ -6,7 +6,7 @@ import {
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { CustomerEntity } from './entities/customer.entity';
 import * as bcrypt from 'bcrypt';
 
@@ -74,9 +74,20 @@ export class CustomersService {
     }
   }
 
-  async findByRole(role: string): Promise<CustomerEntity[]> {
+  async findByRole(
+    role: string,
+    excludeId?: number,
+  ): Promise<CustomerEntity[]> {
+    const whereCondition: any = {
+      role,
+    };
+
+    if (excludeId !== undefined) {
+      whereCondition.customer_id = Not(excludeId);
+    }
+
     return await this.customersRepository.find({
-      where: { role },
+      where: whereCondition,
       order: {
         created_at: 'DESC',
       },

@@ -7,7 +7,7 @@ import {
 import { Pizza } from "../../interfaces/order.interface";
 import { useDebounce } from "use-debounce";
 import { useNavigate } from "react-router-dom";
-import { Constants } from "../../enums/constants";
+import { Constants } from "../../enums/constants.enums";
 import { useAdminAuth } from "../../utils/auth.utils";
 
 export const useFetchPizza = () => {

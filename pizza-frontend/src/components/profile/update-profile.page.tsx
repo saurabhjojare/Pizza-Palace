@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useUpdateUserProfile } from "./update-profile.use";
-import { Constants } from "../../enums/constants";
+import { Constants } from "../../enums/constants.enums";
 import { getToken, getUserIdFromToken } from "../../utils/auth.utils";
 import { useNavigate } from "react-router-dom";
 import "./user-profile.css";

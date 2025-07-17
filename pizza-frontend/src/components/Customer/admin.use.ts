@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Customer } from "../../interfaces/customer.interface";
-import { Roles } from "../../enums/roles";
+import { Roles } from "../../enums/roles.enums";
 import {
   getToken,
+  getUserIdFromToken,
   getUserRoleFromToken,
   useAdminAuth,
 } from "../../utils/auth.utils";
@@ -11,8 +12,8 @@ import {
   deleteCustomer,
   searchAdmins,
 } from "../../services/customer.service";
-import { Messages } from "../../enums/messages";
-import { Constants } from "../../enums/constants";
+import { Messages } from "../../enums/messages.enums";
+import { Constants } from "../../enums/constants.enums";
 import { useDebounce } from "use-debounce";
 
 export const useAdmins = () => {
@@ -24,6 +25,8 @@ export const useAdmins = () => {
   const token = getToken();
   const role = getUserRoleFromToken();
 
+  const userId = getUserIdFromToken();
+
   useAdminAuth();
 
   useEffect(() => {
@@ -34,7 +37,11 @@ export const useAdmins = () => {
     const fetchCustomers = async () => {
       try {
         if (debouncedSearchTerm.trim() === "") {
-          const customerData = await getCustomersByRole("admin", token!);
+          const customerData = await getCustomersByRole(
+            "admin",
+            token!,
+            Number(userId)
+          );
           setCustomers(customerData);
         } else {
           const searchData = await searchAdmins(

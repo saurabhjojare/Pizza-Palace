@@ -90,7 +90,11 @@ const MyOrders = () => {
                     {order.status && (
                       <button
                         className="btn btn-danger btn-sm"
-                        onClick={() => handleCancel(order.order_id)}
+                        onClick={() => {
+                          if (window.confirm("Confirm?")) {
+                            handleCancel(order.order_id);
+                          }
+                        }}
                       >
                         Cancel Order
                       </button>

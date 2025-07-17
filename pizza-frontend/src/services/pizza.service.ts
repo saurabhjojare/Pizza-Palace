@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getToken } from "../utils/auth.utils";
 import { Pizza } from "../interfaces/order.interface";
-import { PIZZA_API } from "../constants/endpoints";
+import { PIZZA_API } from "../constants/endpoints.constants";
 
 export const fetchPizzas = async (): Promise<Pizza[]> => {
   const token = getToken();

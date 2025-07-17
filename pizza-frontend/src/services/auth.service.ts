@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AUTH_API } from "../constants/endpoints";
+import { AUTH_API } from "../constants/endpoints.constants";
 
 export const loginUser = async (
   email: string,

@@ -99,7 +99,11 @@ const OrderPage: React.FC = () => {
                   {order.status ? (
                     <button
                       className="btn btn-outline-danger w-100"
-                      onClick={() => handleCancel(order.order_id)}
+                      onClick={() => {
+                        if (window.confirm("Confirm?")) {
+                          handleCancel(order.order_id);
+                        }
+                      }}
                     >
                       Cancel
                     </button>

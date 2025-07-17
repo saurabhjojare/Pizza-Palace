@@ -18,7 +18,7 @@ import { ResponseInterceptor } from '../../common/interceptors/response.intercep
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
-import { role } from 'src/common/enums/role';
+import { role } from 'src/common/enums/role.enum';
 
 @Controller('orders')
 @UseInterceptors(ResponseInterceptor)

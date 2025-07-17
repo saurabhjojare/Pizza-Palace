@@ -1,4 +1,4 @@
-import { Roles } from "../enums/roles";
+import { Roles } from "../enums/roles.enums";
 
 export interface SignUpForm {
   firstName: string;

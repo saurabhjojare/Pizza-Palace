@@ -18,7 +18,7 @@ import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { CustomerEntity } from './entities/customer.entity';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
-import { role } from 'src/common/enums/role';
+import { role } from 'src/common/enums/role.enum';
 import { Roles } from '../auth/roles.decorator';
 
 @Controller('customers')
@@ -43,8 +43,11 @@ export class CustomersController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(role.ADMIN)
   @Post('by-role')
-  async findByRole(@Body('role') role: string): Promise<CustomerEntity[]> {
-    return this.customersService.findByRole(role);
+  async findByRole(
+    @Body('role') role: string,
+    @Body('id') id?: number,
+  ): Promise<CustomerEntity[]> {
+    return this.customersService.findByRole(role, id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

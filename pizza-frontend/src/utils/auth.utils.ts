@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { Roles } from "../enums/roles";
-import { Paths } from "../enums/paths";
-import { Constants } from "../enums/constants";
+import { Roles } from "../enums/roles.enums";
+import { Paths } from "../enums/paths.enums";
+import { Constants } from "../enums/constants.enums";
 
 export const getToken = (): string | null => {
   return localStorage.getItem("token");

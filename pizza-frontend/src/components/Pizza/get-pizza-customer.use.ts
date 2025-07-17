@@ -8,8 +8,8 @@ import {
   getToken,
 } from "../../utils/auth.utils";
 import { Pizza } from "../../interfaces/order.interface";
-import { Roles } from "../../enums/roles";
-import { Paths } from "../../enums/paths";
+import { Roles } from "../../enums/roles.enums";
+import { Paths } from "../../enums/paths.enums";
 import { getCustomerNameById } from "../../services/customer.service";
 import { useDebounce } from "use-debounce";
 import { useCart } from "../../context/cart.context";

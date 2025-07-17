@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CUSTOMER_API } from "../constants/endpoints";
+import { CUSTOMER_API } from "../constants/endpoints.constants";
 import { Customer } from "../interfaces/customer.interface";
 
 export const getAllCustomers = async (token: string): Promise<Customer[]> => {
@@ -75,19 +75,22 @@ export const updateCustomerProfile = async (
 
 export const getCustomersByRole = async (
   role: string,
-  token: string
+  token: string,
+  excludeId?: number
 ): Promise<Customer[]> => {
   try {
-    const response = await axios.post(
-      CUSTOMER_API.BY_ROLE,
-      { role },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const requestBody: any = { role };
+
+    if (excludeId !== undefined) {
+      requestBody.id = excludeId;
+    }
+
+    const response = await axios.post(CUSTOMER_API.BY_ROLE, requestBody, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
     return response.data.Data;
   } catch (error: any) {
     throw new Error(

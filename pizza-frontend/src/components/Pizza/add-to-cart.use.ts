@@ -4,7 +4,7 @@ import {
   getUserIdFromToken,
   getUserRoleFromToken,
 } from "../../utils/auth.utils";
-import { Roles } from "../../enums/roles";
+import { Roles } from "../../enums/roles.enums";
 
 export const useAddToCart = (pizza: Pizza, addToCartFn: Function) => {
   const [size, setSize] = useState<string>("regular");

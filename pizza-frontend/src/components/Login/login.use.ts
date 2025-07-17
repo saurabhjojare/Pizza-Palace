@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Roles } from "../../enums/roles";
+import { Roles } from "../../enums/roles.enums";
 import {
   getUserRoleFromToken,
   saveToken,
   useUserAuth,
 } from "../../utils/auth.utils";
 import { loginUser } from "../../services/auth.service";
-import { Paths } from "../../enums/paths";
-import { Constants } from "../../enums/constants";
-import { Messages } from "../../enums/messages";
+import { Paths } from "../../enums/paths.enums";
+import { Constants } from "../../enums/constants.enums";
+import { Messages } from "../../enums/messages.enums";
 
 export const useLogin = () => {
   useUserAuth();

@@ -3,7 +3,7 @@ import { CartProps } from "../../interfaces/order.interface";
 import { placeOrder } from "../../services/order.service";
 import { getToken, getUserIdFromToken } from "../../utils/auth.utils";
 import { getCustomerAddressById } from "../../services/customer.service";
-import { Messages } from "../../enums/messages";
+import { Messages } from "../../enums/messages.enums";
 
 export const useCart = (
   cartItems: CartProps["cartItems"],

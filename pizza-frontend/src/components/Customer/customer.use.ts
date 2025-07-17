@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { Customer } from "../../interfaces/customer.interface";
-import { Roles } from "../../enums/roles";
-import { Messages } from "../../enums/messages";
-import { Constants } from "../../enums/constants";
+import { Roles } from "../../enums/roles.enums";
+import { Messages } from "../../enums/messages.enums";
+import { Constants } from "../../enums/constants.enums";
 import {
   getCustomersByRole,
   deleteCustomer,

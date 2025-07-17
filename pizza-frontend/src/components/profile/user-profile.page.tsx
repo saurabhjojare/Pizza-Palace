@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useUserProfile } from "./user-profile.use";
-import { Constants } from "../../enums/constants";
+import { Constants } from "../../enums/constants.enums";
 import "./user-profile.css";
 
 const UserProfile: React.FC = () => {

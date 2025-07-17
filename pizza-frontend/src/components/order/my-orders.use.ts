@@ -12,10 +12,10 @@ import {
   getUserIdFromToken,
   getUserRoleFromToken,
 } from "../../utils/auth.utils";
-import { Roles } from "../../enums/roles";
-import { Paths } from "../../enums/paths";
-import { Constants } from "../../enums/constants";
-import { Messages } from "../../enums/messages";
+import { Roles } from "../../enums/roles.enums";
+import { Paths } from "../../enums/paths.enums";
+import { Constants } from "../../enums/constants.enums";
+import { Messages } from "../../enums/messages.enums";
 
 export const useMyOrders = () => {
   const [orders, setOrders] = useState<Order[]>([]);

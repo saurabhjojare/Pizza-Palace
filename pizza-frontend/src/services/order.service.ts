@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Order } from "../interfaces/order.interface";
 import { getToken } from "../utils/auth.utils";
-import { ORDER_API } from "../constants/endpoints";
+import { ORDER_API } from "../constants/endpoints.constants";
 
 export const fetchOrders = async (): Promise<Order[]> => {
   const token = getToken();

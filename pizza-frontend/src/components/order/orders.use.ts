@@ -12,10 +12,10 @@ import {
   getUserRoleFromToken,
   useAdminAuth,
 } from "../../utils/auth.utils";
-import { Constants } from "../../enums/constants";
-import { Messages } from "../../enums/messages";
-import { Paths } from "../../enums/paths";
-import { Roles } from "../../enums/roles";
+import { Constants } from "../../enums/constants.enums";
+import { Messages } from "../../enums/messages.enums";
+import { Paths } from "../../enums/paths.enums";
+import { Roles } from "../../enums/roles.enums";
 import { getAllCustomers } from "../../services/customer.service";
 import { Customer } from "../../interfaces/customer.interface";
 import { useDebounce } from "use-debounce";

@@ -6,7 +6,7 @@ import {
   deleteCustomer,
   getCustomerById,
 } from "../../services/customer.service";
-import { Paths } from "../../enums/paths";
+import { Paths } from "../../enums/paths.enums";
 
 export const useUserProfile = () => {
   const [customer, setCustomer] = useState<Customer | null>(null);
@@ -52,7 +52,8 @@ export const useUserProfile = () => {
       }
 
       await deleteCustomer(customer.customer_id, token);
-      alert("Profile deleted successfully.");
+      localStorage.removeItem("token");
+
       navigate("/login");
     } catch (err) {
       console.error(err);

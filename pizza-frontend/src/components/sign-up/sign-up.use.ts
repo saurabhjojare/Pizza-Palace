@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Roles } from "../../enums/roles";
-import { Constants } from "../../enums/constants";
+import { Roles } from "../../enums/roles.enums";
+import { Constants } from "../../enums/constants.enums";
 import { SignUpForm } from "../../interfaces/sign-up.interface";
 import { signUpUser } from "../../services/sign-up.service";
 import { getUserRoleFromToken } from "../../utils/auth.utils";
-import { Paths } from "../../enums/paths";
-import { Messages } from "../../enums/messages";
+import { Paths } from "../../enums/paths.enums";
+import { Messages } from "../../enums/messages.enums";
 
 export const SignUp = () => {
   const [step, setStep] = useState(1);

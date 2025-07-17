@@ -1,6 +1,6 @@
 import React from "react";
 import { SignUp } from "./sign-up.use";
-import { Roles } from "../../enums/roles";
+import { Roles } from "../../enums/roles.enums";
 import "./sign-up.css";
 
 export const SignUpForm: React.FC = () => {

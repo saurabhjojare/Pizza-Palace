@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdminAuth } from "../../utils/auth.utils";
-import { Constants } from "../../enums/constants";
+import { Constants } from "../../enums/constants.enums";
 import { addPizza } from "../../services/pizza.service";
-import { Messages } from "../../enums/messages";
+import { Messages } from "../../enums/messages.enums";
 
 export const useAddPizza = () => {
   useAdminAuth();

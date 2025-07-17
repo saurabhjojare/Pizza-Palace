@@ -1,6 +1,6 @@
 import axios from "axios";
 import { SignUpForm } from "../interfaces/sign-up.interface";
-import { CUSTOMER_API } from "../constants/endpoints";
+import { CUSTOMER_API } from "../constants/endpoints.constants";
 
 export const signUpUser = async (formData: SignUpForm) => {
   try {
