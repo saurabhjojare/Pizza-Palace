@@ -1,8 +1,8 @@
 import React from "react";
-import { useOrderTable } from "./useOrderTable";
-import "./GetOrder.css";
+import { useOrderPage } from "./useOrderPage";
+import "./Order.css";
 
-const OrderTable: React.FC = () => {
+const OrderPage: React.FC = () => {
   const {
     orders,
     pizzas,
@@ -14,7 +14,7 @@ const OrderTable: React.FC = () => {
     setSearchDate,
     handleCancel,
     formatDate,
-  } = useOrderTable();
+  } = useOrderPage();
 
   return (
     <div className="container mt-3">
@@ -116,4 +116,4 @@ const OrderTable: React.FC = () => {
   );
 };
 
-export default OrderTable;
+export default OrderPage;

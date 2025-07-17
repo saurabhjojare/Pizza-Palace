@@ -66,7 +66,7 @@ export const SignUp = () => {
 
       try {
         await signUpUser(formData);
-        navigate(Paths.ROOT);
+        navigate(Paths.LOGIN);
       } catch (err: any) {
         setError(err.message);
       } finally {

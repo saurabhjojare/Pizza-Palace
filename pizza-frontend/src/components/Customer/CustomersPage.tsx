@@ -1,18 +1,14 @@
 import React from "react";
-import CustomerList from "./CustomerList";
-import { useAdmin } from "./useAdmin";
+import CustomerList from "./UserPage";
+import { useCustomers } from "./useCustomers";
 import "./User.css";
 
-const GetAdmin: React.FC = () => {
+const CustomersPage: React.FC = () => {
   const { customers, error, searchTerm, setSearchTerm, handleDelete } =
-    useAdmin();
+    useCustomers();
 
   if (error) {
-    return (
-      <div className="text-center text-danger" role="alert">
-        {error}
-      </div>
-    );
+    return null;
   }
 
   return (
@@ -21,21 +17,17 @@ const GetAdmin: React.FC = () => {
         <div className="col-10 col-sm-10 col-md-6 col-lg-4">
           <input
             type="text"
-            className="form-control py-2 px-4 h4 fw-lighter custom-shadow "
-            placeholder="Search Admin"
+            className="form-control py-2 px-4 h4 fw-lighter custom-shadow"
+            placeholder="Search Customer"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
       </div>
 
-      <CustomerList
-        customers={customers}
-        onDelete={handleDelete}
-        title="Admin List"
-      />
+      <CustomerList customers={customers} onDelete={handleDelete} />
     </div>
   );
 };
 
-export default GetAdmin;
+export default CustomersPage;

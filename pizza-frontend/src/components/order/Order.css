@@ -38,5 +38,5 @@
 
 .fixed-height-card {
   height: 350px;
-  overflow-y: auto; /* enable vertical scrolling */
+  overflow-y: auto;
 }

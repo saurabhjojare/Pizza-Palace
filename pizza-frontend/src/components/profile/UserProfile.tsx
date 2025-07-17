@@ -1,74 +1,15 @@
-import React, { useEffect, useState } from "react";
-import {
-  getCustomerById,
-  deleteCustomer,
-} from "../../services/CustomerService";
-import { getToken, getUserIdFromToken } from "../../utils/Auth";
-import { Customer } from "../../interfaces/Customer";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useUserProfile } from "./useUserProfile";
 import { Constants } from "../enums/Constants";
-import { Paths } from "../enums/Paths";
 import "./UserProfile.css";
 
 const UserProfile: React.FC = () => {
-  const [customer, setCustomer] = useState<Customer | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const { customer, loading, error, handleDelete, handleUpdate } =
+    useUserProfile();
 
   useEffect(() => {
     document.title = Constants.MY_PROFILE;
   }, []);
-
-  useEffect(() => {
-    const fetchCustomer = async () => {
-      const token = getToken();
-      const userId = getUserIdFromToken();
-
-      if (!token || !userId) {
-        setError("Unauthorized access.");
-        setLoading(false);
-        navigate("/");
-        return;
-      }
-
-      try {
-        const data = await getCustomerById(Number(userId), token);
-        setCustomer(data);
-      } catch (err) {
-        setError("Failed to load profile.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCustomer();
-  }, []);
-
-  const handleDelete = async () => {
-    if (!customer) return;
-
-    const confirm = window.confirm("Confirm?");
-    if (!confirm) return;
-
-    try {
-      const token = getToken();
-      if (!token) {
-        setError("Unauthorized.");
-        return;
-      }
-
-      await deleteCustomer(customer.customer_id, token);
-      navigate("/login");
-    } catch (err) {
-      console.error(err);
-      setError("Failed to delete profile.");
-    }
-  };
-
-  const handleUpdate = () => {
-    navigate(Paths.UPDATE_PROFILE);
-  };
 
   if (loading) {
     return <div className="text-center mt-5">Loading...</div>;
@@ -80,7 +21,7 @@ const UserProfile: React.FC = () => {
 
   return (
     <div className="container mt-3 d-flex justify-content-center">
-      <div className="card px-5 pb-4 shadow rounded-4 border-0 custom-custom">
+      <div className="card px-5 pb-4 shadow rounded-4 border-0 custom-card-480">
         <div className="text-center mb-3">
           <i className="bi bi-person-circle text-secondary icon-size"></i>
           <h3 className="fw-bold mb-0">

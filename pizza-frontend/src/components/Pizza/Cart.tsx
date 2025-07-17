@@ -1,8 +1,7 @@
 import React from "react";
 import { CartProps } from "../../interfaces/Order";
 import { useCart } from "./useCart";
-import { getCustomerAddressById } from "../../services/CustomerService";
-import { getToken, getUserIdFromToken } from "../../utils/Auth";
+import "./Cart.css";
 
 const Cart: React.FC<CartProps> = ({
   cartItems,
@@ -20,36 +19,8 @@ const Cart: React.FC<CartProps> = ({
 
   const totalAmount = calculateTotalAmount();
 
-  const handleClickPlaceOrder = async () => {
-    const token = getToken();
-    const userId = getUserIdFromToken();
-    if (!token) {
-      alert("Authentication token is missing.");
-      return;
-    }
-
-    if (!userId) {
-      alert("User ID is missing.");
-      return;
-    }
-
-    try {
-      const address = await getCustomerAddressById(Number(userId), token);
-      await handlePlaceOrder(address);
-    } catch (error) {
-      console.error("Failed to place order:", error);
-      alert("Failed to retrieve address or place the order.");
-    }
-  };
-
   return cartItems.length > 0 ? (
-    <div
-      className="mx-auto card mt-4 mb-4 cart-box-shadow w-50"
-      style={{
-        boxShadow:
-          "rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
-      }}
-    >
+    <div className="mx-auto card mt-4 mb-4 cart-box-shadow w-50 cart-shadow">
       <div className="card-body">
         <h5 className="card-title fs-3">Cart</h5>
         <ul className="list-group list-group-flush">
@@ -103,7 +74,7 @@ const Cart: React.FC<CartProps> = ({
           <button
             className="btn btn-success"
             disabled={isPlacingOrder}
-            onClick={handleClickPlaceOrder}
+            onClick={handlePlaceOrder}
           >
             {isPlacingOrder ? "Placing..." : "Place Order"}
           </button>

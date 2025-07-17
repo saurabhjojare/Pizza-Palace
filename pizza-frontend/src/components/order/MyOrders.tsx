@@ -1,6 +1,6 @@
 import React from "react";
 import { useMyOrders } from "./useMyOrders";
-import "./GetOrder.css";
+import "./Order.css";
 
 const MyOrders = () => {
   const {
@@ -30,9 +30,8 @@ const MyOrders = () => {
           />
           {searchDate && (
             <button
-              className="btn btn-outline-secondary"
+              className="btn btn-outline-secondary text-nowrap"
               onClick={clearDate}
-              style={{ whiteSpace: "nowrap" }}
             >
               Clear
             </button>

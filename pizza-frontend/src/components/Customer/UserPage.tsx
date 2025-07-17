@@ -1,7 +1,7 @@
 import React from "react";
 import { CustomerListProps } from "../../interfaces/Customer";
 
-const CustomerList: React.FC<CustomerListProps> = ({ customers, onDelete }) => {
+const UserPage: React.FC<CustomerListProps> = ({ customers, onDelete }) => {
   return (
     <div className="container">
       <div className="row g-4">
@@ -40,4 +40,4 @@ const CustomerList: React.FC<CustomerListProps> = ({ customers, onDelete }) => {
   );
 };
 
-export default CustomerList;
+export default UserPage;

@@ -61,3 +61,16 @@ export const useCustomerAuth = () => {
     }
   }, [navigate]);
 };
+
+export const useUserAuth = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const role = getUserRoleFromToken();
+    if (role === Roles.ADMIN) {
+      navigate(Paths.PIZZA_LIST);
+    } else if (role === Roles.CUSTOMER) {
+      navigate(Paths.ROOT);
+    }
+  }, [navigate]);
+};

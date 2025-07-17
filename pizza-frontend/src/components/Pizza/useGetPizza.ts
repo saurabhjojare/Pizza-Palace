@@ -45,7 +45,7 @@ export const useGetPizza = () => {
       setCustomerId(Number(userId));
       const fetchFirstName = async () => {
         try {
-          const name = await getCustomerNameById(Number(userId), token!);
+          const name = await getCustomerNameById(Number(userId), token);
           setFirstName(name);
         } catch {
           setFirstName(null);
@@ -58,15 +58,12 @@ export const useGetPizza = () => {
   useEffect(() => {
     const loadPizzas = async () => {
       try {
-        if (debouncedSearchTerm.trim() === "") {
-          const pizzasData = await fetchPizzas();
-          setPizzas(pizzasData);
-        } else {
-          const pizzasData = await searchPizzasByName(
-            debouncedSearchTerm.trim()
-          );
-          setPizzas(pizzasData);
-        }
+        const trimmed = debouncedSearchTerm.trim();
+        const pizzasData =
+          trimmed === ""
+            ? await fetchPizzas()
+            : await searchPizzasByName(trimmed);
+        setPizzas(pizzasData);
         setError(null);
       } catch {
         setError("Failed to fetch pizzas");
@@ -74,24 +71,6 @@ export const useGetPizza = () => {
     };
 
     loadPizzas();
-  }, [debouncedSearchTerm]);
-
-  useEffect(() => {
-    const performSearch = async () => {
-      try {
-        if (debouncedSearchTerm.trim() === "") {
-          const data = await fetchPizzas();
-          setPizzas(data);
-        } else {
-          const data = await searchPizzasByName(debouncedSearchTerm.trim());
-          setPizzas(data);
-        }
-      } catch {
-        setError("Failed to search pizzas");
-      }
-    };
-
-    performSearch();
   }, [debouncedSearchTerm]);
 
   useEffect(() => {

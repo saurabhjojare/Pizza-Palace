@@ -4,7 +4,7 @@ import "./Pizza.css";
 import { useUpdatePizza } from "./useUpdatePizza";
 
 const UpdatePizza: React.FC = () => {
-  const { initialValues, validationSchema, handleSubmit, error, success } =
+  const { initialValues, AddPizzaSchema, handleSubmit, error, success } =
     useUpdatePizza();
 
   return (
@@ -20,7 +20,7 @@ const UpdatePizza: React.FC = () => {
             <Formik
               enableReinitialize
               initialValues={initialValues}
-              validationSchema={validationSchema}
+              validationSchema={AddPizzaSchema}
               onSubmit={handleSubmit}
             >
               {() => (

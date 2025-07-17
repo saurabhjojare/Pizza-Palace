@@ -1,23 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import { AddToCartProps } from "../../interfaces/Order";
-import { getUserIdFromToken, getUserRoleFromToken } from "../../utils/Auth";
-import { Roles } from "../enums/Roles";
+import { useAddToCart } from "./useAddToCart";
 
 const AddToCart: React.FC<AddToCartProps> = ({ pizza, addToCart }) => {
-  const [size, setSize] = useState<string>("regular");
-  const [quantity, setQuantity] = useState<number>(1);
-  const role = getUserRoleFromToken();
-
-  const tokenExists = !!getUserIdFromToken();
-
-  const handleAddToCart = () => {
-    addToCart(pizza, size, quantity);
-    setQuantity(1);
-  };
+  const { size, setSize, quantity, setQuantity, isCustomer, handleAddToCart } =
+    useAddToCart(pizza, addToCart);
 
   return (
     <div>
-      {tokenExists && role !== Roles.ADMIN ? (
+      {isCustomer ? (
         <>
           <select
             value={size}
@@ -55,11 +46,11 @@ const AddToCart: React.FC<AddToCartProps> = ({ pizza, addToCart }) => {
           <span className="text-muted">
             <strong>Regular </strong> - ₹{pizza.regularPrice}
           </span>
-          <br></br>
+          <br />
           <span className="text-muted">
             <strong>Medium</strong> - ₹{pizza.mediumPrice}
           </span>
-          <br></br>
+          <br />
           <span className="text-muted">
             <strong>Large</strong> - ₹{pizza.largePrice}
           </span>

@@ -1,13 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useLogin } from "./useLogin";
+import "./Login.css";
 
 const Login: React.FC = () => {
   const { email, setEmail, password, setPassword, error, handleLogin } =
     useLogin();
 
   return (
-    <div className="container mt-5" style={{ maxWidth: 500 }}>
+    <div className="container mt-5 max-width">
       <h2 className="mb-4 text-center pt-5">Login</h2>
       <form onSubmit={handleLogin}>
         {error && <span className="text-center text-danger">{error}</span>}

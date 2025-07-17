@@ -1,29 +1,16 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAdminAuth } from "../../utils/Auth";
+import React from "react";
 import { useFetchPizza } from "./useFetchPizza";
-import { Constants } from "../enums/Constants";
+import "./Pizza.css";
 
 const FetchPizza: React.FC = () => {
-  const { pizzas, error, searchTerm, setSearchTerm, removePizza } =
-    useFetchPizza();
-  const navigate = useNavigate();
-
-  useAdminAuth();
-
-  useEffect(() => {
-    document.title = Constants.PIZZAS;
-  }, []);
-
-  const handleUpdateClick = (pizzaId: number) => {
-    navigate(`/update-pizza/${pizzaId}`);
-  };
-
-  const handleDeleteClick = async (pizzaId: number) => {
-    if (window.confirm("Confirm?")) {
-      await removePizza(pizzaId);
-    }
-  };
+  const {
+    pizzas,
+    error,
+    searchTerm,
+    setSearchTerm,
+    handleUpdateClick,
+    handleDeleteClick,
+  } = useFetchPizza();
 
   if (error) return <p className="text-center text-danger">{error}</p>;
 
@@ -33,19 +20,13 @@ const FetchPizza: React.FC = () => {
         <div className="col-10 col-sm-10 col-md-6 col-lg-4">
           <input
             type="text"
-            className="form-control py-2 px-4 h4 fw-lighter"
+            className="form-control py-2 px-4 h4 fw-lighter search-box-shadow"
             placeholder="Search Pizza"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            style={{
-              boxShadow:
-                "inset 0 30px 60px -12px rgba(250, 250, 250, 0.25), inset 0 18px 36px -18px rgba(180, 167, 167, 0.3)",
-            }}
           />
         </div>
       </div>
-
-      {error && <p className="text-center text-danger">{error}</p>}
 
       <div className="row g-4">
         {pizzas.map((pizza) => (

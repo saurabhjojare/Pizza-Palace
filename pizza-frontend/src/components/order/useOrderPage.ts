@@ -16,7 +16,7 @@ import { getAllCustomers } from "../../services/CustomerService";
 import { Customer } from "../../interfaces/Customer";
 import { useDebounce } from "use-debounce";
 
-export const useOrderTable = () => {
+export const useOrderPage = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [pizzas, setPizzas] = useState<Map<number, string>>(new Map());
   const [error, setError] = useState<string | null>(null);

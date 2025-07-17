@@ -3,6 +3,7 @@ import { useUpdateUserProfile } from "./useUpdateUserProfile";
 import { Constants } from "../enums/Constants";
 import { getToken, getUserIdFromToken } from "../../utils/Auth";
 import { useNavigate } from "react-router-dom";
+import "./UserProfile.css";
 
 const UpdateUserProfile: React.FC = () => {
   const { customer, loading, error, handleChange, handleSubmit } =
@@ -26,10 +27,7 @@ const UpdateUserProfile: React.FC = () => {
 
   return (
     <div className="container mt-2 d-flex justify-content-center">
-      <div
-        className="card p-4 shadow rounded-4 border-0"
-        style={{ maxWidth: "600px", width: "100%" }}
-      >
+      <div className="card p-4 shadow rounded-4 border-0 custom-card-600">
         <h3 className="text-center mb-4">Update Profile</h3>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">

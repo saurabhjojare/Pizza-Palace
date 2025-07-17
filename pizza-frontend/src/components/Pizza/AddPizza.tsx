@@ -1,29 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
-import { useAddPizza } from "./AddPizza";
+import { AddPizzaSchema } from "../validations/AddPizzaSchema";
 import "./Pizza.css";
-import { Constants } from "../enums/Constants";
-import { addPizza } from "../../services/PizzaService";
-import { useAdminAuth } from "../../utils/Auth";
-import { Messages } from "../enums/Messages";
-import { useNavigate } from "react-router-dom";
+import { useAddPizza } from "./useAddPizza";
 
 const AddPizza: React.FC = () => {
-  useAdminAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    document.title = Constants.ADD_PIZZA;
-  }, []);
-
-  const handleSubmit = async (values: any) => {
-    try {
-      await addPizza(values);
-      navigate("/");
-    } catch (err) {
-      alert(Messages.FAILED_TO_ADD_PIZZA);
-    }
-  };
+  const { initialValues, handleSubmit } = useAddPizza();
 
   return (
     <div className="container mt-2">
@@ -33,16 +15,8 @@ const AddPizza: React.FC = () => {
             <div className="card-body p-4">
               <h3 className="mb-4 text-center">Add Pizza</h3>
               <Formik
-                initialValues={{
-                  name: "",
-                  type: "Vegetarian",
-                  imageUrl: "",
-                  description: "",
-                  regularPrice: "",
-                  mediumPrice: "",
-                  largePrice: "",
-                }}
-                validationSchema={useAddPizza}
+                initialValues={initialValues}
+                validationSchema={AddPizzaSchema}
                 onSubmit={handleSubmit}
               >
                 {() => (

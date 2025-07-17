@@ -1,13 +1,20 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Roles } from "../enums/Roles";
-import { getToken, getUserRoleFromToken, saveToken } from "../../utils/Auth";
+import {
+  getToken,
+  getUserRoleFromToken,
+  saveToken,
+  useUserAuth,
+} from "../../utils/Auth";
 import { loginUser } from "../../services/AuthService";
 import { Paths } from "../enums/Paths";
 import { Constants } from "../enums/Constants";
 import { Messages } from "../enums/Messages";
 
 export const useLogin = () => {
+  useUserAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -15,17 +22,6 @@ export const useLogin = () => {
 
   useEffect(() => {
     document.title = Constants.LOGIN;
-
-    const token = getToken();
-    const role = getUserRoleFromToken();
-
-    if (token && role) {
-      if (role === Roles.ADMIN) {
-        navigate(Paths.PIZZA_LIST);
-      } else if (role === Roles.CUSTOMER) {
-        navigate(Paths.ROOT);
-      }
-    }
   }, [navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {

@@ -4,9 +4,9 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./components/header/Header";
 import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
-import GetCustomers from "./components/customer/GetCustomers";
+import GetCustomers from "./components/customer/CustomersPage";
 import GetPizza from "./components/pizza/GetPizza";
-import OrderTable from "./components/order/OrderTable";
+import OrderPage from "./components/order/OrderPage";
 import UpdatePizza from "./components/pizza/UpdatePizza";
 import AddPizza from "./components/pizza/AddPizza";
 import SignUpForm from "./components/sign-up/SignUpForm";
@@ -16,7 +16,7 @@ import Login from "./components/login/Login";
 import { CartProvider } from "./context/CartContext";
 import MyOrders from "./components/order/MyOrders";
 import UserProfile from "./components/profile/UserProfile";
-import GetAdmin from "./components/customer/GetAdmin";
+import GetAdmin from "./components/customer/AdminsPage";
 import UpdateUserProfile from "./components/profile/UpdateUserProfile";
 
 const App: React.FC = () => {
@@ -39,7 +39,7 @@ const App: React.FC = () => {
               <Route path="/update-profile" element={<UpdateUserProfile />} />
 
               <Route path="/pizza-list" element={<FetchPizza />}></Route>
-              <Route path="/order" element={<OrderTable />} />
+              <Route path="/order" element={<OrderPage />} />
               <Route path="/customer" element={<GetCustomers />}></Route>
               <Route path="/admin" element={<GetAdmin />}></Route>
               <Route path="/update-pizza/:pizzaId" element={<UpdatePizza />} />

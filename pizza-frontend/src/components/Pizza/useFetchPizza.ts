@@ -6,12 +6,22 @@ import {
 } from "../../services/PizzaService";
 import { Pizza } from "../../interfaces/Order";
 import { useDebounce } from "use-debounce";
+import { useNavigate } from "react-router-dom";
+import { Constants } from "../enums/Constants";
+import { useAdminAuth } from "../../utils/Auth";
 
 export const useFetchPizza = () => {
   const [pizzas, setPizzas] = useState<Pizza[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500);
+  const navigate = useNavigate();
+
+  useAdminAuth();
+
+  useEffect(() => {
+    document.title = Constants.PIZZAS;
+  }, []);
 
   useEffect(() => {
     const loadPizzas = async () => {
@@ -40,11 +50,22 @@ export const useFetchPizza = () => {
     }
   };
 
+  const handleUpdateClick = (pizzaId: number) => {
+    navigate(`/update-pizza/${pizzaId}`);
+  };
+
+  const handleDeleteClick = async (pizzaId: number) => {
+    if (window.confirm("Confirm?")) {
+      await removePizza(pizzaId);
+    }
+  };
+
   return {
     pizzas,
     error,
     searchTerm,
     setSearchTerm,
-    removePizza,
+    handleUpdateClick,
+    handleDeleteClick,
   };
 };

@@ -67,8 +67,7 @@ const Header: React.FC = () => {
             location.pathname.startsWith("/update-profile")) && (
             <button
               onClick={() => navigate(-1)}
-              className="text-white me-4 text-decoration-none bg-transparent border-0"
-              style={{ cursor: "pointer" }}
+              className="text-white me-4 text-decoration-none bg-transparent border-0 cursor-pointer"
             >
               <i className="bi bi-arrow-left"></i>
             </button>

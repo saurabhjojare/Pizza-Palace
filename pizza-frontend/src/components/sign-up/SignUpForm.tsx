@@ -1,6 +1,7 @@
 import React from "react";
 import { SignUp } from "./SignUp";
 import { Roles } from "../enums/Roles";
+import "./SignUp.css";
 
 export const SignUpForm: React.FC = () => {
   const {
@@ -14,10 +15,10 @@ export const SignUpForm: React.FC = () => {
   } = SignUp();
 
   return (
-    <div className="container mt-5" style={{ maxWidth: 500 }}>
+    <div className="container mt-5 max-width-500">
       <h2 className="mb-4 text-center pt-5">Sign Up</h2>
 
-      {error && <div className="alert alert-danger">{error}</div>}
+      {error && <div className="text-center text-danger">{error}</div>}
 
       <form>
         {step === 1 && (

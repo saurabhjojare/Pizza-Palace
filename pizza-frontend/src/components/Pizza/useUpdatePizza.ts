@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import "./Pizza.css";
 import { useAdminAuth } from "../../utils/Auth";
 import { getPizzaById, updatePizza } from "../../services/PizzaService";
-import { validationSchema } from "./AddPizza";
+import { AddPizzaSchema } from "../validations/AddPizzaSchema";
 
 const defaultValues = {
   name: "",
@@ -71,7 +71,7 @@ export const useUpdatePizza = () => {
 
   return {
     initialValues,
-    validationSchema,
+    AddPizzaSchema,
     handleSubmit,
     error,
     success,

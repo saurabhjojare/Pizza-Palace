@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { CartProps } from "../../interfaces/Order";
 import { placeOrder } from "../../services/OrderService";
+import { getToken, getUserIdFromToken } from "../../utils/Auth";
+import { getCustomerAddressById } from "../../services/CustomerService";
 import { Messages } from "../enums/Messages";
-import { Constants } from "../enums/Constants";
 
 export const useCart = (
   cartItems: CartProps["cartItems"],
@@ -33,22 +34,29 @@ export const useCart = (
       return total + price * item.quantity;
     }, 0);
 
-  const handlePlaceOrder = async (address: string) => {
-    if (!address.trim()) {
-      alert("Please provide a valid delivery address.");
-      return;
-    }
-
-    const token = localStorage.getItem(Constants.TOKEN.toLowerCase());
+  const handlePlaceOrder = async () => {
+    const token = getToken();
+    const userId = getUserIdFromToken();
 
     if (!token) {
-      alert(Messages.AUTH_TOKEN_MISSING);
+      alert("Authentication token is missing.");
       return;
     }
 
-    setIsPlacingOrder(true);
+    if (!userId) {
+      alert("User ID is missing.");
+      return;
+    }
 
     try {
+      const address = await getCustomerAddressById(Number(userId), token);
+      if (!address.trim()) {
+        alert("Please provide a valid delivery address.");
+        return;
+      }
+
+      setIsPlacingOrder(true);
+
       console.log(Messages.SENDING_ORDER, {
         customerId,
         deliveryAddress: address,
