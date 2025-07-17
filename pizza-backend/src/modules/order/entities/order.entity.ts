@@ -28,7 +28,7 @@ export class OrderEntity {
   })
   order_time: Date;
 
-  @Column({ type: 'int', nullable: false })
+  @Column({ type: 'int', nullable: true })
   customer_id: number;
 
   @Column({ type: 'varchar', nullable: false })
@@ -38,7 +38,8 @@ export class OrderEntity {
   created_at: Date;
 
   @ManyToOne(() => CustomerEntity, (customer) => customer.orders, {
-    onDelete: 'CASCADE',
+    onDelete: 'SET NULL',
+    nullable: true,
   })
   @JoinColumn({ name: 'customer_id' })
   customer: CustomerEntity;

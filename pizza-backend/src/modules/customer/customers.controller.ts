@@ -18,7 +18,7 @@ import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { CustomerEntity } from './entities/customer.entity';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
-import { Role } from 'src/common/enums/Role';
+import { role } from 'src/common/enums/role.enum';
 import { Roles } from '../auth/roles.decorator';
 
 @Controller('customers')
@@ -34,21 +34,24 @@ export class CustomersController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN)
+  @Roles(role.ADMIN)
   @Get()
   async findAll(): Promise<CustomerEntity[]> {
     return this.customersService.findAll();
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN)
+  @Roles(role.ADMIN)
   @Post('by-role')
-  async findByRole(@Body('role') role: string): Promise<CustomerEntity[]> {
-    return this.customersService.findByRole(role);
+  async findByRole(
+    @Body('role') role: string,
+    @Body('id') id?: number,
+  ): Promise<CustomerEntity[]> {
+    return this.customersService.findByRole(role, id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.CUSTOMER, Role.ADMIN)
+  @Roles(role.CUSTOMER, role.ADMIN)
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<CustomerEntity> {
     const customerId = parseInt(id, 10);
@@ -59,7 +62,7 @@ export class CustomersController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.CUSTOMER)
+  @Roles(role.ADMIN, role.CUSTOMER)
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -69,14 +72,14 @@ export class CustomersController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.CUSTOMER)
+  @Roles(role.ADMIN, role.CUSTOMER)
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
     return this.customersService.remove(+id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.CUSTOMER)
+  @Roles(role.ADMIN, role.CUSTOMER)
   @Get(':id/full-name')
   async getCustomerName(
     @Param('id') id: string,
@@ -89,7 +92,7 @@ export class CustomersController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.CUSTOMER)
+  @Roles(role.ADMIN, role.CUSTOMER)
   @Get(':id/address')
   async getCustomerAddress(
     @Param('id') id: string,

@@ -5,8 +5,10 @@
 }
 
 .nav-link:hover {
+  background-color: #e8e8e8;
 }
 
 .nav-link {
   color: #000 !important;
+  margin: 5px;
 }

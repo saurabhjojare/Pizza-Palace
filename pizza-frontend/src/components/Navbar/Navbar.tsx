@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Paths } from "../enums/Paths";
-import "./Navbar.css";
+import { Paths } from "../../enums/paths.enums";
+import "./navbar.css";
 
 const Navbar: React.FC = () => {
   const location = useLocation();

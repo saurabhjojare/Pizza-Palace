@@ -18,7 +18,7 @@ export class CreateOrderDto {
   delivery_address: string;
 
   @IsNotEmpty({ message: 'Status is required' })
-  @IsString({ message: 'Status must be a string' }) // changed from boolean
+  @IsString({ message: 'Status must be a string' })
   status: string;
 
   @IsNotEmpty({ message: 'Order lines are required' })

@@ -4,7 +4,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, Brackets, Like, Repository } from 'typeorm';
+import { Between, Brackets, Repository } from 'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { OrderEntity } from './entities/order.entity';
@@ -165,7 +165,7 @@ export class OrdersService {
       .createQueryBuilder('order')
       .leftJoinAndSelect('order.customer', 'customer')
       .leftJoinAndSelect('order.orderLines', 'orderLine')
-      .orderBy('order.created_at', 'DESC'); // Sort by created_at in descending order (latest first)
+      .orderBy('order.created_at', 'DESC');
 
     if (!name && !date) {
       throw new BadRequestException(

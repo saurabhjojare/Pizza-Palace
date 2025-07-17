@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreatePizzaDto } from './dto/create-pizza.dto';
 import { UpdatePizzaDto } from './dto/update-pizza.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PizzaEntity } from './entities/pizza.entity';
-import { Like, Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 
 @Injectable()
 export class PizzaService {
@@ -26,11 +26,9 @@ export class PizzaService {
   async findOne(id: number): Promise<PizzaEntity> {
     const pizza = await this.pizzaRepository.findOne({
       where: { pizza_id: id },
-      order: { created_at: 'DESC' }, // Optional: to ensure the most recent pizza is fetched
+      order: { created_at: 'DESC' },
     });
-    if (!pizza) {
-      throw new NotFoundException(`Pizza with ID ${id} not found`);
-    }
+
     return pizza;
   }
 
@@ -47,10 +45,9 @@ export class PizzaService {
   }
 
   async searchByName(name: string): Promise<PizzaEntity[]> {
-    return await this.pizzaRepository
-      .createQueryBuilder('pizza')
-      .where('LOWER(pizza.name) LIKE LOWER(:name)', { name: `%${name}%` })
-      .orderBy('pizza.created_at', 'DESC') // Sort by created_at in descending order
-      .getMany();
+    return await this.pizzaRepository.find({
+      where: { name: ILike(`%${name}%`) },
+      order: { created_at: 'DESC' },
+    });
   }
 }

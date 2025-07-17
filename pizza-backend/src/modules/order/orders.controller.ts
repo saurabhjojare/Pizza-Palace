@@ -9,8 +9,6 @@ import {
   UseInterceptors,
   UseGuards,
   Query,
-  Req,
-  BadRequestException,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -20,7 +18,7 @@ import { ResponseInterceptor } from '../../common/interceptors/response.intercep
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
-import { Role } from 'src/common/enums/Role';
+import { role } from 'src/common/enums/role.enum';
 
 @Controller('orders')
 @UseInterceptors(ResponseInterceptor)
@@ -28,7 +26,7 @@ export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.CUSTOMER)
+  @Roles(role.CUSTOMER)
   @Post()
   async create(@Body() createOrderDto: CreateOrderDto): Promise<OrderEntity> {
     const message = await this.ordersService.create(createOrderDto);
@@ -37,14 +35,14 @@ export class OrdersController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN)
+  @Roles(role.ADMIN)
   @Get()
   async findAll(): Promise<OrderEntity[]> {
     return this.ordersService.findAll();
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.CUSTOMER)
+  @Roles(role.CUSTOMER)
   @Get('customer/:customerId')
   async getOrdersByCustomerId(
     @Param('customerId') customerId: string,
@@ -53,24 +51,24 @@ export class OrdersController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN)
+  @Roles(role.ADMIN)
   @Get('filter')
   async getOrdersByFilter(
     @Query('name') name?: string,
-    @Query('date') date?: string, // expected as ISO string or yyyy-mm-dd
+    @Query('date') date?: string,
   ): Promise<OrderEntity[]> {
     return this.ordersService.getOrdersByFilter(name, date);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.CUSTOMER)
+  @Roles(role.CUSTOMER)
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<OrderEntity> {
     return this.ordersService.findOne(+id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.CUSTOMER)
+  @Roles(role.ADMIN, role.CUSTOMER)
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -81,14 +79,14 @@ export class OrdersController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.CUSTOMER)
+  @Roles(role.ADMIN, role.CUSTOMER)
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
     await this.ordersService.remove(+id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.CUSTOMER)
+  @Roles(role.CUSTOMER)
   @Get('customer/:customerId/date')
   async getOrdersByCustomerAndDate(
     @Param('customerId') customerId: string,

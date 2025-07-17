@@ -8,7 +8,6 @@ import {
   Delete,
   UseInterceptors,
   UseGuards,
-  Query,
 } from '@nestjs/common';
 import { PizzaService } from './pizza.service';
 import { CreatePizzaDto } from './dto/create-pizza.dto';
@@ -18,7 +17,7 @@ import { ResponseInterceptor } from '../../common/interceptors/response.intercep
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
-import { Role } from 'src/common/enums/Role';
+import { role } from 'src/common/enums/role.enum';
 
 @Controller('pizzas')
 @UseInterceptors(ResponseInterceptor)
@@ -26,7 +25,7 @@ export class PizzaController {
   constructor(private readonly pizzaService: PizzaService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.CUSTOMER)
+  @Roles(role.ADMIN, role.CUSTOMER)
   @Post()
   async create(@Body() createPizzaDto: CreatePizzaDto): Promise<PizzaEntity> {
     return this.pizzaService.create(createPizzaDto);
@@ -38,14 +37,14 @@ export class PizzaController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.CUSTOMER)
+  @Roles(role.ADMIN, role.CUSTOMER)
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<PizzaEntity> {
     return this.pizzaService.findOne(+id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.CUSTOMER)
+  @Roles(role.ADMIN, role.CUSTOMER)
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -56,14 +55,14 @@ export class PizzaController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.CUSTOMER)
+  @Roles(role.ADMIN, role.CUSTOMER)
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
     await this.pizzaService.remove(+id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.CUSTOMER)
+  @Roles(role.ADMIN, role.CUSTOMER)
   @Post('search-by-name')
   async searchByName(@Body('name') name: string): Promise<PizzaEntity[]> {
     return this.pizzaService.searchByName(name);

@@ -1,10 +1,10 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { getToken, getUserRoleFromToken } from "../../utils/Auth";
-import "./Header.css";
-import { Paths } from "../enums/Paths";
-import { useCart } from "../../context/CartContext";
-import { Roles } from "../enums/Roles";
+import { getToken, getUserRoleFromToken } from "../../utils/auth.utils";
+import "./header.css";
+import { Paths } from "../../enums/paths.enums";
+import { useCart } from "../../context/cart.context";
+import { Roles } from "../../enums/roles.enums";
 
 const Header: React.FC = () => {
   const location = useLocation();
@@ -67,8 +67,7 @@ const Header: React.FC = () => {
             location.pathname.startsWith("/update-profile")) && (
             <button
               onClick={() => navigate(-1)}
-              className="text-white me-4 text-decoration-none bg-transparent border-0"
-              style={{ cursor: "pointer" }}
+              className="text-white me-4 text-decoration-none bg-transparent border-0 cursor-pointer"
             >
               <i className="bi bi-arrow-left"></i>
             </button>

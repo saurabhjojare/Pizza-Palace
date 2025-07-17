@@ -1,0 +1,13 @@
+.custom-card-480 {
+  max-width: 480px;
+  width: 100%;
+}
+
+.custom-card-600 {
+  max-width: 600px;
+  width: 100%;
+}
+
+.icon-size {
+  font-size: 80px;
+}
