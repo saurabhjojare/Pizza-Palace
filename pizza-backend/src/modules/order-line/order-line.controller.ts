@@ -17,7 +17,7 @@ import { ResponseInterceptor } from '../../common/interceptors/response.intercep
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
-import { Role } from 'src/common/enums/Role';
+import { role } from 'src/common/enums/role';
 
 @Controller('order-line')
 @UseInterceptors(ResponseInterceptor)
@@ -25,7 +25,7 @@ export class OrderLineController {
   constructor(private readonly orderLineService: OrderLineService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.CUSTOMER)
+  @Roles(role.CUSTOMER)
   @Post()
   async create(
     @Body() createOrderLineDto: CreateOrderLineDto,
@@ -35,21 +35,21 @@ export class OrderLineController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN)
+  @Roles(role.ADMIN)
   @Get()
   async findAll(): Promise<OrderLineEntity[]> {
     return this.orderLineService.findAll();
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN)
+  @Roles(role.ADMIN)
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<OrderLineEntity> {
     return this.orderLineService.findOne(+id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN)
+  @Roles(role.ADMIN)
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -60,7 +60,7 @@ export class OrderLineController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN)
+  @Roles(role.ADMIN)
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
     await this.orderLineService.remove(+id);
