@@ -1,65 +1,53 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Roles } from "../enums/Roles";
-import { getToken, getUserRoleFromToken, saveToken } from "../../utils/Auth";
-import LoginForm from "./LoginForm";
-import { loginUser } from "../../services/AuthService";
-import { Paths } from "../enums/Paths";
-import { Constants } from "../enums/Constants";
-import { Messages } from "../enums/Messages";
+import React from "react";
+import { Link } from "react-router-dom";
+import { useLogin } from "./useLogin";
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    document.title = Constants.LOGIN;
-
-    const token = getToken();
-    const role = getUserRoleFromToken();
-
-    if (token && role) {
-      if (role === Roles.ADMIN) {
-        navigate(Paths.PIZZA_LIST);
-      } else if (role === Roles.CUSTOMER) {
-        navigate(Paths.ROOT);
-      }
-    }
-  }, [navigate]);
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-
-    try {
-      const token = await loginUser(email, password);
-      saveToken(token);
-
-      const role = getUserRoleFromToken();
-
-      if (role === Roles.ADMIN) {
-        navigate(Paths.PIZZA_LIST);
-      } else if (role === Roles.CUSTOMER) {
-        navigate(Paths.ROOT);
-      } else {
-        navigate(Paths.ROOT);
-      }
-    } catch {
-      setError(Messages.INVALID_EMAIL_OR_PASSWORD);
-    }
-  };
+  const { email, setEmail, password, setPassword, error, handleLogin } =
+    useLogin();
 
   return (
-    <LoginForm
-      email={email}
-      password={password}
-      onEmailChange={setEmail}
-      onPasswordChange={setPassword}
-      onSubmit={handleLogin}
-      error={error}
-    />
+    <div className="container mt-5" style={{ maxWidth: 500 }}>
+      <h2 className="mb-4 text-center pt-5">Login</h2>
+      <form onSubmit={handleLogin}>
+        {error && <span className="text-center text-danger">{error}</span>}
+
+        <div className="mb-3">
+          <label className="form-label">Email address</label>
+          <input
+            type="email"
+            className="form-control"
+            value={email}
+            required
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">Password</label>
+          <input
+            type="password"
+            className="form-control"
+            value={password}
+            required
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+
+        <button type="submit" className="btn btn-light w-100">
+          Login
+        </button>
+
+        <div className="text-center mt-3">
+          <small>
+            Don't have an account?{" "}
+            <Link to="/sign-up" className="text-decoration-none">
+              Sign Up
+            </Link>
+          </small>
+        </div>
+      </form>
+    </div>
   );
 };
 

@@ -1,60 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  fetchPizzas,
-  deletePizza,
-  searchPizzasByName,
-} from "../../services/PizzaService";
-import { Pizza } from "../../interfaces/Order";
 import { useAdminAuth } from "../../utils/Auth";
-import { useDebounce } from "use-debounce";
+import { useFetchPizza } from "./useFetchPizza";
+import { Constants } from "../enums/Constants";
 
 const FetchPizza: React.FC = () => {
-  const [pizzas, setPizzas] = useState<Pizza[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [debouncedSearchTerm] = useDebounce(searchTerm, 500);
+  const { pizzas, error, searchTerm, setSearchTerm, removePizza } =
+    useFetchPizza();
   const navigate = useNavigate();
 
   useAdminAuth();
 
   useEffect(() => {
-    document.title = "Pizza";
+    document.title = Constants.PIZZAS;
   }, []);
-
-  useEffect(() => {
-    const loadPizzas = async () => {
-      try {
-        if (debouncedSearchTerm.trim() === "") {
-          const pizzasData = await fetchPizzas();
-          setPizzas(pizzasData);
-        } else {
-          const pizzasData = await searchPizzasByName(
-            debouncedSearchTerm.trim()
-          );
-          setPizzas(pizzasData);
-        }
-        setError(null);
-      } catch {
-        setError("Failed to fetch pizzas");
-      }
-    };
-
-    loadPizzas();
-  }, [debouncedSearchTerm]);
 
   const handleUpdateClick = (pizzaId: number) => {
     navigate(`/update-pizza/${pizzaId}`);
   };
 
   const handleDeleteClick = async (pizzaId: number) => {
-    if (window.confirm("Are you sure you want to delete this pizza?")) {
-      try {
-        await deletePizza(pizzaId);
-        setPizzas(pizzas.filter((pizza) => pizza.pizza_id !== pizzaId));
-      } catch {
-        setError("Failed to delete pizza");
-      }
+    if (window.confirm("Confirm?")) {
+      await removePizza(pizzaId);
     }
   };
 
@@ -83,7 +50,7 @@ const FetchPizza: React.FC = () => {
       <div className="row g-4">
         {pizzas.map((pizza) => (
           <div key={pizza.pizza_id} className="col-12 col-md-6 col-lg-4">
-            <div className="card shadow-sm h-100 border-0 rounded-4">
+            <div className="card shadow-sm h-100 border-0 rounded-4 p-4">
               <div className="card-body">
                 <h5 className="card-title fw-bold">{pizza.name}</h5>
                 <h6
@@ -104,13 +71,13 @@ const FetchPizza: React.FC = () => {
                 </p>
                 <div className="d-flex justify-content-center gap-3">
                   <button
-                    className="btn btn-success px-4"
+                    className="btn btn-outline-secondary px-4 w-50"
                     onClick={() => handleUpdateClick(pizza.pizza_id)}
                   >
                     <i className="bi bi-box2"></i>
                   </button>
                   <button
-                    className="btn btn-danger px-4"
+                    className="btn btn-outline-danger px-4 w-50"
                     onClick={() => handleDeleteClick(pizza.pizza_id)}
                   >
                     <i className="bi bi-trash"></i>
@@ -121,11 +88,7 @@ const FetchPizza: React.FC = () => {
           </div>
         ))}
 
-        {pizzas.length === 0 && (
-          <div className="col-12">
-            <div className="text-center">NowhereMan</div>
-          </div>
-        )}
+        {pizzas.length === 0 && <span></span>}
       </div>
     </div>
   );

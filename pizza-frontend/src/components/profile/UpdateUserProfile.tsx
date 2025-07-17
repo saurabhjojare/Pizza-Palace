@@ -1,18 +1,28 @@
 import React, { useEffect } from "react";
 import { useUpdateUserProfile } from "./useUpdateUserProfile";
 import { Constants } from "../enums/Constants";
+import { getToken, getUserIdFromToken } from "../../utils/Auth";
+import { useNavigate } from "react-router-dom";
 
 const UpdateUserProfile: React.FC = () => {
   const { customer, loading, error, handleChange, handleSubmit } =
     useUpdateUserProfile();
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const token = getToken();
+    const userId = getUserIdFromToken();
+
     document.title = Constants.UPDATE_PROFILE;
+
+    if (!token || !userId) {
+      navigate("/");
+      return;
+    }
   }, []);
 
   if (loading) return <div className="text-center mt-5">Loading...</div>;
-  if (error)
-    return <div className="alert alert-danger text-center mt-5">{error}</div>;
+  if (error) return null;
 
   return (
     <div className="container mt-2 d-flex justify-content-center">
@@ -83,7 +93,7 @@ const UpdateUserProfile: React.FC = () => {
           </div>
 
           <div className="text-center">
-            <button className="btn btn-success px-4" type="submit">
+            <button className="btn btn-outline-secondary px-4" type="submit">
               Save Changes
             </button>
           </div>

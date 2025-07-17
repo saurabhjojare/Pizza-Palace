@@ -1,73 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
-import { validationSchema } from "./Validation";
-import { useAdminAuth } from "../../utils/Auth";
-import { getPizzaById, updatePizza } from "../../services/PizzaService";
 import "./Pizza.css";
+import { useUpdatePizza } from "./useUpdatePizza";
 
 const UpdatePizza: React.FC = () => {
-  const { pizzaId } = useParams<{ pizzaId: string }>();
-  const navigate = useNavigate();
-
-  useAdminAuth();
-
-  const [initialValues, setInitialValues] = useState({
-    name: "",
-    type: "Vegetarian",
-    imageUrl: "",
-    description: "",
-    regularPrice: "",
-    mediumPrice: "",
-    largePrice: "",
-  });
-
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
-
-  useEffect(() => {
-    document.title = "Update Pizza";
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!pizzaId) return;
-
-      try {
-        const pizza = await getPizzaById(pizzaId);
-        setInitialValues({
-          name: pizza.name || "",
-          type: pizza.type || "Vegetarian",
-          imageUrl: pizza.imageUrl || "",
-          description: pizza.description || "",
-          regularPrice: pizza.regularPrice || "",
-          mediumPrice: pizza.mediumPrice || "",
-          largePrice: pizza.largePrice || "",
-        });
-      } catch (err) {
-        setError("Failed to load pizza data");
-      }
-    };
-
-    fetchData();
-  }, [pizzaId]);
-
-  const handleSubmit = async (values: typeof initialValues) => {
-    try {
-      const response = await updatePizza(pizzaId!, values);
-      if (response.Success) {
-        setSuccess("Pizza updated successfully!");
-        setError(null);
-        navigate("/pizza");
-      } else {
-        throw new Error(response.Message || "Failed to update pizza");
-      }
-    } catch (err) {
-      console.error(err);
-      setError("Failed to update pizza");
-      setSuccess(null);
-    }
-  };
+  const { initialValues, validationSchema, handleSubmit, error, success } =
+    useUpdatePizza();
 
   return (
     <div className="container mt-2">
@@ -87,7 +25,6 @@ const UpdatePizza: React.FC = () => {
             >
               {() => (
                 <Form noValidate>
-                  {/* Input Fields */}
                   {[
                     { id: "name", label: "Name", type: "text" },
                     { id: "imageUrl", label: "Image URL", type: "text" },
@@ -117,7 +54,6 @@ const UpdatePizza: React.FC = () => {
                     </div>
                   ))}
 
-                  {/* Select Field */}
                   <div className="mb-3">
                     <label htmlFor="type" className="form-label">
                       Type
@@ -138,7 +74,6 @@ const UpdatePizza: React.FC = () => {
                     />
                   </div>
 
-                  {/* Textarea */}
                   <div className="mb-3">
                     <label htmlFor="description" className="form-label">
                       Description
@@ -157,10 +92,12 @@ const UpdatePizza: React.FC = () => {
                     />
                   </div>
 
-                  {/* Submit Button */}
                   <div className="text-center">
-                    <button type="submit" className="btn btn-primary px-4">
-                      Update
+                    <button
+                      type="submit"
+                      className="btn btn-outline-secondary px-4"
+                    >
+                      Update Pizza
                     </button>
                   </div>
                 </Form>

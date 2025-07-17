@@ -6,9 +6,11 @@ import { Constants } from "../enums/Constants";
 import { addPizza } from "../../services/PizzaService";
 import { useAdminAuth } from "../../utils/Auth";
 import { Messages } from "../enums/Messages";
+import { useNavigate } from "react-router-dom";
 
 const AddPizza: React.FC = () => {
   useAdminAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.title = Constants.ADD_PIZZA;
@@ -17,7 +19,7 @@ const AddPizza: React.FC = () => {
   const handleSubmit = async (values: any) => {
     try {
       await addPizza(values);
-      alert(Messages.PIZZA_ADDED_SUCCESSFULLY);
+      navigate("/");
     } catch (err) {
       alert(Messages.FAILED_TO_ADD_PIZZA);
     }
@@ -169,7 +171,10 @@ const AddPizza: React.FC = () => {
                     </div>
 
                     <div className="d-grid">
-                      <button type="submit" className="btn btn-primary py-2">
+                      <button
+                        type="submit"
+                        className="btn btn-outline-secondary py-2"
+                      >
                         Add Pizza
                       </button>
                     </div>

@@ -1,45 +1,50 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Roles } from "../enums/Roles";
 import { Order } from "../../interfaces/Order";
-import { Paths } from "../enums/Paths";
-import { fetchOrders, cancelOrder } from "../../services/OrderService";
-import { Constants } from "../enums/Constants";
-import { getToken, getUserRoleFromToken } from "../../utils/Auth";
-import { Messages } from "../enums/Messages";
+import {
+  fetchOrdersByCustomerId,
+  cancelOrder,
+  fetchOrdersByCustomerAndDate,
+} from "../../services/OrderService";
 import { fetchPizzas } from "../../services/PizzaService";
+import {
+  getToken,
+  getUserIdFromToken,
+  getUserRoleFromToken,
+} from "../../utils/Auth";
+import { Roles } from "../enums/Roles";
+import { Paths } from "../enums/Paths";
+import { Constants } from "../enums/Constants";
+import { Messages } from "../enums/Messages";
 
-export const useGetOrders = () => {
+export const useMyOrders = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [pizzas, setPizzas] = useState<Map<number, string>>(new Map());
   const [error, setError] = useState<string | null>(null);
-
-  const token = getToken();
+  const [searchDate, setSearchDate] = useState<string>("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!token) {
-      navigate(Paths.ROOT);
-      return;
-    }
-
-    const role = getUserRoleFromToken();
-    if (role !== Roles.ADMIN) {
-      navigate(Paths.ROOT);
-    }
-  }, [navigate, token]);
+  const token = getToken();
+  const role = getUserRoleFromToken();
+  const customerId = getUserIdFromToken();
 
   useEffect(() => {
-    document.title = Constants.ORDER;
+    if (!token || role !== Roles.CUSTOMER || !customerId) {
+      navigate(Paths.ROOT);
+    }
+  }, [token, role, customerId, navigate]);
+
+  useEffect(() => {
+    document.title = Constants.MY_ORDERS;
   }, []);
 
   useEffect(() => {
     const loadOrdersAndPizzas = async () => {
-      if (!token) return;
-
       try {
         const [ordersData, pizzaData] = await Promise.all([
-          fetchOrders(),
+          searchDate
+            ? fetchOrdersByCustomerAndDate(Number(customerId), searchDate)
+            : fetchOrdersByCustomerId(Number(customerId)),
           fetchPizzas(),
         ]);
 
@@ -51,13 +56,14 @@ export const useGetOrders = () => {
         });
 
         setPizzas(pizzaMap);
+        setError(null);
       } catch {
-        return null;
+        setError(Messages.FAILED_TO_FETCH_ORDERS);
       }
     };
 
     loadOrdersAndPizzas();
-  }, [token]);
+  }, [customerId, searchDate]);
 
   const handleCancel = async (orderId: number) => {
     if (!token) return;
@@ -85,11 +91,18 @@ export const useGetOrders = () => {
     };
   };
 
+  const sortedOrders = [...orders].sort(
+    (a, b) =>
+      new Date(b.order_time).getTime() - new Date(a.order_time).getTime()
+  );
+
   return {
-    orders,
+    sortedOrders,
     pizzas,
     error,
     handleCancel,
     formatDate,
+    searchDate,
+    setSearchDate,
   };
 };

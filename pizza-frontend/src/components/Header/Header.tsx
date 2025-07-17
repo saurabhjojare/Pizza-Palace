@@ -41,12 +41,7 @@ const Header: React.FC = () => {
     );
 
   return (
-    <header
-      className="header d-flex justify-content-between align-items-center px-3 py-3 bg-dark"
-      style={{
-        boxShadow: "rgba(0, 0, 0, 0.45) 0px 25px 20px -20px",
-      }}
-    >
+    <header className="header d-flex justify-content-between align-items-center px-3 py-3 bg-dark custom-shadow">
       <Link to={Paths.ROOT} className="text-decoration-none text-white">
         <h2 className="fw-light mb-0 fs-4 dancing-script">Pizza Palace</h2>
       </Link>
@@ -66,17 +61,18 @@ const Header: React.FC = () => {
           </Link>
         )}
 
-        {(location.pathname === Paths.ADD_PIZZA ||
-          location.pathname.startsWith("/update-pizza/") ||
-          location.pathname.startsWith("/update-profile")) && (
-          <button
-            onClick={() => navigate(-1)}
-            className="text-white me-4 text-decoration-none bg-transparent border-0"
-            style={{ cursor: "pointer" }}
-          >
-            <i className="bi bi-arrow-left"></i>
-          </button>
-        )}
+        {token !== null &&
+          (location.pathname === Paths.ADD_PIZZA ||
+            location.pathname.startsWith("/update-pizza/") ||
+            location.pathname.startsWith("/update-profile")) && (
+            <button
+              onClick={() => navigate(-1)}
+              className="text-white me-4 text-decoration-none bg-transparent border-0"
+              style={{ cursor: "pointer" }}
+            >
+              <i className="bi bi-arrow-left"></i>
+            </button>
+          )}
 
         {showMyProfile && (
           <Link
@@ -113,8 +109,7 @@ const Header: React.FC = () => {
             aria-label="Log Out"
           >
             <i
-              className="bi bi-x-lg me-2 fs-5"
-              style={{ cursor: "pointer" }}
+              className="bi bi-box-arrow-right me-3 fs-5 cursor-pointer"
               title="Log Out"
               aria-hidden="true"
             ></i>

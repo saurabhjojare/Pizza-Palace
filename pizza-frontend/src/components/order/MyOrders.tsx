@@ -1,104 +1,49 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Order } from "../../interfaces/Order";
-import {
-  fetchOrdersByCustomerId,
-  cancelOrder,
-} from "../../services/OrderService";
-import { fetchPizzas } from "../../services/PizzaService";
-import {
-  getToken,
-  getUserIdFromToken,
-  getUserRoleFromToken,
-} from "../../utils/Auth";
-import { Roles } from "../enums/Roles";
-import { Paths } from "../enums/Paths";
-import { Constants } from "../enums/Constants";
-import { Messages } from "../enums/Messages";
+import React from "react";
+import { useMyOrders } from "./useMyOrders";
+import "./GetOrder.css";
 
 const MyOrders = () => {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [pizzas, setPizzas] = useState<Map<number, string>>(new Map());
-  const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const {
+    sortedOrders,
+    pizzas,
+    error,
+    handleCancel,
+    formatDate,
+    searchDate,
+    setSearchDate,
+  } = useMyOrders();
 
-  const token = getToken();
-  const role = getUserRoleFromToken();
-  const customerId = getUserIdFromToken();
-
-  useEffect(() => {
-    if (!token || role !== Roles.CUSTOMER || !customerId) {
-      navigate(Paths.ROOT);
-    }
-  }, [token, role, customerId, navigate]);
-
-  useEffect(() => {
-    document.title = Constants.MY_ORDERS;
-  }, []);
-
-  useEffect(() => {
-    const loadOrdersAndPizzas = async () => {
-      try {
-        const [ordersData, pizzaData] = await Promise.all([
-          fetchOrdersByCustomerId(Number(customerId)),
-          fetchPizzas(),
-        ]);
-
-        setOrders(ordersData);
-
-        const pizzaMap = new Map<number, string>();
-        pizzaData.forEach((pizza: { pizza_id: number; name: string }) => {
-          pizzaMap.set(pizza.pizza_id, pizza.name);
-        });
-
-        setPizzas(pizzaMap);
-      } catch {
-        setError(Messages.FAILED_TO_FETCH_ORDERS);
-      }
-    };
-
-    loadOrdersAndPizzas();
-  }, [customerId]);
-
-  const handleCancel = async (orderId: number) => {
-    if (!token) return;
-
-    try {
-      await cancelOrder(token, orderId);
-      setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order.order_id === orderId ? { ...order, status: false } : order
-        )
-      );
-    } catch {
-      setError(Messages.FAILED_TO_CANCEL_ORDER);
-    }
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return {
-      date: date.toLocaleDateString("en-GB"),
-      time: date.toLocaleTimeString("en-GB", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
-  };
-
-  const sortedOrders = [...orders].sort(
-    (a, b) =>
-      new Date(b.order_time).getTime() - new Date(a.order_time).getTime()
-  );
+  const clearDate = () => setSearchDate("");
 
   return (
     <div className="container mt-4">
       <h2 className="mb-4 text-center">My Orders</h2>
 
-      {error && <div className="alert alert-danger">{error}</div>}
+      <div className="row justify-content-center mb-4">
+        <div className="col-12 col-md-6 d-flex gap-2">
+          <input
+            type="date"
+            className="form-control"
+            value={searchDate}
+            onChange={(e) => setSearchDate(e.target.value)}
+            placeholder="Search by Date"
+          />
+          {searchDate && (
+            <button
+              className="btn btn-outline-secondary"
+              onClick={clearDate}
+              style={{ whiteSpace: "nowrap" }}
+            >
+              Clear
+            </button>
+          )}
+        </div>
+      </div>
+
+      {error && <span></span>}
 
       {sortedOrders.length === 0 ? (
-        <div className="alert alert-info">No orders placed yet.</div>
+        <span> </span>
       ) : (
         <div className="row">
           {sortedOrders.map((order) => {
@@ -106,8 +51,8 @@ const MyOrders = () => {
 
             return (
               <div className="col-md-6 mb-4" key={order.order_id}>
-                <div className="card shadow-sm">
-                  <div className="card-body">
+                <div className="card custom-shadow h-100 max-height px-4 py-3">
+                  <div className="card-body overflow-auto fixed-height-card">
                     <h5 className="card-title">Order #{order.order_id}</h5>
                     <p className="card-text mb-2">
                       <strong>Status:</strong>{" "}

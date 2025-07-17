@@ -11,9 +11,6 @@ const AddToCart: React.FC<AddToCartProps> = ({ pizza, addToCart }) => {
   const tokenExists = !!getUserIdFromToken();
 
   const handleAddToCart = () => {
-    console.trace("AddToCart clicked");
-    console.log("Adding:", { pizzaId: pizza.pizza_id, size, quantity });
-
     addToCart(pizza, size, quantity);
     setQuantity(1);
   };
@@ -32,17 +29,26 @@ const AddToCart: React.FC<AddToCartProps> = ({ pizza, addToCart }) => {
             <option value="large">Large - ₹{pizza.largePrice}</option>
           </select>
 
-          <input
-            type="number"
-            min={1}
+          <select
             value={quantity}
             onChange={(e) => setQuantity(Number(e.target.value))}
-            className="form-control mb-2"
-          />
+            className="form-select mb-2"
+          >
+            {Array.from({ length: 9 }, (_, i) => i + 1).map((qty) => (
+              <option key={qty} value={qty}>
+                {qty}
+              </option>
+            ))}
+          </select>
 
-          <button className="btn btn-success mt-2" onClick={handleAddToCart}>
-            Add to Cart
-          </button>
+          <div className="text-center">
+            <button
+              className="btn btn-outline-secondary mt-2 w-100"
+              onClick={handleAddToCart}
+            >
+              Add to Cart
+            </button>
+          </div>
         </>
       ) : (
         <>

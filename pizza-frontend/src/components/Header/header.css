@@ -1,7 +1,5 @@
 .header {
-  background: #536976;
-  background: -webkit-linear-gradient(to right, #292e49, #536976);
-  background: linear-gradient(to right, #292e49, #536976);
+  background: #000;
   padding: 10px;
   text-align: center;
   color: #fff;
@@ -30,4 +28,12 @@ h2 {
 
 .admin-link:hover {
   text-decoration: underline;
+}
+
+.custom-shadow {
+  box-shadow: rgba(0, 0, 0, 0.45) 0px -25px 20px -20px;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }

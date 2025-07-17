@@ -1,39 +1,27 @@
 import React from "react";
-import { Customer } from "../../interfaces/Customer";
+import { CustomerListProps } from "../../interfaces/Customer";
 
-interface Props {
-  customers: Customer[];
-  onDelete: (customerId: number) => void;
-  title: string;
-}
-
-const CustomerList: React.FC<Props> = ({ customers, onDelete, title }) => {
+const CustomerList: React.FC<CustomerListProps> = ({ customers, onDelete }) => {
   return (
     <div className="container">
-      <h2 className="text-center mb-4">{title}</h2>
-
       <div className="row g-4">
         {customers.map((customer) => (
           <div key={customer.customer_id} className="col-12 col-md-6 col-lg-4">
-            <div className="card shadow-sm h-100 border-0 rounded-4">
+            <div className="card shadow-sm h-100 border-0 rounded-4 p-3">
               <div className="card-body">
                 <h5 className="card-title fw-bold">
                   {customer.first_name} {customer.last_name}
                 </h5>
-                <p className="card-text mb-2">
+                <p className="card-text ">
                   <strong>Email:</strong> {customer.email_address}
                   <br />
                   <strong>Phone:</strong> {customer.phone_number}
                 </p>
                 <div className="d-flex justify-content-center">
                   <button
-                    className="btn btn-danger px-4"
+                    className="btn btn-outline-danger mt-4 px-4 w-100"
                     onClick={() => {
-                      if (
-                        window.confirm(
-                          "Are you sure you want to delete this admin?"
-                        )
-                      ) {
+                      if (window.confirm("Confirm?")) {
                         onDelete(customer.customer_id);
                       }
                     }}
@@ -46,11 +34,7 @@ const CustomerList: React.FC<Props> = ({ customers, onDelete, title }) => {
           </div>
         ))}
 
-        {customers.length === 0 && (
-          <div className="d-flex justify-content-center">
-            <div className="text-center">OutOfScope</div>
-          </div>
-        )}
+        {customers.length === 0 && <span></span>}
       </div>
     </div>
   );

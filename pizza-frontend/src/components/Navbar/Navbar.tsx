@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Paths } from "../enums/Paths";
+import "./Navbar.css";
 
 const Navbar: React.FC = () => {
   const location = useLocation();
@@ -13,13 +14,11 @@ const Navbar: React.FC = () => {
   ];
   const isAdminPage = adminPaths.includes(location.pathname as Paths);
 
-  const isAddPizzaPage = location.pathname === Paths.ADD_PIZZA;
-
   return (
     <div className="container-fluid container-with-navbar">
       <div className="navbar d-flex justify-content-center mt-4">
         <ul className="nav nav-pills ">
-          {isAdminPage && !isAddPizzaPage && (
+          {isAdminPage && (
             <>
               <li className="nav-item">
                 <Link

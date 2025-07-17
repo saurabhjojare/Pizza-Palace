@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { CartProps } from "../../interfaces/Order";
-import { placeOrder } from "../../services/OrderService";
-import { Messages } from "../enums/Messages";
-import { Constants } from "../enums/Constants";
+import { useCart } from "./useCart";
+import { getCustomerAddressById } from "../../services/CustomerService";
+import { getToken, getUserIdFromToken } from "../../utils/Auth";
 
 const Cart: React.FC<CartProps> = ({
   cartItems,
@@ -11,80 +11,34 @@ const Cart: React.FC<CartProps> = ({
   clearCart,
   customerId,
 }) => {
-  const [showModal, setShowModal] = useState(false);
-  const [address, setAddress] = useState("");
-  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
-
-  const handleQuantityChange = (index: number, increment: boolean) => {
-    const newQuantity = increment
-      ? cartItems[index].quantity + 1
-      : cartItems[index].quantity - 1;
-    if (newQuantity > 0) {
-      updateQuantity(index, newQuantity);
-    }
-  };
-
-  const calculateTotalAmount = () =>
-    cartItems.reduce((total, item) => {
-      const price =
-        item.size === "regular"
-          ? Number(item.pizza.regularPrice)
-          : item.size === "medium"
-          ? Number(item.pizza.mediumPrice)
-          : Number(item.pizza.largePrice);
-      return total + price * item.quantity;
-    }, 0);
+  const {
+    isPlacingOrder,
+    handleQuantityChange,
+    calculateTotalAmount,
+    handlePlaceOrder,
+  } = useCart(cartItems, removeFromCart, updateQuantity, clearCart, customerId);
 
   const totalAmount = calculateTotalAmount();
 
-  const handlePlaceOrder = async () => {
-    if (!address.trim()) {
-      alert("Please enter a delivery address");
-      return;
-    }
-
-    const token = localStorage.getItem(Constants.TOKEN.toLowerCase());
-
+  const handleClickPlaceOrder = async () => {
+    const token = getToken();
+    const userId = getUserIdFromToken();
     if (!token) {
-      alert(Messages.AUTH_TOKEN_MISSING);
+      alert("Authentication token is missing.");
       return;
     }
 
-    setIsPlacingOrder(true);
+    if (!userId) {
+      alert("User ID is missing.");
+      return;
+    }
 
     try {
-      console.log(Messages.SENDING_ORDER, {
-        customerId,
-        deliveryAddress: address,
-        cartItems,
-      });
-
-      await placeOrder(
-        token,
-        customerId,
-        address,
-        cartItems.map((item) => ({
-          pizza_id: item.pizza.pizza_id,
-          size: item.size,
-          quantity: item.quantity,
-        }))
-      );
-
-      clearCart();
-      setShowModal(false);
-      setAddress("");
-    } catch (error: any) {
-      console.error(
-        Messages.ERROR_WHILE_BUYING,
-        error?.response?.data || error.message
-      );
-      alert(
-        `Failed to place order: ${
-          error?.response?.data?.message || error.message
-        }`
-      );
-    } finally {
-      setIsPlacingOrder(false);
+      const address = await getCustomerAddressById(Number(userId), token);
+      await handlePlaceOrder(address);
+    } catch (error) {
+      console.error("Failed to place order:", error);
+      alert("Failed to retrieve address or place the order.");
     }
   };
 
@@ -147,62 +101,14 @@ const Cart: React.FC<CartProps> = ({
 
         <div className="text-end mt-3">
           <button
-            className="btn btn-primary"
-            onClick={() => setShowModal(true)}
+            className="btn btn-success"
+            disabled={isPlacingOrder}
+            onClick={handleClickPlaceOrder}
           >
-            Proceed to Checkout
+            {isPlacingOrder ? "Placing..." : "Place Order"}
           </button>
         </div>
       </div>
-
-      {/* Bootstrap Modal */}
-      {showModal && (
-        <div
-          className="modal show fade d-block"
-          tabIndex={-1}
-          role="dialog"
-          style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
-        >
-          <div className="modal-dialog modal-dialog-centered" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Enter Delivery Address</h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={() => setShowModal(false)}
-                ></button>
-              </div>
-              <div className="modal-body">
-                <textarea
-                  className="form-control"
-                  placeholder="1234 Example Street, City, Zip"
-                  rows={3}
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                ></textarea>
-              </div>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={() => setShowModal(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-success"
-                  disabled={isPlacingOrder}
-                  onClick={handlePlaceOrder}
-                >
-                  {isPlacingOrder ? "Placing..." : "Place Order"}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   ) : null;
 };

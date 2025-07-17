@@ -88,6 +88,19 @@ export class CustomersController {
     return this.customersService.getCustomerNameById(customerId);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.CUSTOMER)
+  @Get(':id/address')
+  async getCustomerAddress(
+    @Param('id') id: string,
+  ): Promise<{ address: string }> {
+    const customerId = parseInt(id, 10);
+    if (isNaN(customerId)) {
+      throw new BadRequestException('Invalid customer ID');
+    }
+    return this.customersService.getCustomerAddressById(customerId);
+  }
+
   @Get('search/customers')
   async searchCustomers(@Query('q') query: string) {
     return this.customersService.searchCustomers(query);

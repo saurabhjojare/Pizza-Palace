@@ -4,7 +4,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Brackets, Repository } from 'typeorm';
+import { Between, Brackets, Like, Repository } from 'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { OrderEntity } from './entities/order.entity';
@@ -102,16 +102,18 @@ export class OrdersService {
 
     return `Order #${savedOrder.order_id} has been successfully created.`;
   }
-
   async findAll(): Promise<OrderEntity[]> {
-    return this.orderRepository.find({ relations: ['orderLines'] });
+    return this.orderRepository.find({
+      relations: ['orderLines'],
+      order: { created_at: 'DESC' },
+    });
   }
 
   async getOrdersByCustomerId(customerId: number): Promise<OrderEntity[]> {
     const orders = await this.orderRepository.find({
       where: { customer_id: customerId },
       relations: ['orderLines'],
-      order: { order_time: 'DESC' }, // Optional: Sort by latest orders
+      order: { created_at: 'DESC' },
     });
 
     if (!orders || orders.length === 0) {
@@ -163,7 +165,7 @@ export class OrdersService {
       .createQueryBuilder('order')
       .leftJoinAndSelect('order.customer', 'customer')
       .leftJoinAndSelect('order.orderLines', 'orderLine')
-      .orderBy('order.order_time', 'DESC');
+      .orderBy('order.created_at', 'DESC'); // Sort by created_at in descending order (latest first)
 
     if (!name && !date) {
       throw new BadRequestException(
@@ -200,5 +202,29 @@ export class OrdersService {
     }
 
     return query.getMany();
+  }
+
+  async getOrdersByCustomerAndDate(
+    customerId: number,
+    date: string,
+  ): Promise<OrderEntity[]> {
+    const parsedDate = new Date(date);
+    if (isNaN(parsedDate.getTime())) {
+      throw new BadRequestException('Invalid date format');
+    }
+
+    const startOfDay = new Date(parsedDate.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(parsedDate.setHours(23, 59, 59, 999));
+
+    const orders = await this.orderRepository.find({
+      where: {
+        customer_id: customerId,
+        order_time: Between(startOfDay, endOfDay),
+      },
+      relations: ['orderLines'],
+      order: { created_at: 'DESC' },
+    });
+
+    return orders;
   }
 }

@@ -114,6 +114,26 @@ export const getCustomerNameById = async (
   }
 };
 
+export const getCustomerAddressById = async (
+  customerId: number,
+  token: string
+): Promise<string> => {
+  try {
+    const response = await axios.get(
+      CUSTOMER_API.GET_ADDRESS_BY_ID(customerId),
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    return response.data.Data?.address ?? "";
+  } catch (error: any) {
+    throw new Error(
+      error.response?.data?.message || "Failed to get customer address."
+    );
+  }
+};
+
 export const searchCustomers = async (
   query: string,
   token: string

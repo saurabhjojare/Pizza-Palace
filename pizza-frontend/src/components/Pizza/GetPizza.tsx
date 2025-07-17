@@ -1,114 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import AddToCart from "./AddToCart";
 import Cart from "./Cart";
-import { useNavigate } from "react-router-dom";
-import { fetchPizzas, searchPizzasByName } from "../../services/PizzaService";
-import {
-  useCustomerAuth,
-  getUserIdFromToken,
-  getUserRoleFromToken,
-  getToken,
-} from "../../utils/Auth";
-import { Pizza } from "../../interfaces/Order";
-import { Roles } from "../enums/Roles";
-import { Paths } from "../enums/Paths";
-import { getCustomerNameById } from "../../services/CustomerService";
-import { useDebounce } from "use-debounce";
-import { useCart } from "../../context/CartContext";
+import { getToken } from "../../utils/Auth";
+import { useGetPizza } from "./useGetPizza";
+import "./Pizza.css";
 
 const GetPizza: React.FC = () => {
-  const [pizzas, setPizzas] = useState<Pizza[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [customerId, setCustomerId] = useState<number | null>(null);
-  const [firstName, setFirstName] = useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [debouncedSearchTerm] = useDebounce(searchTerm, 500);
-
-  const navigate = useNavigate();
-  useCustomerAuth();
-
-  const { cartItems, addToCart, removeFromCart, updateQuantity, clearCart } =
-    useCart();
-
-  // Load customer info and redirect based on role
-  useEffect(() => {
-    document.title = "Pizza Palace";
-
-    const userId = getUserIdFromToken();
-    const role = getUserRoleFromToken();
-    const token = getToken();
-
-    if (!userId || !token) {
-      setFirstName(null);
-      setCustomerId(null);
-      navigate(Paths.ROOT);
-    } else if (role === Roles.ADMIN) {
-      navigate(Paths.PIZZA_LIST);
-    } else {
-      setCustomerId(Number(userId));
-      const fetchFirstName = async () => {
-        try {
-          const name = await getCustomerNameById(Number(userId), token!);
-          setFirstName(name);
-        } catch {
-          setFirstName(null);
-        }
-      };
-      fetchFirstName();
-    }
-  }, [navigate]);
-
-  useEffect(() => {
-    const loadPizzas = async () => {
-      try {
-        if (debouncedSearchTerm.trim() === "") {
-          const pizzasData = await fetchPizzas();
-          setPizzas(pizzasData);
-        } else {
-          const pizzasData = await searchPizzasByName(
-            debouncedSearchTerm.trim()
-          );
-          setPizzas(pizzasData);
-        }
-        setError(null);
-      } catch {
-        setError("Failed to fetch pizzas");
-      }
-    };
-
-    loadPizzas();
-  }, [debouncedSearchTerm]);
-
-  // Handle search
-  useEffect(() => {
-    const performSearch = async () => {
-      try {
-        if (debouncedSearchTerm.trim() === "") {
-          const data = await fetchPizzas();
-          setPizzas(data);
-        } else {
-          const data = await searchPizzasByName(debouncedSearchTerm.trim());
-          setPizzas(data);
-        }
-      } catch {
-        setError("Failed to search pizzas");
-      }
-    };
-
-    performSearch();
-  }, [debouncedSearchTerm]);
-
-  // Detect logout
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const token = getToken();
-      if (!token) {
-        setFirstName(null);
-        setCustomerId(null);
-      }
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
+  const {
+    pizzas,
+    error,
+    cartItems,
+    addToCart,
+    removeFromCart,
+    updateQuantity,
+    clearCart,
+    customerId,
+    firstName,
+    searchTerm,
+    setSearchTerm,
+  } = useGetPizza();
 
   if (error) {
     return (
@@ -117,6 +27,26 @@ const GetPizza: React.FC = () => {
       </div>
     );
   }
+
+  const scrollToTopSlow = () => {
+    const duration = 1000;
+    const start = window.scrollY;
+    const startTime = performance.now();
+
+    const scrollStep = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easeInOut = 0.5 * (1 - Math.cos(Math.PI * progress));
+
+      window.scrollTo(0, start * (1 - easeInOut));
+
+      if (progress < 1) {
+        requestAnimationFrame(scrollStep);
+      }
+    };
+
+    requestAnimationFrame(scrollStep);
+  };
 
   return (
     <div className="container mt-3">
@@ -130,8 +60,18 @@ const GetPizza: React.FC = () => {
         />
       )}
 
+      {cartItems.length > 0 && customerId !== null && (
+        <span
+          onClick={scrollToTopSlow}
+          className="text-black font-weight-light go-to-cart"
+          aria-label="Top"
+        >
+          Cart
+        </span>
+      )}
+
       {getToken() && firstName ? (
-        <h3 className="text-center mb-4 fw-lighter">Welcome, {firstName}!</h3>
+        <h3 className="text-center mb-4 fw-lighter">Welcome, {firstName} </h3>
       ) : (
         <h3 className="text-center mb-4 fw-lighter">Our Menu</h3>
       )}
@@ -141,7 +81,7 @@ const GetPizza: React.FC = () => {
           <div className="col-10 col-sm-10 col-md-6 col-lg-4">
             <input
               type="text"
-              className="form-control py-2 px-4 h4 fw-lighter py-2 px-4 h4 fw-lighter"
+              className="form-control py-2 px-4 h4 fw-lighter"
               placeholder="What's on your mind today?"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -158,7 +98,7 @@ const GetPizza: React.FC = () => {
         {pizzas.map((pizza) => (
           <div key={pizza.pizza_id} className="col-md-6 col-lg-4 mb-4">
             <div
-              className="card h-100"
+              className="card h-100 d-flex flex-column"
               style={{
                 boxShadow: "rgba(0, 0, 0, 0.1) 0px 10px 50px",
               }}
@@ -167,14 +107,29 @@ const GetPizza: React.FC = () => {
                 src={pizza.imageUrl}
                 className="card-img-top"
                 alt={pizza.name}
+                style={{
+                  height: "300px",
+                  objectFit: "cover",
+                }}
               />
-              <div className="card-body">
-                <h5 className="card-title">{pizza.name}</h5>
-                <p className="card-text">{pizza.description}</p>
-                <p className="card-text">
+              <div className="card-body d-flex flex-column">
+                <h5 className="card-title" title={pizza.name}>
+                  {pizza.name.length > 35
+                    ? pizza.name.slice(0, 35) + "..."
+                    : pizza.name}
+                </h5>
+
+                <p className="card-text" title={pizza.description}>
+                  {pizza.description.length > 100
+                    ? pizza.description.slice(0, 100) + "..."
+                    : pizza.description}
+                </p>
+                <p className="card-text ">
                   <strong>Type:</strong> {pizza.type}
                 </p>
-                <AddToCart pizza={pizza} addToCart={addToCart} />
+                <div className="mt-auto">
+                  <AddToCart pizza={pizza} addToCart={addToCart} />
+                </div>
               </div>
             </div>
           </div>

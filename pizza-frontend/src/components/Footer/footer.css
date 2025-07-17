@@ -6,9 +6,7 @@
   width: 100%;
   text-align: center;
   z-index: 1000;
-  background: #536976;
-  background: -webkit-linear-gradient(to right, #292e49, #536976);
-  background: linear-gradient(to right, #292e49, #536976);
+  background: #000;
 }
 
 .footer a {
@@ -19,4 +17,8 @@
 
 .footer a:hover {
   text-decoration: underline;
+}
+
+.custom-shadow {
+  box-shadow: rgba(0, 0, 0, 0.45) 0px -25px 20px -20px;
 }

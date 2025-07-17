@@ -33,7 +33,11 @@ export class CustomersService {
   }
 
   async findAll(): Promise<CustomerEntity[]> {
-    return await this.customersRepository.find();
+    return await this.customersRepository.find({
+      order: {
+        created_at: 'DESC', // Sort by created_at in descending order (latest date first)
+      },
+    });
   }
 
   async findOne(id: number): Promise<CustomerEntity> {
@@ -73,6 +77,9 @@ export class CustomersService {
   async findByRole(role: string): Promise<CustomerEntity[]> {
     return await this.customersRepository.find({
       where: { role },
+      order: {
+        created_at: 'DESC', // Order by created_at in descending order
+      },
     });
   }
 
@@ -88,6 +95,19 @@ export class CustomersService {
 
     const fullName = `${customer.first_name} ${customer.last_name}`;
     return { fullName };
+  }
+
+  async getCustomerAddressById(id: number): Promise<{ address: string }> {
+    const customer = await this.customersRepository.findOne({
+      where: { customer_id: id },
+      select: ['address'],
+    });
+
+    if (!customer) {
+      throw new NotFoundException(`Customer with ID ${id} not found`);
+    }
+
+    return { address: customer.address };
   }
 
   async searchCustomers(search: string): Promise<CustomerEntity[]> {
@@ -119,6 +139,8 @@ export class CustomersService {
         { searchTerm },
       );
     }
+
+    queryBuilder.orderBy('customer.created_at', 'DESC');
 
     return await queryBuilder.getMany();
   }

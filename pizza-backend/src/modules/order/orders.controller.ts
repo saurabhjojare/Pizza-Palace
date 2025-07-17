@@ -10,6 +10,7 @@ import {
   UseGuards,
   Query,
   Req,
+  BadRequestException,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -84,5 +85,15 @@ export class OrdersController {
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
     await this.ordersService.remove(+id);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.CUSTOMER)
+  @Get('customer/:customerId/date')
+  async getOrdersByCustomerAndDate(
+    @Param('customerId') customerId: string,
+    @Query('date') date: string,
+  ): Promise<OrderEntity[]> {
+    return this.ordersService.getOrdersByCustomerAndDate(+customerId, date);
   }
 }

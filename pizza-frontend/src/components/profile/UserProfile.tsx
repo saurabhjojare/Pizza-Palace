@@ -28,6 +28,7 @@ const UserProfile: React.FC = () => {
       if (!token || !userId) {
         setError("Unauthorized access.");
         setLoading(false);
+        navigate("/");
         return;
       }
 
@@ -47,9 +48,7 @@ const UserProfile: React.FC = () => {
   const handleDelete = async () => {
     if (!customer) return;
 
-    const confirm = window.confirm(
-      "Are you sure you want to delete your account?"
-    );
+    const confirm = window.confirm("Confirm?");
     if (!confirm) return;
 
     try {
@@ -60,7 +59,6 @@ const UserProfile: React.FC = () => {
       }
 
       await deleteCustomer(customer.customer_id, token);
-      alert("Profile deleted successfully.");
       navigate("/login");
     } catch (err) {
       console.error(err);
@@ -81,10 +79,10 @@ const UserProfile: React.FC = () => {
   }
 
   return (
-    <div className="container container-with-navbar d-flex justify-content-center">
-      <div className="card p-4 shadow rounded-4 border-0 custom-custom">
+    <div className="container mt-3 d-flex justify-content-center">
+      <div className="card px-5 pb-4 shadow rounded-4 border-0 custom-custom">
         <div className="text-center mb-3">
-          <i className="bi bi-person-circle fs-1 text-secondary"></i>
+          <i className="bi bi-person-circle text-secondary icon-size"></i>
           <h3 className="fw-bold mb-0">
             {customer?.first_name} {customer?.last_name}
           </h3>
@@ -115,14 +113,17 @@ const UserProfile: React.FC = () => {
         </div>
 
         <div className="d-flex justify-content-center gap-3 mt-4">
-          <button className="btn btn-primary px-4" onClick={handleUpdate}>
+          <button
+            className="btn btn-outline-secondary px-4"
+            onClick={handleUpdate}
+          >
             Update
           </button>
           <button
             className="btn btn-outline-danger px-4"
             onClick={handleDelete}
           >
-            Delete
+            Delete My Account
           </button>
         </div>
       </div>

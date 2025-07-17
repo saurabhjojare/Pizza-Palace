@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   JoinColumn,
+  CreateDateColumn,
 } from 'typeorm';
 import { CustomerEntity } from '../../customer/entities/customer.entity';
 import { OrderLineEntity } from '../../order-line/entities/order-line.entity';
@@ -32,6 +33,9 @@ export class OrderEntity {
 
   @Column({ type: 'varchar', nullable: false })
   delivery_address: string;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
 
   @ManyToOne(() => CustomerEntity, (customer) => customer.orders, {
     onDelete: 'CASCADE',

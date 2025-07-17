@@ -12,6 +12,7 @@ export const CUSTOMER_API = {
     `${API_BASE_URL}/customers/search/customers?q=${encodeURIComponent(query)}`,
   SEARCH_ADMINS: (query: string) =>
     `${API_BASE_URL}/customers/search/admins?q=${encodeURIComponent(query)}`,
+  GET_ADDRESS_BY_ID: (id: number) => `${API_BASE_URL}/customers/${id}/address`,
 };
 
 export const PIZZA_API = {
@@ -32,6 +33,10 @@ export const ORDER_API = {
   GET_BY_CUSTOMER_ID: (customerId: number) =>
     `${API_BASE_URL}/orders/customer/${customerId}`,
   FILTER: (query: string) => `${API_BASE_URL}/orders/filter?${query}`,
+  GET_BY_CUSTOMER_AND_DATE: (customerId: number, date: string) =>
+    `${API_BASE_URL}/orders/customer/${customerId}/date?date=${encodeURIComponent(
+      date
+    )}`,
 };
 
 export const AUTH_API = {

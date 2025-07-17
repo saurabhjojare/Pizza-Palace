@@ -79,3 +79,20 @@ export const fetchOrdersByFilter = async (
 
   return response.data.Data;
 };
+
+export const fetchOrdersByCustomerAndDate = async (
+  customerId: number,
+  date: string
+): Promise<Order[]> => {
+  const token = getToken();
+  const response = await axios.get(
+    ORDER_API.GET_BY_CUSTOMER_AND_DATE(customerId, date),
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data.Data;
+};
