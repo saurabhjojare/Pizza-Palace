@@ -1,0 +1,37 @@
+INSERT INTO pizza (name, type, "imageUrl", description, "regularPrice", "mediumPrice", "largePrice")
+VALUES
+  ('Classic Cheese', 'Vegetarian',
+   'https://www.inspiredtaste.net/wp-content/uploads/2023/08/Cheese-Pizza-2-1200.jpg',
+   'Classic cheese pizza with rich tomato sauce and mozzarella.', 150, 220, 280),
+
+  ('Pepperoni Feast', 'Non-Vegetarian',
+   'https://sirpizza-mi.com/wp-content/uploads/2017/11/Sir-Pizza-Pepperoni-Feast-1920x1200.jpg',
+   'Pepperoni-loaded pizza with extra cheese.', 180, 250, 300),
+
+  ('Chicken Tikka', 'Non-Vegetarian',
+   'https://onestophalal.com/cdn/shop/articles/tikka_masala_pizza-1694014914105_1200x.jpg?v=1694568363',
+   'Indian-style spiced chicken on cheesy base.', 200, 280, 350),
+
+  ('Margherita', 'Vegetarian',
+   'https://safrescobaldistatic.blob.core.windows.net/media/2022/11/PIZZA-MARGHERITA.jpg',
+   'Simple pizza with fresh basil, tomato, and mozzarella.', 130, 180, 230),
+
+  ('BBQ Chicken', 'Non-Vegetarian',
+   'https://www.allrecipes.com/thmb/qZ7LKGV1_RYDCgYGSgfMn40nmks=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/AR-24878-bbq-chicken-pizza-beauty-4x3-39cd80585ad04941914dca4bd82eae3d.jpg',
+   'Tangy barbecue sauce with grilled chicken and onions.', 180, 250, 300),
+
+  ('Paneer Delight', 'Vegetarian',
+   'https://www.xerodegrees.com/wp-content/uploads/2024/06/PANEER-DELIGHT.jpg',
+   'Paneer cubes with spices and crunchy veggies.', 160, 220, 270),
+
+  ('Meat Lover''s', 'Non-Vegetarian',
+   'https://halo-pg.com/wp-content/uploads/2021/10/Ultimate-Stuffed-Meatlovers-Pizza-1.jpg',
+   'Beef, chicken, sausage and pepperoni overload.', 220, 300, 380),
+
+  ('Farmhouse', 'Vegetarian',
+   'https://rahicafe.com/wp-content/uploads/2022/03/pizza-farm-house.jpg',
+   'Loaded with fresh veggies and mozzarella cheese.', 160, 220, 270),
+
+  ('Spicy Sausage', 'Non-Vegetarian',
+   'https://www.thecandidcooks.com/wp-content/uploads/2022/08/spicy-sausage-pepper-pizza-feature-1024x683.jpg',
+   'Spicy Italian sausage with jalapeños and cheese.', 180, 250, 300);
