@@ -4,7 +4,6 @@
 
 A feature rich pizza ordering application crafted to simplify and enhance the ordering experience for both customers and store admins. Users can effortlessly browse the menu, customize pizzas to their taste, and manage their cart with ease. Administrators have powerful tools to manage inventory, track orders, and update customer details, all in one seamless system.
 
-
 ## Screenshots
 
 ### Client View
@@ -25,7 +24,7 @@ Check your order history
 ![My Orders](https://www.dropbox.com/scl/fi/9cd68qrgevx39o5e87w4j/My-Orders.png?rlkey=ez1pjb1lzpqq9ids8ea76k8d6&raw=1)
 
 Access your profile
-![My Profile](https://www.dropbox.com/scl/fi/9yadn7nk8zlpw03dn4vfr/My-Profile.png?rlkey=svcanugtnv2d9n3m63mmncmrw&raw=1)w
+![My Profile](https://www.dropbox.com/scl/fi/9yadn7nk8zlpw03dn4vfr/My-Profile.png?rlkey=svcanugtnv2d9n3m63mmncmrw&raw=1)
 
 ### Admin Panel
 Browse the pizza menu
