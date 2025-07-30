@@ -1,4 +1,4 @@
-# Pizza Palace
+# Pizza Ordering System
 
 ## Overview
 
@@ -54,12 +54,12 @@ The images above showcase the core features of the Pizza Ordering System:
 
 
 ## Tech Stack
-**Frontend**: ReactJS with TypeScript  
+**Frontend**: ReactJS with TypeScript, Bootstrap
 **Backend**: NestJS  
 **Database**: PostgreSQL  
 **API**: RESTful APIs  
 **Authentication**: JWT (JSON Web Token)
-
+**Containerization**: Docker
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
