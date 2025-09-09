@@ -6,7 +6,7 @@ import {
   IsArray,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { CreateOrderLineDto } from '../../order-line/dto/create-order-line.dto';
+import { CreateOrderLineDto } from './create-order-line.dto';
 
 export class CreateOrderDto {
   @IsNotEmpty()

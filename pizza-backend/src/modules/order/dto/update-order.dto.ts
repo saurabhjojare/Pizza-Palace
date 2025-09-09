@@ -6,7 +6,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
-import { CreateOrderLineDto } from '../../order-line/dto/create-order-line.dto';
+import { CreateOrderLineDto } from './create-order-line.dto';
 
 export class UpdateOrderDto {
   @IsOptional()

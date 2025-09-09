@@ -8,8 +8,8 @@ import { Between, Brackets, Repository } from 'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { OrderEntity } from './entities/order.entity';
-import { OrderLineEntity } from '../order-line/entities/order-line.entity';
 import { PizzaEntity } from '../pizza/entities/pizza.entity';
+import { OrderLineEntity } from './entities/order-line.entity';
 
 @Injectable()
 export class OrdersService {
@@ -22,7 +22,7 @@ export class OrdersService {
 
     @InjectRepository(PizzaEntity)
     private readonly pizzaRepository: Repository<PizzaEntity>,
-  ) {}
+  ) { }
 
   private readonly validSizes = ['regular', 'medium', 'large'];
 

@@ -1,9 +1,6 @@
 import React from "react";
 import "./app.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Header from "./components/header/header";
-import Navbar from "./components/navbar/navbar";
-import Footer from "./components/footer/footer";
 import GetCustomers from "./components/customer/customer.page";
 import GetPizza from "./components/pizza/get-pizza-customer.page";
 import OrderPage from "./components/order/orders.page";
@@ -12,12 +9,15 @@ import AddPizza from "./components/pizza/add-pizza.page";
 import SignUpForm from "./components/sign-up/sign-up.page";
 import HomePage from "./components/home/home.page";
 import FetchPizza from "./components/pizza/get-pizza-admin.page";
-import Login from "./components/login/login";
 import { CartProvider } from "./context/cart.context";
 import MyOrders from "./components/order/my-orders.page";
 import UserProfile from "./components/profile/user-profile.page";
 import GetAdmin from "./components/customer/admin.page";
 import UpdateUserProfile from "./components/profile/update-profile.page";
+import Header from "./components/header/header.page";
+import Navbar from "./components/navbar/navbar.page";
+import Login from "./components/login/login.page";
+import Footer from "./components/footer/footer.page";
 
 const App: React.FC = () => {
   return (
