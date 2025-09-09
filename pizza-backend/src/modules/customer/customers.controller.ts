@@ -24,7 +24,7 @@ import { Roles } from '../auth/roles.decorator';
 @Controller('customers')
 @UseInterceptors(ResponseInterceptor)
 export class CustomersController {
-  constructor(private readonly customersService: CustomersService) {}
+  constructor(private readonly customersService: CustomersService) { }
 
   @Post()
   async create(

@@ -11,7 +11,7 @@ export class AuthService {
     private jwtService: JwtService,
     @InjectRepository(CustomerEntity)
     private customersRepository: Repository<CustomerEntity>,
-  ) {}
+  ) { }
 
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.customersRepository.findOne({
