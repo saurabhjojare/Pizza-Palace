@@ -119,16 +119,6 @@ The images above showcase the core features of the Pizza Ordering System:
 | `DELETE`| `/orders/:id`                  | Admin/Customer | Delete an order                   | N/A |
 | `GET`  | `/orders/customer/:customerId/date` | Customer | Get orders for customer by date   | `/orders/customer/1/date?date=2025-09-01` |
 
-### Order Lines
-
-| Method | Endpoint                | Role  | Description                     | Request Body Example |
-|--------|------------------------|-------|---------------------------------|--------------------|
-| `POST` | `/order-line`           | Customer | Create an order line           | `{ "orderId": 1, "pizzaId": 2, "quantity": 2 }` |
-| `GET`  | `/order-line`           | Admin   | Get all order lines            | N/A |
-| `GET`  | `/order-line/:id`       | Admin   | Get order line by ID           | N/A |
-| `PATCH`| `/order-line/:id`       | Admin   | Update order line              | `{ "quantity": 3 }` |
-| `DELETE`| `/order-line/:id`      | Admin   | Delete order line              | N/A |
-
 ## License
 This project is licensed under the [MIT License](LICENSE).
   
