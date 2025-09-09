@@ -65,7 +65,7 @@ The images above showcase the core features of the Pizza Ordering System:
 
 
 ## Tech Stack
-**Frontend**: ReactJS with TypeScript, Bootstrap  
+**Frontend**: ReactJS (TypeScript), Bootstrap  
 **Backend**: NestJS   
 **Database**: PostgreSQL    
 **API**: RESTful APIs  
