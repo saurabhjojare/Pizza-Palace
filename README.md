@@ -61,7 +61,7 @@ The images above showcase the core features of the Pizza Ordering System:
 - **Customer Management**: Add, view, update, and delete customer records.
 - **Order Tracking**: View complete order history for efficient order tracking and customer service.
 - **Validation & Control**: Enforce rules for customizing orders and managing inventory to ensure a smooth process.
-- **Authentication & Authorization**: Secure user and endpoint access using JWT (JSON Web Tokens) for safe login, request validation, and role-based permission control.
+- **Authentication & Authorization**: Secure user access with JWT for login, request validation, and role-based permissions.
 
 
 ## Tech Stack
