@@ -76,45 +76,43 @@ The images above showcase the core features of the Pizza Ordering System:
 
 ### Authentication
 
-| Method | Endpoint       | Role   | Description                 |
+| Method | Endpoint       | Access   | Description                 |
 |--------|---------------|--------|-----------------------------|
 | `POST` | `/auth/login`  | Public | Login a user and return JWT token |
 
 ### Customers
 
-| Method | Endpoint                     | Role           | Description                       |
-|--------|-----------------------------|----------------|-----------------------------------|
+| Method | Endpoint                     | Access           | Description                     |
+|--------|-----------------------------|----------------|----------------------------------- |
 | `POST` | `/customers`                 | Public         | Create a new customer             |
 | `GET`  | `/customers`                 | Admin          | Get all customers                 |
-| `POST` | `/customers/by-role`         | Admin          | Get customers by role             |
-| `GET`  | `/customers/:id`             | Admin/Customer | Get customer by ID                |
+| `GET`  | `/customers/:id`             | Customer       | Get customer by ID                |
 | `PATCH`| `/customers/:id`             | Admin/Customer | Update customer info              |
 | `DELETE`| `/customers/:id`            | Admin/Customer | Delete a customer                 |
-| `GET`  | `/customers/:id/full-name`   | Admin/Customer | Get full name of a customer      |
 | `GET`  | `/customers/:id/address`     | Admin/Customer | Get address of a customer         |
-| `GET`  | `/customers/search/customers`| Public         | Search customers by query         |
-| `GET`  | `/customers/search/admins`   | Public         | Search admins by query            |
+| `GET`  | `/customers/search/customers`| Admin          | Search customers by query         |
+| `GET`  | `/customers/search/admins`   | Admin          | Search admins by query            |
 
 ### Pizzas
 
-| Method | Endpoint                   | Role           | Description                     |
+| Method | Endpoint                   | Access           | Description                     |
 |--------|----------------------------|----------------|---------------------------------|
-| `POST` | `/pizzas`                  | Admin/Customer | Create a pizza                  |
+| `POST` | `/pizzas`                  | Admin          | Create a pizza                  |
 | `GET`  | `/pizzas`                  | Public         | Get all pizzas                  |
 | `GET`  | `/pizzas/:id`              | Admin/Customer | Get pizza by ID                 |
-| `PATCH`| `/pizzas/:id`              | Admin/Customer | Update pizza info               |
-| `DELETE`| `/pizzas/:id`             | Admin/Customer | Delete a pizza                  |
-| `POST` | `/pizzas/search-by-name`   | Admin/Customer | Search pizza by name            |
+| `PATCH`| `/pizzas/:id`              | Admin          | Update pizza info               |
+| `DELETE`| `/pizzas/:id`             | Admin          | Delete a pizza                  |
+| `POST` | `/pizzas/search`           | Admin/Customer | Search pizza by name            |
 
 ### Orders
 
-| Method | Endpoint                          | Role           | Description                       |
-|--------|----------------------------------|----------------|-----------------------------------|
+| Method | Endpoint                          | Access           | Description                      |
+|--------|----------------------------------|----------------|-----------------------------------  |
 | `POST` | `/orders`                         | Customer       | Create a new order                 |
-| `GET`  | `/orders`                         | Admin          | Get all orders                     |
-| `GET`  | `/orders/customer/:customerId`    | Customer       | Get orders by customer ID          |
+| `GET`  | `/orders?page=&limit=&date=`      | Admin          | Get all orders (pagination, filter)|
+| `GET`  | `/orders/customer/:customerId`    | Customer/Admin | Get orders by customer ID          |
 | `GET`  | `/orders/filter`                  | Admin          | Filter orders by name/date         |
-| `GET`  | `/orders/:id`                     | Customer       | Get order by ID                    |
+| `GET`  | `/orders/:id`                     | Customer/Admin | Get order by ID                    |
 | `PATCH`| `/orders/:id`                     | Admin/Customer | Update order info                  |
 | `DELETE`| `/orders/:id`                    | Admin/Customer | Delete an order                    |
 | `GET`  | `/orders/customer/:customerId/date` | Customer     | Get orders for customer by date    |
