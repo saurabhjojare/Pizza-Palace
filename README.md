@@ -57,11 +57,11 @@ Browse all orders with filters for username and date
 
 The images above showcase the core features of the Pizza Ordering System:
 
-- **Cart Management**: Add or remove pizzas, select sizes, and adjust quantities in real time.
-- **Customer Management**: Add, view, update, and delete customer records.
-- **Order Tracking**: View complete order history for efficient order tracking and customer service.
-- **Validation & Control**: Enforce rules for customizing orders and managing inventory to ensure a smooth process.
-- **Authentication & Authorization**: Secure user access with JWT for login, request validation, and role-based permissions.
+- **Cart Management**: Add or remove pizzas, select sizes, and adjust quantities in real time
+- **Customer Management**: Add, view, update, and delete customer records
+- **Order Tracking**: View complete order history for efficient order tracking and customer service
+- **Validation & Control**: Enforce rules for customizing orders & managing inventory to ensure smooth process
+- **Authentication & Authorization**: Secure user access with JWT for login, validation, & role-based permissions
 
 
 ## Tech Stack
