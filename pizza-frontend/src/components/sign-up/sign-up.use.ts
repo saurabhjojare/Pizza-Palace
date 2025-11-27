@@ -23,6 +23,9 @@ export const SignUp = () => {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
 
   const navigate = useNavigate();
 
@@ -101,5 +104,9 @@ export const SignUp = () => {
     handleNext,
     handleBack,
     handleChange,
+    showPassword,
+    setShowPassword,
+    showConfirmPassword,
+    setShowConfirmPassword
   };
 };
