@@ -119,6 +119,30 @@ The images above showcase the core features of the Pizza Ordering System:
 | `DELETE`| `/orders/:id`                    | Admin/Customer | Delete an order                    |
 | `GET`  | `/orders/customer/:customerId/date` | Customer     | Get orders for customer by date    |
 
+
+## How to Run Locally
+
+<p><strong>Clone the repository:</strong></p>
+
+```bash
+git clone https://github.com/saurabhjojare/Pizza-Ordering-System.git
+cd Pizza-Ordering-System
+```
+
+<p><strong>Run backend:</strong></p>
+
+```bash
+cd pizza-backend
+docker compose up -d --build
+```
+
+<p><strong>Run frontend:</strong></p>
+
+```bash
+cd ../pizza-frontend
+docker compose up -d --build
+```
+
 ## License
 This project is licensed under the [MIT License](LICENSE).
   
