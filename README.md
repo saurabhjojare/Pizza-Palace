@@ -10,48 +10,48 @@ A feature rich pizza ordering application crafted to simplify and enhance the or
 
 Log into your account
 
-![Login Page](https://www.dropbox.com/scl/fi/igdumyhtjiyr6yedup17v/Login-Filled.png?rlkey=bpcw3twdn35j4xywnidejeguj&raw=1)
+![Login Page](https://drive.google.com/uc?export=view&id=1zQIVg4C4SDLHLVFF3ORU_N294qdGNks2)
 
 Browse full pizza selection
 
-![Home Page](https://www.dropbox.com/scl/fi/5ucsw714x2tr55z7155kg/Home-Logged.png?rlkey=lq83jil6sex77u9yrch2r6f9b&raw=1)
+![Home Page](https://drive.google.com/uc?export=view&id=1bfkrW_0tUBLlQ_oGYTdeL2hqjiaNN26C)
 
 Quickly search the collection
 
-![Search Pizza Home](https://www.dropbox.com/scl/fi/8o54ag94l3d6f1ls38di5/Search-Pizza-Home.png?rlkey=pcxy0s5cxevnt8g7ri8rrsjrj&raw=1)
+![Search Pizza Home](https://drive.google.com/uc?export=view&id=1EookyjpRTPNxTRgBmpS_cjfQiN9peMM4)
 
 Select items and place your order
 
-![Cart](https://www.dropbox.com/scl/fi/pzr6kltkhaqkjb0w7as8h/Cart.png?rlkey=myh2b3roleujgnvff60rgyxa7&raw=1)
+![Cart](https://drive.google.com/uc?export=view&id=1FeznW801j2jMEguI9buqADvuaLnrqS4B)
 
 Check your order history
 
-![My Orders](https://www.dropbox.com/scl/fi/9cd68qrgevx39o5e87w4j/My-Orders.png?rlkey=ez1pjb1lzpqq9ids8ea76k8d6&raw=1)
+![My Orders](https://drive.google.com/uc?export=view&id=1L6Mnc1GlK3_9Lr49hCBHeu8UJDelq680)
 
 Access your profile
 
-![My Profile](https://www.dropbox.com/scl/fi/9yadn7nk8zlpw03dn4vfr/My-Profile.png?rlkey=svcanugtnv2d9n3m63mmncmrw&raw=1)
+![My Profile](https://drive.google.com/uc?export=view&id=1lXow5aDsT2Hl5sr-CMyVIdp0HoVtyXZV)
 
 ### Admin Panel
 Browse the pizza menu
 
-![Pizza List](https://www.dropbox.com/scl/fi/hhn5kv6pmjy8tf9f3vp7g/Pizza-List.png?rlkey=gufjf37pztb81ee6c7uzulvhd&raw=1)
+![Pizza List](https://drive.google.com/uc?export=view&id=1MkhCt_qL9Y8goh91rN3TH-8Uzi8dLtdr)
 
 Modify Pizza
 
-![Update Pizza](https://www.dropbox.com/scl/fi/yo5zr1a4mi0trno95exp6/Update-Pizza.png?rlkey=7i5foe22pk8v21cis0f0xx0es&raw=1)
+![Update Pizza](https://drive.google.com/uc?export=view&id=1hmjUwYiIRlPRCuheFDnZu7Ke7IhBzle3)
 
 Explore customer profiles
 
-![Customers List](https://www.dropbox.com/scl/fi/uajmdhq50r5tgwp1i98np/Customers-List.png?rlkey=8q7aj8klahclhw6cqutvddmmk&raw=1)
+![Customers List](https://drive.google.com/uc?export=view&id=15IdEqXq2E4On_SlRLqyqIVxc_fv5eaga)
 
 View all admins except yourself
 
-![Admin List](https://www.dropbox.com/scl/fi/nnr3hxs2grjrtykam3bc9/Admin-List.png?rlkey=zmgte6r0szaty9lri574ilqm0&raw=1)
+![Admin List](https://drive.google.com/uc?export=view&id=1GvxeZZ2dcGWlfW6i6I6_mJJl7n_71dQM)
 
 Browse all orders with filters for username and date
 
-![All Orders](https://www.dropbox.com/scl/fi/kxneie8z5e01scd2nsiih/All-Orders.png?rlkey=bko7ov1wr7qgvcjgifb7k2j3e&raw=1)
+![All Orders](https://drive.google.com/uc?export=view&id=1ZnRgvDGeKJLXTauA8BMu_dyd1wo9vgDQ)
 
 ## Feature Summary
 
