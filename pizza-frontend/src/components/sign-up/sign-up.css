@@ -1,3 +1,17 @@
 .max-width-500 {
   max-width: 500px !important;
 }
+
+.password-toggle-icon {
+  position: absolute;
+  right: 12px;
+  top: 38px;
+  cursor: pointer;
+  font-size: 18px;
+  color: #6c757d;
+}
+
+.password-toggle-icon:hover {
+  color: #000;
+}
+

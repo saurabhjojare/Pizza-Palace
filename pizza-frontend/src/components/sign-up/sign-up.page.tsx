@@ -12,6 +12,10 @@ export const SignUpForm: React.FC = () => {
     handleNext,
     handleBack,
     handleChange,
+    showPassword,
+    setShowPassword,
+    showConfirmPassword,
+    setShowConfirmPassword
   } = SignUp();
 
   return (
@@ -95,25 +99,34 @@ export const SignUpForm: React.FC = () => {
 
         {step === 3 && (
           <>
-            <div className="mb-3">
+            <div className="mb-3 position-relative">
               <label className="form-label">Password</label>
               <input
                 name="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 className="form-control"
                 value={formData.password}
                 onChange={handleChange}
               />
+               <i
+                className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"} password-toggle-icon`}
+                onClick={() => setShowPassword(!showPassword)}
+              ></i>
             </div>
-            <div className="mb-3">
+
+            <div className="mb-3 position-relative">
               <label className="form-label">Re-enter Password</label>
               <input
                 name="confirmPassword"
-                type="password"
+                type={showConfirmPassword ? "text" : "password"}
                 className="form-control"
                 value={formData.confirmPassword}
                 onChange={handleChange}
               />
+              <i
+              className={`bi ${showConfirmPassword ? "bi-eye-slash" : "bi-eye"} password-toggle-icon`}
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              ></i>
             </div>
           </>
         )}
