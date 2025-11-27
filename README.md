@@ -122,6 +122,8 @@ The images above showcase the core features of the Pizza Ordering System:
 
 ## How to Run Locally
 
+> **Note:** Make sure Docker is installed on your machine before running these commands.
+
 <p><strong>Clone the repository:</strong></p>
 
 ```bash
