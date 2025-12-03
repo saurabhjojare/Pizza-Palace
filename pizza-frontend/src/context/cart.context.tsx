@@ -1,14 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { CartItem, Pizza } from "../interfaces/order.interface";
 import { getCartStorageKey } from "../utils/cart-storage.utils";
-
-interface CartContextType {
-  cartItems: CartItem[];
-  addToCart: (pizza: Pizza, size: string, quantity: number) => void;
-  removeFromCart: (index: number) => void;
-  updateQuantity: (index: number, quantity: number) => void;
-  clearCart: () => void;
-}
+import { CartContextType } from "../interfaces/cart.interface";
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
