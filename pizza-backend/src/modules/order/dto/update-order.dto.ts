@@ -1,10 +1,4 @@
-import {
-  IsOptional,
-  IsBoolean,
-  IsInt,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
+import { IsOptional, IsBoolean, IsInt, IsString, ValidateNested } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 import { CreateOrderLineDto } from './create-order-line.dto';
 

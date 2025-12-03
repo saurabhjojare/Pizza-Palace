@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -121,14 +117,6 @@ export class CustomersService {
     return { address: customer.address };
   }
 
-  async searchCustomers(search: string): Promise<CustomerEntity[]> {
-    return this.searchByKeywordAndRole('customer', search);
-  }
-
-  async searchAdmins(search: string): Promise<CustomerEntity[]> {
-    return this.searchByKeywordAndRole('admin', search);
-  }
-
   async searchByKeywordAndRole(
     role: string,
     search: string,
@@ -154,5 +142,13 @@ export class CustomersService {
     queryBuilder.orderBy('customer.created_at', 'DESC');
 
     return await queryBuilder.getMany();
+  }
+
+  async searchCustomers(search: string): Promise<CustomerEntity[]> {
+    return this.searchByKeywordAndRole('customer', search);
+  }
+
+  async searchAdmins(search: string): Promise<CustomerEntity[]> {
+    return this.searchByKeywordAndRole('admin', search);
   }
 }

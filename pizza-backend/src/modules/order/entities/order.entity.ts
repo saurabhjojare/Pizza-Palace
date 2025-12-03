@@ -1,12 +1,4 @@
-import {
-  Column,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  OneToMany,
-  JoinColumn,
-  CreateDateColumn,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany, JoinColumn, CreateDateColumn } from 'typeorm';
 import { CustomerEntity } from '../../customer/entities/customer.entity';
 import { OrderLineEntity } from './order-line.entity';
 

@@ -1,12 +1,4 @@
-import {
-  ValidateIf,
-  IsIn,
-  IsNotEmpty,
-  IsEmail,
-  IsString,
-  Length,
-  Matches,
-} from 'class-validator';
+import { ValidateIf, IsIn, IsNotEmpty,IsEmail, IsString,Length, Matches } from 'class-validator';
 
 export class CreateCustomerDto {
   @IsNotEmpty({ message: 'First name is required' })
