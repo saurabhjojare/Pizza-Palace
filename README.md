@@ -1,4 +1,4 @@
-# Pizza Ordering System
+# Pizza Palace
 
 ## Overview
 
